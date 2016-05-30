@@ -50,10 +50,12 @@ The app will use three different API's as data sources. These API's all return a
 - The {MAAS} API will be used for all weather data. [marsweather.ingenology](http://marsweather.ingenology.com/)
 - The NASA Mars Photos API will be used to get all rover photos. [Mars Photos](https://api.nasa.gov/api.html#MarsPhotos)
 - The Twitter API will be used to collect the latest tweets from Curiosity. [Twitter API](https://dev.twitter.com/rest/public) & [Curiosity Twitter Account](https://twitter.com/marscuriosity)
+
 ### Possible technical problems and solutions
 - The images from the Mars Photo API could be too high in resolution, this can cause high data usage for the user and long waits for an image to load. There is maybe a way to pre compress the images.
 - The images from the Mars Photo API have probably all different dimensions, this can become ugly in a static UI. Empty space around the image can occur. It may be possible to make the UI flexible, so it organizes itself around the image. 
 - I don't know if there is a special library to make graphs. If there is one, I need to learn to use it. If not I may have to build one.
+
 ### Review existing Mars weather applications
 Within Google Play there are a few Mars weather apps. I will discuss the four most popular:
 - REMS Mars Weather

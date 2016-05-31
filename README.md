@@ -1,4 +1,4 @@
-# Mars Weather app
+# Mars Weather Explorer
 Programming Project - Minor programming University of Amsterdam.
 Nadeche Studer
 

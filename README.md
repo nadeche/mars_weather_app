@@ -1,6 +1,6 @@
 # Mars Weather Explorer
-Programming Project - Minor programming University of Amsterdam.
-Nadeche Studer
+###### Programming Project - Minor programming University of Amsterdam.
+##### Nadeche Studer
 
 ### Project Proposal
 
@@ -39,23 +39,23 @@ The weather is a classic small talk topic. But the next time you are in need of 
 
 These features are also the separate parts of the app. Together they give the user an overview of what Curiosity encounters on Mars. The up to date data makes sure the user feels very connected to what is happening now on Mars. 
 ### User Interface sketch
-Home Screen
+###### Home Screen
 ![Image of home screen sketch](doc/sketch_homescreen.jpg)
-Actionbar functionality
+###### Actionbar functionality
 ![Image of actionbar functionality sketch](doc/sketch_actionbar_functionality.jpg)
-Past data visualization and widget
+###### Past data visualization and widget
 ![Image of past data visualization and widget](doc/sketch_past_datavisualisation-widget.jpg)
-Twitter latest news feed
+###### Twitter latest news feed
 ![Image of twitter latest news feed](doc/sketch_twitter_news.jpg)
 ### Data sets and API sources
-The app will use three different API's as data sources. These API's all return a JSON object which can be put in java model classes to work with the data and display it. 
+The app will use three different API's as data sources. These API's all return a JSON object which can be put in java model classes to work with the data and display it.
 - The {MAAS} API will be used for all weather data. [marsweather.ingenology](http://marsweather.ingenology.com/)
 - The NASA Mars Photos API will be used to get all rover photos. [Mars Photos](https://api.nasa.gov/api.html#MarsPhotos)
 - The Twitter API will be used to collect the latest tweets from Curiosity. [Twitter API](https://dev.twitter.com/rest/public) & [Curiosity Twitter Account](https://twitter.com/marscuriosity)
 
 ### Possible technical problems and solutions
 - The images from the Mars Photo API could be too high in resolution, this can cause high data usage for the user and long waits for an image to load. There is maybe a way to pre compress the images.
-- The images from the Mars Photo API have probably all different dimensions, this can become ugly in a static UI. Empty space around the image can occur. It may be possible to make the UI flexible, so it organizes itself around the image. 
+- The images from the Mars Photo API have probably all different dimensions, this can become ugly in a static UI. Empty space around the image can occur. It may be possible to make the UI flexible, so it organizes itself around the image.
 - I don't know if there is a special library to make graphs. If there is one, I need to learn to use it. If not I may have to build one.
 
 ### Review existing Mars weather applications

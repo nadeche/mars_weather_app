@@ -18,7 +18,9 @@ The goals of this application are:
 - To give an overview of past weather information from Mars.
 - To provide a light newsfeed from Mars.
 - To give the user the ability to view Mars' surface together with a Mars rover.
+
 All these goals should give the user a part of the excitement of exploring Mars. 
+
 ### Problem definition
 Humans are naturally curious, in ancient times we have sent brave men to distant parts of our planet to tell us what it was like over there. In modern times we sent brave rover bots to distant planets to tell us what it is like over there. We fantasize about going to Mars and start a human colony over there. But what about the weather? Let those rover bots tell us first what it is like over there before we make any decision about moving there. 
 Curiosity sends back weather data to earth nearly every Martian day and images of its environment every Martian day. Although NASA makes this data publicly available, you have to look for it daily. So an app that automatically collects the latest data for you would be a good solution. This way it can feel like you are in direct contact with a distant explorer, experiencing a part of the excitement human explores must have had when they found an unexplored piece of the earth.

@@ -1,5 +1,6 @@
 package mprog.nl.mars_weather_explorer;
 
+import android.app.Dialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class WeatherDataActivity extends AppCompatActivity {
 
@@ -29,6 +33,7 @@ public class WeatherDataActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    Dialog changeDateDialog;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -49,6 +54,8 @@ public class WeatherDataActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        changeDateDialog = new Dialog(this);
 
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -75,14 +82,27 @@ public class WeatherDataActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_date_picker:
+                // let the user pick a different solar day
+                showChooseNewSolDialog();
+                //Toast.makeText(WeatherDataActivity.this, "Show dialog to pick different date", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_home:
+                // get latest weather data
+                //getApiData(null);
+                Toast.makeText(WeatherDataActivity.this,"Latest weather data fetched", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_photo_load:
+                Toast.makeText(WeatherDataActivity.this,"Change the photo in the background", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_settings:
+                Toast.makeText(WeatherDataActivity.this,"Show dialog to change temperature settings", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -114,10 +134,47 @@ public class WeatherDataActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_weather_data, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
+    }
+    /**
+     * This method displays a dialog where the user can choose
+     * a solar day to see the weather data from.
+     * When a day is confirmed the data is fetched directly.
+     * */
+    private void showChooseNewSolDialog() {
+
+        changeDateDialog.setContentView(R.layout.change_date_dialog);
+        changeDateDialog.setTitle("Change date");
+
+        // initialize number picker with the latest solar day as a maximum
+        final NumberPicker numberPicker = (NumberPicker)changeDateDialog.findViewById(R.id.solNumberPicker);
+        numberPicker.setMaxValue(1355);
+        numberPicker.setMinValue(15);
+        numberPicker.setWrapSelectorWheel(true);
+
+        Button cancelButton = (Button)changeDateDialog.findViewById(R.id.cancelButton);
+        Button getButton = (Button)changeDateDialog.findViewById(R.id.getButton);
+
+        getButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // get the data from the entered solar day
+                Toast.makeText(WeatherDataActivity.this,"New sol " + numberPicker.getValue(), Toast.LENGTH_SHORT).show();
+                changeDateDialog.dismiss();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeDateDialog.dismiss();
+            }
+        });
+
+        changeDateDialog.show();
     }
 
     /**
@@ -140,6 +197,8 @@ public class WeatherDataActivity extends AppCompatActivity {
                     return PlaceholderFragment.newInstance(position + 1);
                 case 1:
                     return GraphDataFragment.newInstance();
+                case 2:
+                    return NewsFeedFragment.newInstance();
             }
             return null;
 
@@ -148,7 +207,7 @@ public class WeatherDataActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 2;
+            return 3;
         }
 
         /*@Override

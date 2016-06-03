@@ -1,6 +1,5 @@
 package mprog.nl.mars_weather_explorer;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +14,6 @@ public class GraphDataFragment extends android.support.v4.app.Fragment{
         GraphDataFragment fragment = new GraphDataFragment();
         return fragment;
     }
-
-    //public GraphDataFragment{ }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

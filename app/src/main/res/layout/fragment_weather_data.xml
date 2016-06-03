@@ -31,60 +31,60 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
+                android:text="Martian sol"
                 android:paddingRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="data"/>
+                android:text="1355"/>
         </LinearLayout>
         <LinearLayout
             style="@style/TextBox">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
+                android:text="Earth date"
                 android:paddingRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="data"/>
+                android:text="03/06/2016"/>
         </LinearLayout>
         <LinearLayout
             style="@style/TextBox">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
+                android:text="Sun rise"
                 android:paddingRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="data"/>
+                android:text="20.50"/>
         </LinearLayout>
         <LinearLayout
             style="@style/TextBox">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
+                android:text="Sun set"
                 android:paddingRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="data"/>
+                android:text="05.30"/>
         </LinearLayout>
         <LinearLayout
             style="@style/TextBox">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
+                android:text="Season"
                 android:paddingRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="data"/>
+                android:text="6"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -100,69 +100,60 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
+                android:text="Max temp"
                 android:paddingRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="data"/>
+                android:text="-15"/>
         </LinearLayout>
         <LinearLayout
             style="@style/TextBox">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
+                android:text="Min temp"
                 android:paddingRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="data"/>
+                android:text="-74"/>
         </LinearLayout>
         <LinearLayout
             style="@style/TextBox">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
+                android:text="Wind speed"
                 android:paddingRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="data"/>
+                android:text="2"/>
         </LinearLayout>
         <LinearLayout
             style="@style/TextBox">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
+                android:text="Pressure"
                 android:paddingRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="data"/>
+                android:text="738.0"/>
         </LinearLayout>
         <LinearLayout
             style="@style/TextBox">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
+                android:text="Status"
                 android:paddingRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="data"/>
+                android:text="Sunny"/>
         </LinearLayout>
     </LinearLayout>
-
-
-    <TextView
-        android:id="@+id/section_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-
-
 </RelativeLayout>

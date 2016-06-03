@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:id="@+id/dataLeft">
         <LinearLayout
             style="@style/TextBox">
@@ -36,22 +36,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1355"/>
-        </LinearLayout>
-        <LinearLayout
-            style="@style/TextBox">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="Earth date"
                 android:paddingRight="8dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="03/06/2016"/>
-        </LinearLayout>
-        <LinearLayout
-            style="@style/TextBox">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -60,38 +46,44 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="20.50"/>
-        </LinearLayout>
-        <LinearLayout
-            style="@style/TextBox">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="Sun set"
                 android:paddingRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="05.30"/>
+                android:text="Season"
+                android:paddingRight="8dp"/>
         </LinearLayout>
         <LinearLayout
             style="@style/TextBox">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Season"
-                android:paddingRight="8dp"/>
+                android:text="1355"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="03/06/2016"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20.50"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="05.30"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="6"/>
         </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_alignBottom="@+id/roverImageView"
         android:layout_alignParentEnd="true"
         android:id="@+id/dataRight">
@@ -105,22 +97,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-15"/>
-        </LinearLayout>
-        <LinearLayout
-            style="@style/TextBox">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="Min temp"
                 android:paddingRight="8dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="-74"/>
-        </LinearLayout>
-        <LinearLayout
-            style="@style/TextBox">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -129,27 +107,32 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2"/>
-        </LinearLayout>
-        <LinearLayout
-            style="@style/TextBox">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="Pressure"
                 android:paddingRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="738.0"/>
+                android:text="Status"
+                android:paddingRight="8dp"/>
         </LinearLayout>
         <LinearLayout
             style="@style/TextBox">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Status"
-                android:paddingRight="8dp"/>
+                android:text="-15"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-74"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="738.0"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

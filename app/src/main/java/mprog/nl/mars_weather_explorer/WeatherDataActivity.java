@@ -1,8 +1,6 @@
 package mprog.nl.mars_weather_explorer;
 
 import android.app.Dialog;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -18,8 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.NumberPicker;
-import android.widget.TextView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 public class WeatherDataActivity extends AppCompatActivity {
@@ -34,6 +33,7 @@ public class WeatherDataActivity extends AppCompatActivity {
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
     Dialog changeDateDialog;
+    Dialog setTemperatureUnitDialog;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -56,6 +56,7 @@ public class WeatherDataActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         changeDateDialog = new Dialog(this);
+        setTemperatureUnitDialog = new Dialog(this);
 
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -98,7 +99,8 @@ public class WeatherDataActivity extends AppCompatActivity {
                 Toast.makeText(WeatherDataActivity.this,"Change the photo in the background", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_settings:
-                Toast.makeText(WeatherDataActivity.this,"Show dialog to change temperature settings", Toast.LENGTH_SHORT).show();
+                showSetTemperatureUnitDialog();
+                //Toast.makeText(WeatherDataActivity.this,"Show dialog to change temperature settings", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -146,7 +148,7 @@ public class WeatherDataActivity extends AppCompatActivity {
      * */
     private void showChooseNewSolDialog() {
 
-        changeDateDialog.setContentView(R.layout.change_date_dialog);
+        changeDateDialog.setContentView(R.layout.dialog_change_date);
         changeDateDialog.setTitle("Change date");
 
         // initialize number picker with the latest solar day as a maximum
@@ -175,6 +177,45 @@ public class WeatherDataActivity extends AppCompatActivity {
         });
 
         changeDateDialog.show();
+    }
+
+    public void showSetTemperatureUnitDialog(){
+        setTemperatureUnitDialog.setContentView(R.layout.dialog_temperature_setting);
+        setTemperatureUnitDialog.setTitle("Setting");
+
+        Button cancelButton = (Button)setTemperatureUnitDialog.findViewById(R.id.cancelButton);
+        Button saveButton = (Button)setTemperatureUnitDialog.findViewById(R.id.saveButton);
+        Switch temperatureSwitch = (Switch)setTemperatureUnitDialog.findViewById(R.id.temperatureSwitch);
+        final String[] temperatureUnit = new String[1];
+        temperatureUnit[0] = "Nothing changed";
+        temperatureSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    temperatureUnit[0] = "Fahrenheit";
+                }
+                else{
+                    temperatureUnit[0] = "Celsius";
+                }
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(WeatherDataActivity.this,"Saved " + temperatureUnit[0], Toast.LENGTH_SHORT).show();
+                setTemperatureUnitDialog.dismiss();
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(WeatherDataActivity.this,"Canceled", Toast.LENGTH_SHORT).show();
+                setTemperatureUnitDialog.dismiss();
+            }
+        });
+
+        setTemperatureUnitDialog.show();
     }
 
     /**

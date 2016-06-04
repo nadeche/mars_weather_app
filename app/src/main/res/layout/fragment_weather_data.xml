@@ -6,10 +6,13 @@
 
 
     <ImageView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/roverImageView"
-        android:src="@drawable/curiosity_sol_1344_navcamleftb_ratio"/>
+        android:src="@drawable/curiosity_sol_1344_navcamleftb_ratio"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -18,14 +21,16 @@
         android:textSize="16sp"
         style="@style/TextBox"
         android:layout_above="@+id/dataLeft"
-        android:layout_alignEnd="@+id/dataRight" />
+        android:layout_alignEnd="@+id/dataRight"
+        android:id="@+id/textView2" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:id="@+id/dataLeft">
+        android:id="@+id/dataLeft"
+        android:layout_alignParentLeft="true">
         <LinearLayout
             style="@style/TextBox">
             <TextView
@@ -84,9 +89,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_alignBottom="@+id/roverImageView"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/dataRight">
+        android:id="@+id/dataRight"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true">
         <LinearLayout
             style="@style/TextBox">
             <TextView

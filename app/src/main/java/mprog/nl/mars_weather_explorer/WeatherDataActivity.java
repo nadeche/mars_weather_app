@@ -1,6 +1,7 @@
 package mprog.nl.mars_weather_explorer;
 
 import android.app.Dialog;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -57,6 +58,7 @@ public class WeatherDataActivity extends AppCompatActivity {
 
         changeDateDialog = new Dialog(this);
         setTemperatureUnitDialog = new Dialog(this);
+
 
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

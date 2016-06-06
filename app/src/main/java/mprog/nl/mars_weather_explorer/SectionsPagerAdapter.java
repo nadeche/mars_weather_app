@@ -25,7 +25,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 // Return a PlaceholderFragment (defined as a static inner class below).
-                return WeatherDataActivity.PlaceholderFragment.newInstance(position + 1);
+                return WeatherDataFragment.newInstance(position + 1);
             case 1:
                 return GraphDataFragment.newInstance();
             case 2:

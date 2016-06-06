@@ -5,7 +5,6 @@ package mprog.nl.mars_weather_explorer;
  */
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,26 +27,23 @@ import java.util.Date;
  * While fetching data it displays a progress dialog to the user.
  * The data is saved in a WeatherDataModel from where the data is displayed on screen.
  * */
-public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, WeatherDataModel> {
+public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject> {
 
-    ProgressDialog progressDialog;
-    Context context;
+    BaseFragmentSuper fragment;
 
 
-    FetchDataAsync (Context context) {
-        this.context = context;
+    FetchDataAsync (BaseFragmentSuper context) {
+        this.fragment = context;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage(context.getText(R.string.loading));
-        progressDialog.show();
+        fragment.showProgressDialog();
     }
 
     @Override
-    protected WeatherDataModel doInBackground(HttpRequestModel... requestModels) {
+    protected JSONObject doInBackground(HttpRequestModel... requestModels) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
@@ -69,9 +64,9 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, WeatherDat
             }
 
             // convert complete data to Json object
-            JSONObject reportJsonObject = new JSONObject(builder.toString());
+            return new JSONObject(builder.toString());
 
-            // when the returned Json object of a requested solar day is empty quit this action
+            /*// when the returned Json object of a requested solar day is empty quit this action
             if(!requestModels[0].latestWeatherData && reportJsonObject.getInt("count") == 0) {
                 return null;
             }
@@ -82,7 +77,7 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, WeatherDat
                 weatherDataJsonObj = reportJsonObject.getJSONObject("report");
             }
             /* when a particular solar day was requested there is an extra Json array to get
-             * which resides in the results object */
+             * which resides in the results object
             else {
                 JSONArray resultArrayJsonObject = reportJsonObject.getJSONArray("results");
                 weatherDataJsonObj = resultArrayJsonObject.getJSONObject(0);
@@ -110,9 +105,9 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, WeatherDat
             weatherData.setSunrise(weatherDataJsonObj.getString("sunrise"));
             weatherData.setSunset(weatherDataJsonObj.getString("sunset"));
 
-            return weatherData;
+            return weatherData;*/
 
-        } catch (IOException | JSONException | ParseException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         } finally {
             if(urlConnection != null){
@@ -130,47 +125,18 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, WeatherDat
     }
 
     @Override
-    protected void onPostExecute(WeatherDataModel weatherData) {
-        super.onPostExecute(weatherData);
-        progressDialog.dismiss();
+    protected void onPostExecute(JSONObject jsonObject) {
+        super.onPostExecute(jsonObject);
+
+        fragment.hideProgressDialog();
 
         // when doInBackground has quit because there was no data, let the user know
-        if(weatherData == null){
-            Toast.makeText(context, context.getText(R.string.toast_no_data), Toast.LENGTH_SHORT).show();
+        /*if(weatherData == null){
+            Toast.makeText(fragment, fragment.getText(R.string.toast_no_data), Toast.LENGTH_SHORT).show();
             return;
-        }
+        }*/
+
         // display fetched weather data
-        setDataToView(weatherData);
-    }
-
-    /**
-     * This method displays the received weather data to the screen.
-     * It checks whether the weather status has a value.
-     * It gets the current date and time to display as update time.
-     * */
-    private void setDataToView(WeatherDataModel weatherData) {
-
-        context.solDateTextView.setText(String.valueOf(weatherData.getSol()));
-        dateOfDataTextView.setText(weatherData.getTerrestrial_date());
-
-        // set a degrees celsius character behind the temperatures values
-        maxCelsiusTextView.setText(String.valueOf(weatherData.getMax_temp())+ (char) 0x00B0 + "C");
-        minCelsiusTextView.setText(String.valueOf(weatherData.getMin_temp()) + (char) 0x00B0 + "C");
-
-        // display "no data" when there is no weather status
-        if(weatherData.getAtmo_opacity().equals("null")) {
-            opacityDataTextView.setText(getText(R.string.no_data));
-        }
-        else {
-            opacityDataTextView.setText(weatherData.getAtmo_opacity());
-        }
-
-        windSpeedDataTextView.setText(String.valueOf(weatherData.getWind_speed()));
-        seasonDataTextView.setText(weatherData.getSeason());
-
-        // get and display the current time and date as last update time
-        SimpleDateFormat dateFormatUpdate = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-        String currentDateAndTime = dateFormatUpdate.format(new Date());
-        lastUpdateTextView.setText(getText(R.string.last_update) + currentDateAndTime);
+        fragment.setJsonToView(jsonObject);
     }
 }

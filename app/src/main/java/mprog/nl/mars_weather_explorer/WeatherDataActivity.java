@@ -23,6 +23,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -78,9 +79,7 @@ public class WeatherDataActivity extends AppCompatActivity {
         changeDateDialog = new Dialog(this);
         setTemperatureUnitDialog = new Dialog(this);
 
-        // get the latest weather data
-        HttpRequestModel request= new HttpRequestModel();
-        new FetchDataAsync(this).execute(request);
+
 
 
 
@@ -130,61 +129,6 @@ public class WeatherDataActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Placeholder fragment containing the weatherDataFragment
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        //private static final String ARG_SECTION_NUMBER = "section_number";
-        private TextView earthDateTextView;     // contains the earth date of the data
-        private TextView solTextView;           // contains the martian solar day of the data
-        private TextView minTempTextView;       // contains the minimum temperature
-        private TextView maxTempTextView;      // contains the maximum temperature
-        private TextView windSpeedTextView;     // contains the wind speed (unknown scale)
-        private TextView statusDataTextView;    // contains the status of the weather
-        private TextView seasonDataTextView;    // contains the martian season
-        private TextView sunriseTextView;       // contains the earth date and time on the martian sunrise
-        private TextView sunsetTextView;        // contains the earth date and time on the martian sunset
-        private TextView pressureTextView;      // contains the atmospheric pressure on mars
-
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            //Bundle args = new Bundle();
-            //args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            //fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_weather_data, container, false);
-
-            earthDateTextView = (TextView)rootView.findViewById(R.id.earthDateTextView);
-            solTextView = (TextView)rootView.findViewById(R.id.solDateTextView);
-            minTempTextView = (TextView)rootView.findViewById(R.id.minTempTextView);
-            maxTempTextView = (TextView)rootView.findViewById(R.id.maxTempTextView);
-            windSpeedTextView = (TextView)rootView.findViewById(R.id.windSpeedTextView);
-            statusDataTextView = (TextView)rootView.findViewById(R.id.statusTextView);
-            seasonDataTextView = (TextView)rootView.findViewById(R.id.seasonTextView);
-            sunriseTextView = (TextView)rootView.findViewById(R.id.sunriseTextView);
-            sunsetTextView = (TextView)rootView.findViewById(R.id.sunsetTextView);
-            pressureTextView = (TextView)rootView.findViewById(R.id.pressureTextView);
-            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
-        }
-    }
 
     /**
      * This method displays a dialog where the user can choose

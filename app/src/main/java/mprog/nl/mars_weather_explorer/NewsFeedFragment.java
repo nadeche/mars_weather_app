@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.json.JSONObject;
+
 /**
  * Created by Nadeche
  */
@@ -17,7 +19,7 @@ import android.widget.ListView;
 // TODO Add home and back function in the actionbar from newsItem
 // TODO Add update functionality
 
-public class NewsFeedFragment extends Fragment {
+public class NewsFeedFragment extends BaseFragmentSuper {
 
     public static NewsFeedFragment newInstance (){
         NewsFeedFragment fragment = new NewsFeedFragment();
@@ -34,5 +36,10 @@ public class NewsFeedFragment extends Fragment {
         newsFeedListView = (ListView)rootView.findViewById(R.id.newsFeedListView);
         newsFeedListView.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dummyListItems));
         return rootView;
+    }
+
+    @Override
+    public void setJsonToView(JSONObject jsonObject) {
+
     }
 }

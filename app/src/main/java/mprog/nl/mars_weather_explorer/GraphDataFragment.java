@@ -5,13 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONObject;
+
 /**
  * Created by Nadeche
  */
 // TODO Add graphView library and incorporate
 // TODO Add to actionbar search date range function
 
-public class GraphDataFragment extends android.support.v4.app.Fragment{
+public class GraphDataFragment extends BaseFragmentSuper{
 
     public static GraphDataFragment newInstance(){
         GraphDataFragment fragment = new GraphDataFragment();
@@ -23,5 +25,10 @@ public class GraphDataFragment extends android.support.v4.app.Fragment{
 
         View rootView = inflater.inflate(R.layout.fragment_graph_data, container, false);
         return rootView;
+    }
+
+    @Override
+    public void setJsonToView(JSONObject jsonObject) {
+
     }
 }

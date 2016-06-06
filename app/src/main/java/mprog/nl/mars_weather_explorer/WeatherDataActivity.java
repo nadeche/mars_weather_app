@@ -20,14 +20,17 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 // TODO Add menu for search on sol or date
 // TODO Add dialog for search on date
 // TODO Change actionbar for other fragments
 // TODO Add actionbar function: icon and dialog for date search in graph data fragment
 // TODO Create dot navigation at the bottom
-// TODO Organize weatherDataActivity in more classes
 // TODO Add dialog to change photo
 // TODO Make internet connection > manifest and asyncTask class
 // TODO Make request class
@@ -35,6 +38,7 @@ import android.widget.Toast;
 // TODO Make method to handle Json to data models
 // TODO Create load photo method (save?)
 // TODO Handle the save of settings with sharedPref
+// TODO Add the latest SOL to the sharedPref and check later to update
 
 public class WeatherDataActivity extends AppCompatActivity {
 
@@ -46,9 +50,9 @@ public class WeatherDataActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    Dialog changeDateDialog;
-    Dialog setTemperatureUnitDialog;
+    private SectionsPagerAdapter mSectionsPagerAdapter; // contains the adapter used to swipe through fragments
+    private Dialog changeDateDialog;                    // contains dialog to change the date to view data from
+    private Dialog setTemperatureUnitDialog;            // contains dialog to change the temperature unit used in the app
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -70,8 +74,13 @@ public class WeatherDataActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        // initialize the dialogs
         changeDateDialog = new Dialog(this);
         setTemperatureUnitDialog = new Dialog(this);
+
+        // get the latest weather data
+        HttpRequestModel request= new HttpRequestModel();
+        new FetchDataAsync(this).execute(request);
 
 
 
@@ -104,7 +113,6 @@ public class WeatherDataActivity extends AppCompatActivity {
             case R.id.action_date_picker:
                 // let the user pick a different solar day
                 showChooseNewSolDialog();
-                //Toast.makeText(WeatherDataActivity.this, "Show dialog to pick different date", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_home:
                 // get latest weather data
@@ -116,7 +124,6 @@ public class WeatherDataActivity extends AppCompatActivity {
                 return true;
             case R.id.action_settings:
                 showSetTemperatureUnitDialog();
-                //Toast.makeText(WeatherDataActivity.this,"Show dialog to change temperature settings", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -124,14 +131,24 @@ public class WeatherDataActivity extends AppCompatActivity {
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+     * Placeholder fragment containing the weatherDataFragment
      */
     public static class PlaceholderFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+        //private static final String ARG_SECTION_NUMBER = "section_number";
+        private TextView earthDateTextView;     // contains the earth date of the data
+        private TextView solTextView;           // contains the martian solar day of the data
+        private TextView minTempTextView;       // contains the minimum temperature
+        private TextView maxTempTextView;      // contains the maximum temperature
+        private TextView windSpeedTextView;     // contains the wind speed (unknown scale)
+        private TextView statusDataTextView;    // contains the status of the weather
+        private TextView seasonDataTextView;    // contains the martian season
+        private TextView sunriseTextView;       // contains the earth date and time on the martian sunrise
+        private TextView sunsetTextView;        // contains the earth date and time on the martian sunset
+        private TextView pressureTextView;      // contains the atmospheric pressure on mars
 
         public PlaceholderFragment() {
         }
@@ -142,9 +159,9 @@ public class WeatherDataActivity extends AppCompatActivity {
          */
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
+            //Bundle args = new Bundle();
+            //args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            //fragment.setArguments(args);
             return fragment;
         }
 
@@ -152,11 +169,23 @@ public class WeatherDataActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_weather_data, container, false);
+
+            earthDateTextView = (TextView)rootView.findViewById(R.id.earthDateTextView);
+            solTextView = (TextView)rootView.findViewById(R.id.solDateTextView);
+            minTempTextView = (TextView)rootView.findViewById(R.id.minTempTextView);
+            maxTempTextView = (TextView)rootView.findViewById(R.id.maxTempTextView);
+            windSpeedTextView = (TextView)rootView.findViewById(R.id.windSpeedTextView);
+            statusDataTextView = (TextView)rootView.findViewById(R.id.statusTextView);
+            seasonDataTextView = (TextView)rootView.findViewById(R.id.seasonTextView);
+            sunriseTextView = (TextView)rootView.findViewById(R.id.sunriseTextView);
+            sunsetTextView = (TextView)rootView.findViewById(R.id.sunsetTextView);
+            pressureTextView = (TextView)rootView.findViewById(R.id.pressureTextView);
             //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
     }
+
     /**
      * This method displays a dialog where the user can choose
      * a solar day to see the weather data from.
@@ -234,50 +263,4 @@ public class WeatherDataActivity extends AppCompatActivity {
         setTemperatureUnitDialog.show();
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-
-            switch (position) {
-                case 0:
-                    // Return a PlaceholderFragment (defined as a static inner class below).
-                    return PlaceholderFragment.newInstance(position + 1);
-                case 1:
-                    return GraphDataFragment.newInstance();
-                case 2:
-                    return NewsFeedFragment.newInstance();
-            }
-            return null;
-
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-
-        /*@Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
-        }*/
-    }
 }

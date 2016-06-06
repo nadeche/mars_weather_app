@@ -85,30 +85,35 @@
             style="@style/TextBox.RightSpace"
             android:layout_column="2"
             android:layout_row="0"
+            android:id="@+id/solDateTextView"
             android:text="1355"
             android:layout_columnWeight="0.5" />
         <TextView
             style="@style/TextBox.RightSpace"
             android:layout_column="2"
             android:layout_row="1"
+            android:id="@+id/earthDateTextView"
             android:text="03/06/2016"
             android:layout_columnWeight="0.5" />
         <TextView
             style="@style/TextBox.RightSpace"
             android:layout_column="2"
             android:layout_row="2"
+            android:id="@+id/sunriseTextView"
             android:text="20.50"
             android:layout_columnWeight="0.5"/>
         <TextView
             style="@style/TextBox.RightSpace"
             android:layout_column="2"
             android:layout_row="3"
+            android:id="@+id/sunsetTextView"
             android:text="05.30"
             android:layout_columnWeight="0.5"/>
         <TextView
             style="@style/TextBox.RightSpace"
             android:layout_column="2"
             android:layout_row="4"
+            android:id="@+id/seasonTextView"
             android:text="6"
             android:layout_columnWeight="0.5"/>
         <ImageView
@@ -177,30 +182,35 @@
             style="@style/TextBox"
             android:layout_column="5"
             android:layout_row="0"
+            android:id="@+id/maxTempTextView"
             android:text="-15 C"
             android:layout_columnWeight="0.5" />
         <TextView
             style="@style/TextBox"
             android:layout_column="5"
             android:layout_row="1"
+            android:id="@+id/minTempTextView"
             android:text="-74 C"
             android:layout_columnWeight="0.5" />
         <TextView
             style="@style/TextBox"
             android:layout_column="5"
             android:layout_row="2"
+            android:id="@+id/windSpeedTextView"
             android:text="2"
             android:layout_columnWeight="0.5"/>
         <TextView
             style="@style/TextBox"
             android:layout_column="5"
             android:layout_row="3"
+            android:id="@+id/pressureTextView"
             android:text="738.0"
             android:layout_columnWeight="0.5"/>
         <TextView
             style="@style/TextBox"
             android:layout_column="5"
             android:layout_row="4"
+            android:id="@+id/statusTextView"
             android:text="Sunny"
             android:layout_columnWeight="0.5"/>
     </GridLayout>
@@ -216,125 +226,4 @@
         android:paddingTop="5dp"
         android:layout_above="@id/weatherDataGrid"
         android:id="@+id/textView2" />
-
-    <!--<LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:id="@+id/dataLeft"
-        android:layout_alignParentLeft="true">
-        <LinearLayout
-            style="@style/TextBox">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Martian sol"
-                android:paddingRight="8dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Earth date"
-                android:paddingRight="8dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sun rise"
-                android:paddingRight="8dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sun set"
-                android:paddingRight="8dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Season"
-                android:paddingRight="8dp"/>
-        </LinearLayout>
-        <LinearLayout
-            style="@style/TextBox">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1355"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="03/06/2016"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="20.50"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="05.30"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="6"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/dataRight"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true">
-        <LinearLayout
-            style="@style/TextBox">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Max temp"
-                android:paddingRight="8dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Min temp"
-                android:paddingRight="8dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Wind speed"
-                android:paddingRight="8dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pressure"
-                android:paddingRight="8dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Status"
-                android:paddingRight="8dp"/>
-        </LinearLayout>
-        <LinearLayout
-            style="@style/TextBox">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="-15"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="-74"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="738.0"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sunny"/>
-        </LinearLayout>
-    </LinearLayout>-->
 </RelativeLayout>

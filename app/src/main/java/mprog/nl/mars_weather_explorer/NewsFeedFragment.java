@@ -9,8 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 /**
- * Created by Nadeche on 3-6-2016.
+ * Created by Nadeche
  */
+
+// TODO Add custom list adapter and layout
+// TODO Add onListItemClickListener to new activity to view news item
+// TODO Add home and back function in the actionbar from newsItem
+// TODO Add update functionality
+
 public class NewsFeedFragment extends Fragment {
 
     public static NewsFeedFragment newInstance (){

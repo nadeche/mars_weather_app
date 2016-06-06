@@ -22,6 +22,20 @@ import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.Toast;
 
+// TODO Add menu for search on sol or date
+// TODO Add dialog for search on date
+// TODO Change actionbar for other fragments
+// TODO Add actionbar function: icon and dialog for date search in graph data fragment
+// TODO Create dot navigation at the bottom
+// TODO Organize weatherDataActivity in more classes
+// TODO Add dialog to change photo
+// TODO Make internet connection > manifest and asyncTask class
+// TODO Make request class
+// TODO Make data model classes
+// TODO Make method to handle Json to data models
+// TODO Create load photo method (save?)
+// TODO Handle the save of settings with sharedPref
+
 public class WeatherDataActivity extends AppCompatActivity {
 
     /**

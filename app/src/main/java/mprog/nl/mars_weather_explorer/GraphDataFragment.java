@@ -6,8 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by Nadeche on 2-6-2016.
+ * Created by Nadeche
  */
+// TODO Add graphView library and incorporate
+// TODO Add to actionbar search date range function
+
 public class GraphDataFragment extends android.support.v4.app.Fragment{
 
     public static GraphDataFragment newInstance(){

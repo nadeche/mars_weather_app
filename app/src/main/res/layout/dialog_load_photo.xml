@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/camerasListView">
+    </ListView>
+
+    <NumberPicker
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/solNumberPicker"
+        android:layout_gravity="center_horizontal"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cancel"
+            android:layout_gravity="left"
+            android:layout_marginRight="7dp"/>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:id="@+id/getButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="get data" />
+    </LinearLayout>
+
+</LinearLayout>

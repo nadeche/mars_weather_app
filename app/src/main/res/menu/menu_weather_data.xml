@@ -4,12 +4,6 @@
     tools:context="mprog.nl.mars_weather_explorer.WeatherDataActivity">
 
     <item
-        android:id="@+id/action_home"
-        android:icon="@drawable/ic_home"
-        android:title="Home"
-        app:showAsAction="always"/>
-
-    <item
         android:id="@+id/action_photo_load"
         android:icon="@drawable/ic_photo_camera"
         android:title="Load a different photo"
@@ -22,8 +16,8 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/action_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home"
+        app:showAsAction="ifRoom"/>
 </menu>

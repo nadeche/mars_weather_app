@@ -28,7 +28,7 @@ public class GraphDataFragment extends BaseFragmentSuper{
     }
 
     @Override
-    public void setJsonToView(JSONObject jsonObject) {
+    public void setJsonToView(JSONObject jsonObject, HttpRequestModel requestModel) {
 
     }
 }

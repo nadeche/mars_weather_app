@@ -1,13 +1,24 @@
 package mprog.nl.mars_weather_explorer;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,6 +46,8 @@ public class WeatherDataFragment extends BaseFragmentSuper {
     private TextView sunriseTextView;       // contains the earth date and time on the martian sunrise
     private TextView sunsetTextView;        // contains the earth date and time on the martian sunset
     private TextView pressureTextView;      // contains the atmospheric pressure on mars
+    private Dialog changeDateDialog;        // contains dialog to change the date to view data from
+    private Dialog loadPhotoDialog;         // dialog to load a particular photo from curiosity
 
     public WeatherDataFragment() {
     }
@@ -55,6 +68,10 @@ public class WeatherDataFragment extends BaseFragmentSuper {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_weather_data, container, false);
+        setHasOptionsMenu(true);
+
+        changeDateDialog = new Dialog(getActivity());
+        loadPhotoDialog = new Dialog(getActivity());
 
         earthDateTextView = (TextView)rootView.findViewById(R.id.earthDateTextView);
         solTextView = (TextView)rootView.findViewById(R.id.solDateTextView);
@@ -70,6 +87,39 @@ public class WeatherDataFragment extends BaseFragmentSuper {
         //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
         // get the latest weather data
+        getLatestWeatherData();
+
+        return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_weather_data, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_date_picker:
+                // let the user pick a different solar day
+                showChooseNewSolDialog();
+                return true;
+            case R.id.action_home:
+                // get the latest weather data
+                getLatestWeatherData();
+                return true;
+            case R.id.action_photo_load:
+                showLoadPhotoDialog();
+                //Toast.makeText(getActivity(),"Change the photo in the background", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    /**
+     * This method gets the latest weather data from the API
+     * */
+    private void getLatestWeatherData() {
         HttpRequestModel request= null;
         try {
             request = new HttpRequestModel();
@@ -77,20 +127,108 @@ public class WeatherDataFragment extends BaseFragmentSuper {
             e.printStackTrace();
         }
         new FetchDataAsync(this).execute(request);
+    }
 
-        return rootView;
+    private void showLoadPhotoDialog(){
+        loadPhotoDialog.setContentView(R.layout.dialog_load_photo);
+        loadPhotoDialog.setTitle("Curiosity cameras");
+
+        String[]dummyListItems = {"News item 1", "News item 2", "News item 3", "News item 4"};
+        ListView camerasListView = (ListView)loadPhotoDialog.findViewById(R.id.camerasListView);
+        camerasListView.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dummyListItems));
+
+        // TODO make init number picker method
+        // initialize number picker with the latest solar day as a maximum
+        final NumberPicker numberPicker = (NumberPicker)loadPhotoDialog.findViewById(R.id.solNumberPicker);
+        // TODO handle latest sol as maximum
+        numberPicker.setMaxValue(1355);
+        numberPicker.setMinValue(15);
+        numberPicker.setWrapSelectorWheel(true);
+
+        Button cancelButton = (Button)loadPhotoDialog.findViewById(R.id.cancelButton);
+        Button getButton = (Button)loadPhotoDialog.findViewById(R.id.getButton);
+
+        getButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),String.valueOf(numberPicker.getValue()),Toast.LENGTH_SHORT).show();
+                loadPhotoDialog.dismiss();
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadPhotoDialog.dismiss();
+            }
+        });
+        loadPhotoDialog.show();
+    }
+
+    /**
+     * This method displays a dialog where the user can choose
+     * a solar day to see the weather data from.
+     * When a day is confirmed the data is fetched directly.
+     * */
+    private void showChooseNewSolDialog() {
+
+        changeDateDialog.setContentView(R.layout.dialog_change_date);
+        changeDateDialog.setTitle("Change date");
+
+        // initialize number picker with the latest solar day as a maximum
+        final NumberPicker numberPicker = (NumberPicker)changeDateDialog.findViewById(R.id.solNumberPicker);
+        // TODO handle latest sol as maximum
+        numberPicker.setMaxValue(1355);
+        numberPicker.setMinValue(15);
+        numberPicker.setWrapSelectorWheel(true);
+
+        Button cancelButton = (Button)changeDateDialog.findViewById(R.id.cancelButton);
+        Button getButton = (Button)changeDateDialog.findViewById(R.id.getButton);
+
+        getButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // get the data from the entered solar day
+                try {
+                    HttpRequestModel request = new HttpRequestModel(numberPicker.getValue());
+                    new FetchDataAsync(WeatherDataFragment.this).execute(request);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                changeDateDialog.dismiss();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeDateDialog.dismiss();
+            }
+        });
+        changeDateDialog.show();
     }
 
     @Override
-    public void setJsonToView(JSONObject jsonObject) {
-        // TODO handle empty Json object
+    public void setJsonToView(JSONObject jsonObject, HttpRequestModel requestModel) {
         // TODO handle data from a particular date
 
-        JSONObject weatherDataJsonObj;
-        // when the latest data was requested the weather data can be found in the report object
-
         try {
-            weatherDataJsonObj = jsonObject.getJSONObject("report");
+            // when the returned Json object of a requested solar day is empty quit this action
+            if(!requestModel.latestWeatherData && jsonObject.getInt("count") == 0) {
+                Toast.makeText(getActivity(), getText(R.string.toast_no_data), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            JSONObject weatherDataJsonObj;
+            // when the latest data was requested the weather data can be found in the report object
+            if(requestModel.latestWeatherData) {
+                weatherDataJsonObj = jsonObject.getJSONObject("report");
+            }
+            /* when a particular solar day was requested there is an extra Json array to get
+             * which resides in the results object*/
+            else {
+                JSONArray resultArrayJsonObject = jsonObject.getJSONArray("results");
+                weatherDataJsonObj = resultArrayJsonObject.getJSONObject(0);
+            }
 
             WeatherDataModel weatherData = new WeatherDataModel();
 
@@ -102,11 +240,11 @@ public class WeatherDataFragment extends BaseFragmentSuper {
 
             // save the other returned data in a weatherDataModel
             weatherData.setSol(weatherDataJsonObj.getLong("sol"));
-            weatherData.setMax_temp_C(weatherDataJsonObj.getLong("max_temp"));
-            weatherData.setMin_temp_C(weatherDataJsonObj.getLong("min_temp"));
-            weatherData.setMax_temp_F(weatherDataJsonObj.getLong("max_temp_fahrenheit"));
-            weatherData.setMin_temp_F(weatherDataJsonObj.getLong("min_temp_fahrenheit"));
-            weatherData.setPressure(weatherDataJsonObj.getLong("pressure"));
+            weatherData.setMax_temp_C(weatherDataJsonObj.getDouble("max_temp"));
+            weatherData.setMin_temp_C(weatherDataJsonObj.getDouble("min_temp"));
+            weatherData.setMax_temp_F(weatherDataJsonObj.optDouble("max_temp_fahrenheit"));
+            weatherData.setMin_temp_F(weatherDataJsonObj.optDouble("min_temp_fahrenheit"));
+            weatherData.setPressure(weatherDataJsonObj.getDouble("pressure"));
             weatherData.setAtmo_opacity(weatherDataJsonObj.getString("atmo_opacity"));
             weatherData.setWind_speed(weatherDataJsonObj.optLong("wind_speed"));
             weatherData.setSeason(weatherDataJsonObj.getString("season"));
@@ -118,8 +256,6 @@ public class WeatherDataFragment extends BaseFragmentSuper {
         } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
-
-
     }
 
     /**
@@ -146,5 +282,9 @@ public class WeatherDataFragment extends BaseFragmentSuper {
 
         windSpeedTextView.setText(String.valueOf(weatherData.getWind_speed()));
         seasonDataTextView.setText(weatherData.getSeason());
+        pressureTextView.setText(String.valueOf(weatherData.getPressure()));
+        // TODO handle layout for date and time to fit gridLayout
+        //sunriseTextView.setText(weatherData.getSunrise());
+        //sunsetTextView.setText(weatherData.getSunset());
     }
 }

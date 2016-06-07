@@ -30,6 +30,7 @@ import java.util.Date;
 public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject> {
 
     BaseFragmentSuper fragment;
+    HttpRequestModel requestModel;
 
 
     FetchDataAsync (BaseFragmentSuper context) {
@@ -46,10 +47,10 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject
     protected JSONObject doInBackground(HttpRequestModel... requestModels) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
-
+        requestModel = requestModels[0];
 
         try {
-            urlConnection = (HttpURLConnection) requestModels[0].getUrl().openConnection();
+            urlConnection = (HttpURLConnection) requestModel.getUrl().openConnection();
             urlConnection.connect();
 
             InputStream stream = urlConnection.getInputStream();
@@ -137,6 +138,6 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject
         }*/
 
         // display fetched weather data
-        fragment.setJsonToView(jsonObject);
+        fragment.setJsonToView(jsonObject, requestModel);
     }
 }

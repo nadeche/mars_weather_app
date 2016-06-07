@@ -22,6 +22,13 @@ public class HttpRequestModel {
         url = new URL("http://marsweather.ingenology.com/v1/latest/?format=json");
     }
 
+    // constructor to get weather data from a particular Martian solar day
+    HttpRequestModel(int sol) throws MalformedURLException {
+        latestWeatherData = false;
+        this.sol = sol;
+        url = new URL("http://marsweather.ingenology.com/v1/archive/?sol=" + sol + "&format=json");
+    }
+
     public URL getUrl() {
         return url;
     }

@@ -22,5 +22,5 @@ public abstract class BaseFragmentSuper extends Fragment {
         progressDialog.dismiss();
     }
 
-    public abstract void setJsonToView(JSONObject jsonObject);
+    public abstract void setJsonToView(JSONObject jsonObject, HttpRequestModel requestModel);
 }

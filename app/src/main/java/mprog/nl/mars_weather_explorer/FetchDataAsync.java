@@ -67,47 +67,6 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject
             // convert complete data to Json object
             return new JSONObject(builder.toString());
 
-            /*// when the returned Json object of a requested solar day is empty quit this action
-            if(!requestModels[0].latestWeatherData && reportJsonObject.getInt("count") == 0) {
-                return null;
-            }
-
-            JSONObject weatherDataJsonObj;
-            // when the latest data was requested the weather data can be found in the report object
-            if(requestModels[0].latestWeatherData) {
-                weatherDataJsonObj = reportJsonObject.getJSONObject("report");
-            }
-            /* when a particular solar day was requested there is an extra Json array to get
-             * which resides in the results object
-            else {
-                JSONArray resultArrayJsonObject = reportJsonObject.getJSONArray("results");
-                weatherDataJsonObj = resultArrayJsonObject.getJSONObject(0);
-            }
-
-            WeatherDataModel weatherData = new WeatherDataModel();
-
-            // convert the returned terrestrial date to a EU date format and save it in weatherData
-            SimpleDateFormat originalDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-            Date date = originalDateFormat.parse(weatherDataJsonObj.getString("terrestrial_date"));
-            weatherData.setTerrestrial_date(dateFormat.format(date));
-
-            // save the other returned data in a weatherDataModel
-            weatherData.setSol(weatherDataJsonObj.getLong("sol"));
-            weatherData.setMax_temp_C(weatherDataJsonObj.getLong("max_temp"));
-            weatherData.setMin_temp_C(weatherDataJsonObj.getLong("min_temp"));
-            weatherData.setMax_temp_F(weatherDataJsonObj.getLong("max_temp_fahrenheit"));
-            weatherData.setMin_temp_F(weatherDataJsonObj.getLong("min_temp_fahrenheit"));
-            weatherData.setPressure(weatherDataJsonObj.getLong("pressure"));
-            weatherData.setAtmo_opacity(weatherDataJsonObj.getString("atmo_opacity"));
-            weatherData.setWind_speed(weatherDataJsonObj.optLong("wind_speed"));
-            weatherData.setSeason(weatherDataJsonObj.getString("season"));
-            // TODO Handle date and time format
-            weatherData.setSunrise(weatherDataJsonObj.getString("sunrise"));
-            weatherData.setSunset(weatherDataJsonObj.getString("sunset"));
-
-            return weatherData;*/
-
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         } finally {

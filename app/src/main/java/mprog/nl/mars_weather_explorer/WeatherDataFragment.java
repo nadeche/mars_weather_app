@@ -2,6 +2,7 @@ package mprog.nl.mars_weather_explorer;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.NumberPicker;
@@ -70,6 +72,7 @@ public class WeatherDataFragment extends BaseFragmentSuper {
 
         changeDateDialog = new Dialog(getActivity());
         loadPhotoDialog = new Dialog(getActivity());
+        loadPhotoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         earthDateTextView = (TextView)rootView.findViewById(R.id.earthDateTextView);
         solTextView = (TextView)rootView.findViewById(R.id.solDateTextView);
@@ -128,7 +131,6 @@ public class WeatherDataFragment extends BaseFragmentSuper {
     }
 
     private void showLoadPhotoDialog(){
-        loadPhotoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         loadPhotoDialog.setContentView(R.layout.dialog_load_photo);
 
         // initialise spinner to choose camera
@@ -145,13 +147,34 @@ public class WeatherDataFragment extends BaseFragmentSuper {
         numberPicker.setMinValue(15);
         numberPicker.setWrapSelectorWheel(true);
 
+        final String[] camera = new String[1];
+        camerasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                camera[0] = (String) parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         Button cancelButton = (Button)loadPhotoDialog.findViewById(R.id.cancelButton);
         Button getButton = (Button)loadPhotoDialog.findViewById(R.id.loadPhotoButton);
 
         getButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),String.valueOf(numberPicker.getValue()),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), camera[0] + String.valueOf(numberPicker.getValue()),Toast.LENGTH_SHORT).show();
+                Log.d("camera", camera[0]);
+
+                try {
+                    HttpRequestModel request = new HttpRequestModel(numberPicker.getValue(), camera[0]);
+                    new FetchDataAsync(WeatherDataFragment.this).execute(request);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
                 loadPhotoDialog.dismiss();
             }
         });
@@ -209,7 +232,28 @@ public class WeatherDataFragment extends BaseFragmentSuper {
 
     @Override
     public void setJsonToView(JSONObject jsonObject, HttpRequestModel requestModel) {
-        // TODO handle data from a particular date
+        if(requestModel.photoRequest){
+            setJsonPhotoToView(jsonObject, requestModel);
+        }
+        else {
+            setJsonWeatherDataToView(jsonObject,requestModel);
+        }
+    }
+
+    private void setJsonPhotoToView(JSONObject jsonObject, HttpRequestModel requestModel) {
+
+        try {
+            JSONArray photosJsonArray = jsonObject.getJSONArray("photos");
+            JSONObject firstPhotoJsonObject = photosJsonArray.getJSONObject(0);
+            String photoLink = firstPhotoJsonObject.getString("img_src");
+            Log.d("img_src", photoLink);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setJsonWeatherDataToView(JSONObject jsonObject, HttpRequestModel requestModel){
+        // TODO handle data from a particular earth date
 
         try {
             // when the returned Json object of a requested solar day is empty quit this action

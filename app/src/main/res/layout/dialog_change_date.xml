@@ -2,10 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:layout_marginBottom="@dimen/activity_vertical_margin"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin">
+    android:layout_margin="@dimen/dialog_margin">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +12,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Change Martian Solar day"
+            android:text="Change Martian solar day"
             android:textSize="15sp"
             android:layout_gravity="center_horizontal"/>
 
@@ -35,16 +32,16 @@
                 android:id="@+id/cancelButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="cancel"
+                android:text="Cancel"
                 android:layout_gravity="left"
                 android:layout_marginRight="7dp"/>
 
             <Button
                 style="?android:attr/buttonStyleSmall"
-                android:id="@+id/getButton"
+                android:id="@+id/loadPhotoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="get data"
+                android:text="Get data"
                 android:layout_marginLeft="7dp"/>
         </LinearLayout>
     </LinearLayout>

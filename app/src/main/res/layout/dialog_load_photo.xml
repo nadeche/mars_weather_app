@@ -2,22 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dialog_margin">
 
-    <ListView
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Load a photo from Curiosity"
+        android:textSize="20sp"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_margin="@dimen/dialog_margin"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select camera"
+        android:layout_marginBottom="6dp"
+        android:layout_gravity="center_horizontal"/>
+    <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/camerasListView">
-    </ListView>
+        android:id="@+id/camerasSpinner"
+        android:layout_marginBottom="25dp">
+    </Spinner>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Martian solar day"
+        android:layout_marginBottom="4dp"
+        android:layout_gravity="center_horizontal"/>
     <NumberPicker
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/solNumberPicker"
         android:layout_gravity="center_horizontal"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal">
@@ -26,16 +48,15 @@
             android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="cancel"
-            android:layout_gravity="left"
+            android:text="Cancel"
             android:layout_marginRight="7dp"/>
 
         <Button
             style="?android:attr/buttonStyleSmall"
-            android:id="@+id/getButton"
+            android:id="@+id/loadPhotoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="get data" />
+            android:text="Load photo" />
     </LinearLayout>
 
 </LinearLayout>

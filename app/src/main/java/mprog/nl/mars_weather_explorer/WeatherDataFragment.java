@@ -1,20 +1,18 @@
 package mprog.nl.mars_weather_explorer;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -130,23 +128,25 @@ public class WeatherDataFragment extends BaseFragmentSuper {
     }
 
     private void showLoadPhotoDialog(){
+        loadPhotoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         loadPhotoDialog.setContentView(R.layout.dialog_load_photo);
-        loadPhotoDialog.setTitle("Curiosity cameras");
 
-        String[]dummyListItems = {"News item 1", "News item 2", "News item 3", "News item 4"};
-        ListView camerasListView = (ListView)loadPhotoDialog.findViewById(R.id.camerasListView);
-        camerasListView.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dummyListItems));
+        // initialise spinner to choose camera
+        Spinner camerasSpinner = (Spinner)loadPhotoDialog.findViewById(R.id.camerasSpinner);
+        ArrayAdapter<CharSequence> cameraListAdapter = ArrayAdapter.createFromResource(getActivity(),R.array.curiosity_cameras_list, android.R.layout.simple_spinner_item);
+        cameraListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        camerasSpinner.setAdapter(cameraListAdapter);
 
         // TODO make init number picker method
         // initialize number picker with the latest solar day as a maximum
         final NumberPicker numberPicker = (NumberPicker)loadPhotoDialog.findViewById(R.id.solNumberPicker);
         // TODO handle latest sol as maximum
-        numberPicker.setMaxValue(1355);
+        numberPicker.setMaxValue(1362);
         numberPicker.setMinValue(15);
         numberPicker.setWrapSelectorWheel(true);
 
         Button cancelButton = (Button)loadPhotoDialog.findViewById(R.id.cancelButton);
-        Button getButton = (Button)loadPhotoDialog.findViewById(R.id.getButton);
+        Button getButton = (Button)loadPhotoDialog.findViewById(R.id.loadPhotoButton);
 
         getButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,7 +182,7 @@ public class WeatherDataFragment extends BaseFragmentSuper {
         numberPicker.setWrapSelectorWheel(true);
 
         Button cancelButton = (Button)changeDateDialog.findViewById(R.id.cancelButton);
-        Button getButton = (Button)changeDateDialog.findViewById(R.id.getButton);
+        Button getButton = (Button)changeDateDialog.findViewById(R.id.loadPhotoButton);
 
         getButton.setOnClickListener(new View.OnClickListener() {
             @Override

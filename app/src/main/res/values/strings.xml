@@ -5,4 +5,13 @@
     <string name="loading">Loading…</string>
     <string name="toast_no_data">No data available for this date</string>
     <string name="no_data">No data</string>
+    <string-array name="curiosity_cameras_list">
+        <item>Front Hazard Avoidance Camera</item>
+        <item>Rear Hazard Avoidance Camera</item>
+        <item>Mast Camera</item>
+        <item>Chemistry and Camera Complex</item>
+        <item>Mars Hand Lens Imager</item>
+        <item>Mars Descent Imager</item>
+        <item>Navigation Camera</item>
+    </string-array>
 </resources>

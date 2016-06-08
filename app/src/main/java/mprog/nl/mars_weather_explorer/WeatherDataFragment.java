@@ -247,15 +247,15 @@ public class WeatherDataFragment extends BaseFragmentSuper {
 
         if (jsonObject != null){
             try {
-            Log.d("json", jsonObject.toString());
-            JSONArray photosJsonArray = jsonObject.getJSONArray("photos");
-            JSONObject firstPhotoJsonObject = photosJsonArray.getJSONObject(0);
-            String photoLink = firstPhotoJsonObject.getString("img_src");
-            new DownloadPhotoAsync(roverImageView).execute(photoLink);
-            Log.d("img_src", photoLink);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }}
+                JSONArray photosJsonArray = jsonObject.getJSONArray("photos");
+                JSONObject firstPhotoJsonObject = photosJsonArray.getJSONObject(0);
+                String photoLink = firstPhotoJsonObject.getString("img_src");
+                new DownloadPhotoAsync(roverImageView).execute(photoLink);
+                Log.d("img_src", photoLink);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 

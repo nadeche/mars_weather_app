@@ -55,7 +55,6 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject
             urlConnection.connect();
 
             InputStream stream = urlConnection.getInputStream();
-            Log.d("inputStream return", stream.toString());
 
             reader = new BufferedReader(new InputStreamReader(stream));
             StringBuilder builder = new StringBuilder();

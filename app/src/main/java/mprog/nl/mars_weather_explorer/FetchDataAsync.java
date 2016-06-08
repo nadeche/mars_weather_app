@@ -6,6 +6,7 @@ package mprog.nl.mars_weather_explorer;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -54,6 +55,7 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject
             urlConnection.connect();
 
             InputStream stream = urlConnection.getInputStream();
+            Log.d("inputStream return", stream.toString());
 
             reader = new BufferedReader(new InputStreamReader(stream));
             StringBuilder builder = new StringBuilder();
@@ -89,12 +91,6 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject
         super.onPostExecute(jsonObject);
 
         fragment.hideProgressDialog();
-
-        // when doInBackground has quit because there was no data, let the user know
-        /*if(weatherData == null){
-            Toast.makeText(fragment, fragment.getText(R.string.toast_no_data), Toast.LENGTH_SHORT).show();
-            return;
-        }*/
 
         // display fetched weather data
         fragment.setJsonToView(jsonObject, requestModel);

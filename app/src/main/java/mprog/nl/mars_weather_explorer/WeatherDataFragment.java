@@ -13,6 +13,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -46,6 +47,7 @@ public class WeatherDataFragment extends BaseFragmentSuper {
     private TextView sunriseTextView;       // contains the earth date and time on the martian sunrise
     private TextView sunsetTextView;        // contains the earth date and time on the martian sunset
     private TextView pressureTextView;      // contains the atmospheric pressure on mars
+    private ImageView roverImageView;       // view reference to rover photo in background of weather data
     private Dialog changeDateDialog;        // contains dialog to change the date to view data from
     private Dialog loadPhotoDialog;         // dialog to load a particular photo from curiosity
 
@@ -84,6 +86,7 @@ public class WeatherDataFragment extends BaseFragmentSuper {
         sunriseTextView = (TextView)rootView.findViewById(R.id.sunriseTextView);
         sunsetTextView = (TextView)rootView.findViewById(R.id.sunsetTextView);
         pressureTextView = (TextView)rootView.findViewById(R.id.pressureTextView);
+        roverImageView = (ImageView)rootView.findViewById(R.id.roverImageView);
         //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
@@ -242,21 +245,26 @@ public class WeatherDataFragment extends BaseFragmentSuper {
 
     private void setJsonPhotoToView(JSONObject jsonObject, HttpRequestModel requestModel) {
 
-        try {
+        if (jsonObject != null){
+            try {
+            Log.d("json", jsonObject.toString());
             JSONArray photosJsonArray = jsonObject.getJSONArray("photos");
             JSONObject firstPhotoJsonObject = photosJsonArray.getJSONObject(0);
             String photoLink = firstPhotoJsonObject.getString("img_src");
+            new DownloadPhotoAsync(roverImageView).execute(photoLink);
             Log.d("img_src", photoLink);
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }}
+
     }
 
     private void setJsonWeatherDataToView(JSONObject jsonObject, HttpRequestModel requestModel){
         // TODO handle data from a particular earth date
 
         try {
-            // when the returned Json object of a requested solar day is empty quit this action
+            /* when the returned Json object of a requested solar day is empty quit this action
+             * and let the user know.*/
             if(!requestModel.latestWeatherData && jsonObject.getInt("count") == 0) {
                 Toast.makeText(getActivity(), getText(R.string.toast_no_data), Toast.LENGTH_SHORT).show();
                 return;

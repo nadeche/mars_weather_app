@@ -54,19 +54,23 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject
             urlConnection = (HttpURLConnection) requestModel.getUrl().openConnection();
             urlConnection.connect();
 
-            InputStream stream = urlConnection.getInputStream();
+            // only when the http response code equals 200 aka ok process response
+            if(urlConnection.getResponseCode()  == 200) {
+                InputStream stream = urlConnection.getInputStream();
 
-            reader = new BufferedReader(new InputStreamReader(stream));
-            StringBuilder builder = new StringBuilder();
-            String line;
+                reader = new BufferedReader(new InputStreamReader(stream));
+                StringBuilder builder = new StringBuilder();
+                String line;
 
-            // convert received data to a string
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
+                // convert received data to a string
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line);
+                }
+
+                // convert complete data to Json object
+                return new JSONObject(builder.toString());
             }
 
-            // convert complete data to Json object
-            return new JSONObject(builder.toString());
 
         } catch (IOException | JSONException e) {
             e.printStackTrace();

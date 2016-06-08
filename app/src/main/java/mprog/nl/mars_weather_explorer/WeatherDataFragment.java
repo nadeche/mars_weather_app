@@ -236,27 +236,30 @@ public class WeatherDataFragment extends BaseFragmentSuper {
     @Override
     public void setJsonToView(JSONObject jsonObject, HttpRequestModel requestModel) {
         if(requestModel.photoRequest){
-            setJsonPhotoToView(jsonObject, requestModel);
+            setJsonPhotoToView(jsonObject);
         }
         else {
             setJsonWeatherDataToView(jsonObject,requestModel);
         }
     }
 
-    private void setJsonPhotoToView(JSONObject jsonObject, HttpRequestModel requestModel) {
+    private void setJsonPhotoToView(JSONObject jsonObject) {
 
-        if (jsonObject != null){
+        // TODO Fix placement of photo
+        // TODO Fix save of photo so it doesn't forget when swiping.
+        if(jsonObject != null){
             try {
                 JSONArray photosJsonArray = jsonObject.getJSONArray("photos");
                 JSONObject firstPhotoJsonObject = photosJsonArray.getJSONObject(0);
                 String photoLink = firstPhotoJsonObject.getString("img_src");
                 new DownloadPhotoAsync(roverImageView).execute(photoLink);
-                Log.d("img_src", photoLink);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-
+        else {
+            Toast.makeText(getActivity(), "No photos found for this camera or day", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void setJsonWeatherDataToView(JSONObject jsonObject, HttpRequestModel requestModel){

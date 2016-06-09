@@ -113,8 +113,8 @@ public class WeatherDataFragment extends BaseFragmentSuper {
                 getLatestWeatherData();
                 return true;
             case R.id.action_photo_load:
+                // let the user load a photo from Curiosity
                 showLoadPhotoDialog();
-                //Toast.makeText(getActivity(),"Change the photo in the background", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -133,6 +133,11 @@ public class WeatherDataFragment extends BaseFragmentSuper {
         new FetchDataAsync(this).execute(request);
     }
 
+    /**
+     * This method shows the user a dialog where they can choose a camera from Curiosity
+     * and a Martian solar day. By clicking on the load photo button the photo is loaded with FatchDataAsync().
+     * The cancel button closes the dialog and does nothing more.
+     * */
     private void showLoadPhotoDialog(){
         loadPhotoDialog.setContentView(R.layout.dialog_load_photo);
 
@@ -150,6 +155,7 @@ public class WeatherDataFragment extends BaseFragmentSuper {
         numberPicker.setMinValue(15);
         numberPicker.setWrapSelectorWheel(true);
 
+        // retrieve the selected camera from the spinner
         final String[] camera = new String[1];
         camerasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -166,12 +172,10 @@ public class WeatherDataFragment extends BaseFragmentSuper {
         Button cancelButton = (Button)loadPhotoDialog.findViewById(R.id.cancelButton);
         Button getButton = (Button)loadPhotoDialog.findViewById(R.id.loadPhotoButton);
 
+        // When load photo button is clicked make a FetchDataAsync request with the selected camera and number from the number picker
         getButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getActivity(), camera[0] + String.valueOf(numberPicker.getValue()),Toast.LENGTH_SHORT).show();
-                Log.d("camera", camera[0]);
-
                 try {
                     HttpRequestModel request = new HttpRequestModel(numberPicker.getValue(), camera[0]);
                     new FetchDataAsync(WeatherDataFragment.this).execute(request);
@@ -181,6 +185,7 @@ public class WeatherDataFragment extends BaseFragmentSuper {
                 loadPhotoDialog.dismiss();
             }
         });
+        // when the cancel button is clicked close the dialog
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -233,6 +238,12 @@ public class WeatherDataFragment extends BaseFragmentSuper {
         changeDateDialog.show();
     }
 
+    /**
+     * This method is an implementation of the abstract method setJsonToView() in BaseFragmentSuper.
+     * It is called by onPostExecute() in FetchDataAsync.
+     * This implementation checks whether a photo request or a weather data request was made,
+     * and calls the corresponding method to convert the JsonObject to data viewable on screen.
+     * */
     @Override
     public void setJsonToView(JSONObject jsonObject, HttpRequestModel requestModel) {
         if(requestModel.photoRequest){
@@ -243,6 +254,11 @@ public class WeatherDataFragment extends BaseFragmentSuper {
         }
     }
 
+    /**
+     * This method converts a received JsonObject to a .jpg url and loads the photo async with DownloadPhotoAsync.
+     * When the received object is empty it means there are not photos available for the requested camera and Martian solar day.
+     * In that case the user gets notified by a toast.
+     * */
     private void setJsonPhotoToView(JSONObject jsonObject) {
 
         // TODO Fix placement of photo
@@ -258,10 +274,15 @@ public class WeatherDataFragment extends BaseFragmentSuper {
             }
         }
         else {
-            Toast.makeText(getActivity(), "No photos found for this camera or day", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "No photos found for this camera and day", Toast.LENGTH_LONG).show();
         }
     }
 
+    /**
+     * This method converts a received JsonObject to a weatherDataModel. If the received object is empty
+     * it means there is no data available and the user gets notified by toast.
+     * When all goes well setWeatherDataToView() gets called to display the weather data.
+     * */
     private void setJsonWeatherDataToView(JSONObject jsonObject, HttpRequestModel requestModel){
         // TODO handle data from a particular earth date
 
@@ -316,7 +337,6 @@ public class WeatherDataFragment extends BaseFragmentSuper {
     /**
      * This method displays the received weather data to the screen.
      * It checks whether the weather status has a value.
-     * It gets the current date and time to display as update time.
      * */
     public void setDataToView(WeatherDataModel weatherData) {
 

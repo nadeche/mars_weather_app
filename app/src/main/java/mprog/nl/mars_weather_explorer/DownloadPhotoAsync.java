@@ -27,7 +27,6 @@ public class DownloadPhotoAsync extends AsyncTask <String, Void, Bitmap> {
             InputStream inputStream = new java.net.URL(urls[0]).openStream();
             photoBitMap = BitmapFactory.decodeStream(inputStream);
         } catch (Exception e) {
-            Log.e("Error", e.getMessage());
             e.printStackTrace();
         }
         return photoBitMap;

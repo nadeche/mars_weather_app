@@ -1,8 +1,5 @@
 package mprog.nl.mars_weather_explorer;
 
-/**
- * Created by Nadeche
- */
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -23,10 +20,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * This class runs in the background of the activity to get the weather data from the api.
+ * This class runs in the background of the activity to get data from the API's.
+ * When constructed it needs the fragment context from where the call is made
+ * to pass the data back later and handle the display of a progress dialog.
  * When called it needs to be passed a Request model to tell what kind of data to get.
  * While fetching data it displays a progress dialog to the user.
- * The data is saved in a WeatherDataModel from where the data is displayed on screen.
+ * The data is passed back to the calling fragment for further processing.
  * */
 public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject> {
 
@@ -95,7 +94,7 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject
 
         fragment.hideProgressDialog();
 
-        // display fetched weather data
+        // pass fetched Json back to the calling fragment for display on screen
         fragment.setJsonToView(jsonObject, requestModel);
     }
 }

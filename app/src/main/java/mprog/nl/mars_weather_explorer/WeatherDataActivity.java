@@ -36,6 +36,8 @@ import java.util.Date;
 // TODO Create load photo save in memory
 // TODO Handle the save of settings with sharedPref
 // TODO Add the latest SOL to the sharedPref and check later to update
+// TODO Fix FragmentManager warning "not updated inline; expected state 3 found 2"
+// TODO Handle fragment lifecycle loading data only when needed.
 
 public class WeatherDataActivity extends AppCompatActivity {
 

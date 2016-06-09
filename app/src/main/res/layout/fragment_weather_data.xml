@@ -9,10 +9,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/roverImageView"
-        android:src="@drawable/curiosity_sol1344_navcamleftb"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:adjustViewBounds="true"/>
+        android:adjustViewBounds="true"
+        android:layout_centerHorizontal="true"/>
 
     <GridLayout
         android:layout_width="match_parent"

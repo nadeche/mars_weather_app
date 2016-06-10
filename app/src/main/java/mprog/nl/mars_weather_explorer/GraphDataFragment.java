@@ -1,7 +1,12 @@
 package mprog.nl.mars_weather_explorer;
 
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,6 +31,8 @@ import java.util.ArrayList;
 
 public class GraphDataFragment extends BaseFragmentSuper{
 
+    //private Dialog dateRangeDialog; // dialog where the user can select from when till when to view temperature data from
+
     public static GraphDataFragment newInstance(){
         GraphDataFragment fragment = new GraphDataFragment();
         return fragment;
@@ -35,6 +42,8 @@ public class GraphDataFragment extends BaseFragmentSuper{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_graph_data, container, false);
+        setHasOptionsMenu(true);
+        //dateRangeDialog = new Dialog(getActivity());
         LineChart temperatureGraph = (LineChart) rootView.findViewById(R.id.temperatureLineGraph);
 
         temperatureGraph.setDescription("Min and Max temperature");
@@ -42,15 +51,35 @@ public class GraphDataFragment extends BaseFragmentSuper{
         XAxis xAxis = temperatureGraph.getXAxis();
         initAxis(xAxis);
         xAxis.setAvoidFirstLastClipping(true);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         YAxis yAxis = temperatureGraph.getAxisLeft();
-        yAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        yAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         yAxis.setDrawZeroLine(true);
 
         setupTemperatureGraph(temperatureGraph);
-        //setupDummyGraph(temperatureGraph);
 
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_graph_data, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_date_range:
+                showChooseDateRangeDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showChooseDateRangeDialog() {
+        DatePickerFragment testDatePicker = new DatePickerFragment();
+        testDatePicker.show(getFragmentManager() , "datePicker");
     }
 
     private void initAxis(AxisBase axis) {
@@ -71,31 +100,18 @@ public class GraphDataFragment extends BaseFragmentSuper{
         // setting up line data
         ArrayList<Entry> maxTemp = new ArrayList<Entry>();
         ArrayList<Entry> minTemp = new ArrayList<Entry>();
-        Entry max0 = new Entry(-12.000f, 0);
-        Entry max1 = new Entry(-14.000f, 1);
-        Entry max2 = new Entry(-20.000f, 2);
-        maxTemp.add(max0);
-        maxTemp.add(max1);
-        maxTemp.add(max2);
-
-        Entry min0 = new Entry(-72.000f, 0);
-        Entry min1 = new Entry(-78.000f, 1);
-        Entry min2 = new Entry(-65.000f, 2);
-        minTemp.add(min0);
-        minTemp.add(min1);
-        minTemp.add(min2);
+        int[] max = {-12, -14, -20};
+        createEntries(maxTemp,max);
+        int[] min = {-72, -78, -65};
+        createEntries(minTemp, min);
 
         // setting up line sets
         LineDataSet maxTempSet = new LineDataSet(maxTemp, "Maximum temperature");
-        maxTempSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        //maxTempSet.setLineWidth(2f);
-        //maxTempSet.setDrawValues(true);
-        //maxTempSet.setDrawCircles(true);
+        styleLine(maxTempSet);
+        maxTempSet.setColor(getResources().getColor(R.color.colorAccent));
+
         LineDataSet minTempSet = new LineDataSet(minTemp, "Minimum temperature");
-        minTempSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        //minTempSet.setLineWidth(5f);
-        //minTempSet.setDrawValues(true);
-        //minTempSet.setDrawCircles(true);
+        styleLine(minTempSet);
 
         // setting up graph
         ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
@@ -103,7 +119,10 @@ public class GraphDataFragment extends BaseFragmentSuper{
         dataSets.add(minTempSet);
 
         ArrayList<String> xValues = new ArrayList<String>();
-        xValues.add("3");xValues.add("4");xValues.add("5");xValues.add("6");
+        String[] xLabels = {"3", "4", "5"};
+        for (int i = 0; i < xLabels.length; i++) {
+            xValues.add(xLabels[i]);
+        }
 
         // setting lines to graph
         LineData graphLines = new LineData(xValues, dataSets);
@@ -111,36 +130,16 @@ public class GraphDataFragment extends BaseFragmentSuper{
         temperatureGraph.invalidate();
     }
 
-    private void setupDummyGraph(LineChart graph){
-        ArrayList<Entry> valsComp1 = new ArrayList<Entry>();
-        ArrayList<Entry> valsComp2 = new ArrayList<Entry>();
+    private void createEntries(ArrayList<Entry> entries, int[] yData) {
+        for (int i = 0; i < yData.length; i++) {
+            entries.add(new Entry((float) yData[i], i));
+        }
+    }
 
-        Entry c1e1 = new Entry(100.000f, 0); // 0 == quarter 1
-        valsComp1.add(c1e1);
-        Entry c1e2 = new Entry(50.000f, 1); // 1 == quarter 2 ...
-        valsComp1.add(c1e2);
-        // and so on ...
-
-        Entry c2e1 = new Entry(120.000f, 0); // 0 == quarter 1
-        valsComp2.add(c2e1);
-        Entry c2e2 = new Entry(110.000f, 1); // 1 == quarter 2 ...
-        valsComp2.add(c2e2);
-
-        LineDataSet setComp1 = new LineDataSet(valsComp1, "Company 1");
-        setComp1.setAxisDependency(YAxis.AxisDependency.LEFT);
-        LineDataSet setComp2 = new LineDataSet(valsComp2, "Company 2");
-        setComp2.setAxisDependency(YAxis.AxisDependency.LEFT);
-
-        // use the interface ILineDataSet
-        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        dataSets.add(setComp1);
-        dataSets.add(setComp2);
-
-        ArrayList<String> xVals = new ArrayList<String>();
-        xVals.add("1.Q"); xVals.add("2.Q"); xVals.add("3.Q"); xVals.add("4.Q");
-
-        LineData data = new LineData(xVals, dataSets);
-        graph.setData(data);
-        graph.invalidate(); // refresh
+    private void styleLine(LineDataSet lineSet){
+        lineSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        lineSet.setLineWidth(2f);
+        lineSet.setDrawValues(false);
+        lineSet.setDrawCircles(false);
     }
 }

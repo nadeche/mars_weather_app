@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
         <item name="android:datePickerStyle">@style/AppTheme.DatePicker</item>
+        <item name="android:alertDialogTheme">@style/AppTheme.AlertDialog</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -27,6 +28,12 @@
     
     <style name="AppTheme.DatePicker" parent="android:Widget.Material.DatePicker">
         <item name="android:datePickerMode">spinner</item>
+        <item name="android:calendarViewShown">false</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.AlertDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="TextBox">

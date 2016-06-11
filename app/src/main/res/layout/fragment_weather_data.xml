@@ -18,7 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:id="@+id/weatherDataGrid">
+        android:id="@+id/weatherDataGrid"
+        android:columnCount="7">
 
         <ImageView
             style="@style/TextBox"

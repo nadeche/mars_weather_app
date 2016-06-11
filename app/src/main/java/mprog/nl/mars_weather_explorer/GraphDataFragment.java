@@ -2,7 +2,9 @@ package mprog.nl.mars_weather_explorer;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -82,8 +85,38 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
     }
 
     private void showChooseDateRangeDialog() {
-        DatePickerFragment testDatePicker = new DatePickerFragment();
-        testDatePicker.show(getFragmentManager() , "datePicker");
+        //Dialog dateRangeDialog = new Dialog(getActivity());
+        //dateRangeDialog.setContentView(R.layout.dialog_choose_date_range);
+        //dateRangeDialog.setTitle("Choose a date range");
+
+        //DatePickerFragment testDatePicker = new DatePickerFragment();
+        //testDatePicker.show(getFragmentManager() , "datePicker");
+        //dateRangeDialog.show();
+
+        final AlertDialog.Builder dateRangeDialog = new AlertDialog.Builder(getActivity());
+        dateRangeDialog.setTitle("Choose a date range");
+        FrameLayout fl = new FrameLayout(getActivity());
+        dateRangeDialog.setView(fl);
+
+        //LayoutInflater inflater = getActivity().getLayoutInflater();
+        //View dialogLayout = inflater.inflate(R.layout.dialog_choose_date_range, null);
+        //dateRangeDialog.setView(dialogLayout);
+        dateRangeDialog.setPositiveButton("Load Graph", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        dateRangeDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = dateRangeDialog.create();
+        LayoutInflater inflater = dialog.getLayoutInflater();
+        inflater.inflate(R.layout.dialog_choose_date_range, fl);
+        dialog.show();
     }
 
     private void initAxis(AxisBase axis) {

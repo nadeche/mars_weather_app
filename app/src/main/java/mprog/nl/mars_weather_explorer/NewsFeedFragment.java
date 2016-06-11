@@ -2,6 +2,7 @@ package mprog.nl.mars_weather_explorer;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,9 @@ import org.json.JSONObject;
 // TODO Add home and back function in the actionbar from newsItem
 // TODO Add update functionality
 
-public class NewsFeedFragment extends BaseFragmentSuper {
+public class NewsFeedFragment extends BaseFragmentSuper implements FragmentLifecycle{
+
+    private String TAG = "NewsFeedFragment";
 
     public static NewsFeedFragment newInstance (){
         NewsFeedFragment fragment = new NewsFeedFragment();
@@ -35,11 +38,24 @@ public class NewsFeedFragment extends BaseFragmentSuper {
         String[]dummyListItems = {"News item 1", "News item 2", "News item 3", "News item 4"};
         newsFeedListView = (ListView)rootView.findViewById(R.id.newsFeedListView);
         newsFeedListView.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dummyListItems));
+
+        Log.d("onCreateView fragment", "2");
+
         return rootView;
     }
 
     @Override
     public void setJsonToView(JSONObject jsonObject, HttpRequestModel requestModel) {
 
+    }
+
+    @Override
+    public void onPauseFragment() {
+        Log.i(TAG, "onPauseFragment()");
+    }
+
+    @Override
+    public void onResumeFragment() {
+        Log.i(TAG, "onResumeFragment()");
     }
 }

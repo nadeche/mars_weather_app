@@ -71,6 +71,7 @@ public class WeatherDataActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(pageChangeListener);
 
         // initialize the dialogs
         setTemperatureUnitDialog = new Dialog(this);
@@ -89,6 +90,37 @@ public class WeatherDataActivity extends AppCompatActivity {
         });*/
 
     }
+
+    /**
+     * This will menage the lifecycle of the fragment pages.
+     * When in view it will call the fragments onResumeFragment implementation.
+     * When moving out of view it will call the fragments implementation of onPauseFragment.
+     * */
+    private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+
+        int currentPosition = 0;
+
+        @Override
+        public void onPageSelected(int newPosition) {
+
+            FragmentLifecycle fragmentToShow = (FragmentLifecycle)mSectionsPagerAdapter.getItem(newPosition);
+            fragmentToShow.onResumeFragment();
+
+            FragmentLifecycle fragmentToHide = (FragmentLifecycle)mSectionsPagerAdapter.getItem(currentPosition);
+            fragmentToHide.onPauseFragment();
+
+            currentPosition = newPosition;
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+    };
 
 
     @Override

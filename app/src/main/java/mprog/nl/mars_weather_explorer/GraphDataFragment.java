@@ -3,6 +3,7 @@ package mprog.nl.mars_weather_explorer;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,9 +30,10 @@ import java.util.ArrayList;
 // TODO Add graphView library and incorporate
 // TODO Add to actionbar search date range function
 
-public class GraphDataFragment extends BaseFragmentSuper{
+public class GraphDataFragment extends BaseFragmentSuper implements FragmentLifecycle{
 
     //private Dialog dateRangeDialog; // dialog where the user can select from when till when to view temperature data from
+    private String TAG = "GraphDataFragment";
 
     public static GraphDataFragment newInstance(){
         GraphDataFragment fragment = new GraphDataFragment();
@@ -57,6 +59,8 @@ public class GraphDataFragment extends BaseFragmentSuper{
         yAxis.setDrawZeroLine(true);
 
         setupTemperatureGraph(temperatureGraph);
+
+        Log.d("onCreateView fragment", "1");
 
         return rootView;
     }
@@ -100,7 +104,7 @@ public class GraphDataFragment extends BaseFragmentSuper{
         // setting up line data
         ArrayList<Entry> maxTemp = new ArrayList<Entry>();
         ArrayList<Entry> minTemp = new ArrayList<Entry>();
-        int[] max = {-12, -14, -20};
+        int[] max = {-12, -14, -20, -12};
         createEntries(maxTemp,max);
         int[] min = {-72, -78, -65};
         createEntries(minTemp, min);
@@ -119,7 +123,7 @@ public class GraphDataFragment extends BaseFragmentSuper{
         dataSets.add(minTempSet);
 
         ArrayList<String> xValues = new ArrayList<String>();
-        String[] xLabels = {"3", "4", "5"};
+        String[] xLabels = {"3", "4", "5", "6"};
         for (int i = 0; i < xLabels.length; i++) {
             xValues.add(xLabels[i]);
         }
@@ -141,5 +145,15 @@ public class GraphDataFragment extends BaseFragmentSuper{
         lineSet.setLineWidth(2f);
         lineSet.setDrawValues(false);
         lineSet.setDrawCircles(false);
+    }
+
+    @Override
+    public void onPauseFragment() {
+        Log.i(TAG, "onPauseFragment()");
+    }
+
+    @Override
+    public void onResumeFragment() {
+        Log.i(TAG, "onResumeFragment()");
     }
 }

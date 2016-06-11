@@ -31,7 +31,7 @@ import java.util.Date;
 /**
  * Created by Nadeche
  */
-public class WeatherDataFragment extends BaseFragmentSuper {
+public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLifecycle {
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -50,6 +50,8 @@ public class WeatherDataFragment extends BaseFragmentSuper {
     private ImageView roverImageView;       // view reference to rover photo in background of weather data
     private Dialog changeDateDialog;        // contains dialog to change the date to view data from
     private Dialog loadPhotoDialog;         // dialog to load a particular photo from curiosity
+    private String TAG = "WeatherDataFragment";
+    private WeatherDataModel weatherData;
 
     public WeatherDataFragment() {
     }
@@ -90,8 +92,17 @@ public class WeatherDataFragment extends BaseFragmentSuper {
         //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
-        // get the latest weather data
-        getLatestWeatherData();
+        // when weather data is not yet initialised get the latest weather date
+        if (weatherData == null){
+            // get the latest weather data
+            getLatestWeatherData();
+        }
+        // when weather data is initialised reset the data to screen
+        else {
+            setDataToView(weatherData);
+        }
+
+        Log.d("onCreateView fragment", "0");
 
         return rootView;
     }
@@ -306,7 +317,7 @@ public class WeatherDataFragment extends BaseFragmentSuper {
                 weatherDataJsonObj = resultArrayJsonObject.getJSONObject(0);
             }
 
-            WeatherDataModel weatherData = new WeatherDataModel();
+            weatherData = new WeatherDataModel();
 
             // convert the returned terrestrial date to a EU date format and save it in weatherData
             SimpleDateFormat originalDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -361,5 +372,15 @@ public class WeatherDataFragment extends BaseFragmentSuper {
         // TODO handle layout for date and time to fit gridLayout
         //sunriseTextView.setText(weatherData.getSunrise());
         //sunsetTextView.setText(weatherData.getSunset());
+    }
+
+    @Override
+    public void onPauseFragment() {
+        Log.i(TAG, "onPauseFragment()");
+    }
+
+    @Override
+    public void onResumeFragment() {
+        Log.i(TAG, "onResumeFragment()");
     }
 }

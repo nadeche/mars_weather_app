@@ -7,6 +7,7 @@ package mprog.nl.mars_weather_explorer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -24,11 +25,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
+                Log.d("pagerAdapter 0 position", String.valueOf(position));
                 // Return a PlaceholderFragment (defined as a static inner class below).
                 return WeatherDataFragment.newInstance(position + 1);
             case 1:
+                Log.d("pagerAdapter 1 position", String.valueOf(position));
                 return GraphDataFragment.newInstance();
             case 2:
+                Log.d("pagerAdapter 2 position", String.valueOf(position));
                 return NewsFeedFragment.newInstance();
         }
         return null;

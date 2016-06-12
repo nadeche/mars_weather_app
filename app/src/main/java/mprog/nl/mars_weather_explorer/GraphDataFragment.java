@@ -1,10 +1,9 @@
 package mprog.nl.mars_weather_explorer;
 
-import android.app.Dialog;
-import android.app.DialogFragment;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+//import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.FrameLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -23,9 +23,13 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by Nadeche
@@ -35,8 +39,11 @@ import java.util.ArrayList;
 
 public class GraphDataFragment extends BaseFragmentSuper implements FragmentLifecycle{
 
-    //private Dialog dateRangeDialog; // dialog where the user can select from when till when to view temperature data from
     private String TAG = "GraphDataFragment";
+    private ArrayList<Double> maxCelsius = new ArrayList<>();
+    private ArrayList<Double> minCelsius = new ArrayList<>();
+    private ArrayList<String> solarDay = new ArrayList<>();
+    private LineChart temperatureGraph;
 
     public static GraphDataFragment newInstance(){
         GraphDataFragment fragment = new GraphDataFragment();
@@ -48,8 +55,7 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
 
         View rootView = inflater.inflate(R.layout.fragment_graph_data, container, false);
         setHasOptionsMenu(true);
-        //dateRangeDialog = new Dialog(getActivity());
-        LineChart temperatureGraph = (LineChart) rootView.findViewById(R.id.temperatureLineGraph);
+        temperatureGraph = (LineChart) rootView.findViewById(R.id.temperatureLineGraph);
 
         temperatureGraph.setDescription("Min and Max temperature");
 
@@ -95,16 +101,33 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
 
         final AlertDialog.Builder dateRangeDialog = new AlertDialog.Builder(getActivity());
         dateRangeDialog.setTitle("Choose a date range");
-        FrameLayout fl = new FrameLayout(getActivity());
-        dateRangeDialog.setView(fl);
+        final FrameLayout basicFrameLayout = new FrameLayout(getActivity());
+        dateRangeDialog.setView(basicFrameLayout);
 
-        //LayoutInflater inflater = getActivity().getLayoutInflater();
-        //View dialogLayout = inflater.inflate(R.layout.dialog_choose_date_range, null);
-        //dateRangeDialog.setView(dialogLayout);
         dateRangeDialog.setPositiveButton("Load Graph", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                // TODO check if till date isn't before from date
+                DatePicker fromDatePicker = (DatePicker) basicFrameLayout.findViewById(R.id.fromDatePicker);
+                int fromDayOfMoth = fromDatePicker.getDayOfMonth();
+                int fromMonth = fromDatePicker.getMonth() + 1;
+                int fromYear = fromDatePicker.getYear();
+                Log.d("from day", String.valueOf(fromDayOfMoth));
+                Log.d("from month", String.valueOf(fromMonth));
+                Log.d("from year", String.valueOf(fromYear));
+                String fromDate = String.valueOf(fromYear)+"-"+String.valueOf(fromMonth)+"-"+String.valueOf(fromDayOfMoth);
+                Log.d("send dateFormat", fromDate);
+                DatePicker tillDatePicker = (DatePicker)basicFrameLayout.findViewById(R.id.tillDatePicker);
+                String tillDate = String.valueOf(tillDatePicker.getYear())+"-"
+                        +String.valueOf(tillDatePicker.getMonth()+ 1)+"-"
+                        +String.valueOf(tillDatePicker.getDayOfMonth());
+                try {
+                    HttpRequestModel request = new HttpRequestModel(fromDate, tillDate);
+                    new FetchDataAsync(GraphDataFragment.this).execute(request);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                dialog.dismiss();
             }
         });
         dateRangeDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -115,7 +138,23 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         });
         AlertDialog dialog = dateRangeDialog.create();
         LayoutInflater inflater = dialog.getLayoutInflater();
-        inflater.inflate(R.layout.dialog_choose_date_range, fl);
+        inflater.inflate(R.layout.dialog_choose_date_range, basicFrameLayout);
+
+        DatePicker fromDatePicker = (DatePicker) basicFrameLayout.findViewById(R.id.fromDatePicker);
+        DatePicker tillDatePicker = (DatePicker)basicFrameLayout.findViewById(R.id.tillDatePicker);
+
+        // set maximum date
+        Calendar calendar = Calendar.getInstance();
+        fromDatePicker.setMaxDate(calendar.getTimeInMillis());
+        tillDatePicker.setMaxDate(calendar.getTimeInMillis());
+        // set from date standard 7 days back
+        calendar.add(Calendar.DAY_OF_YEAR, -7);
+        fromDatePicker.updateDate(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        // set minimum date
+        calendar.set(2012, Calendar.AUGUST, 22);
+        fromDatePicker.setMinDate(calendar.getTimeInMillis());
+        tillDatePicker.setMinDate(calendar.getTimeInMillis());
+
         dialog.show();
     }
 
@@ -130,7 +169,21 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
 
     @Override
     public void setJsonToView(JSONObject jsonObject, HttpRequestModel requestModel) {
-
+        try {
+            JSONArray pagesJsonArray = jsonObject.getJSONArray("pages");
+            for (int i = 0 ; i < pagesJsonArray.length(); i++) {
+                JSONObject pageJsonObject = pagesJsonArray.getJSONObject(i);
+                JSONArray resultDaysJsonArray = pageJsonObject.getJSONArray("results");
+                for (int j = 0; j < resultDaysJsonArray.length(); j++) {
+                    JSONObject dailyDataJsonObject = resultDaysJsonArray.getJSONObject(j);
+                    maxCelsius.add(dailyDataJsonObject.getDouble("max_temp"));
+                    minCelsius.add(dailyDataJsonObject.getDouble("min_temp"));
+                    solarDay.add(String.valueOf(dailyDataJsonObject.getLong("sol")));
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setupTemperatureGraph(LineChart temperatureGraph) {

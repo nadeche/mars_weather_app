@@ -35,6 +35,14 @@ public class HttpRequestModel {
         url = new URL("http://marsweather.ingenology.com/v1/archive/?sol=" + sol + "&format=json");
     }
 
+    // constructor to get weather data from an earth date till an earth date
+    HttpRequestModel (String from, String till) throws MalformedURLException {
+        latestWeatherData = false;
+        sol = -1;
+        photoRequest = false;
+        url = new URL("http://marsweather.ingenology.com/v1/archive/?terrestrial_date_end="+till+"&terrestrial_date_start="+from+"&format=json");
+    }
+
     // constructor to get a photo from Curiosity by Martian solar day and camera type
     HttpRequestModel(int sol, String camera) throws MalformedURLException {
         latestWeatherData = false;

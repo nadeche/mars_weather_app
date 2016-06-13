@@ -38,27 +38,4 @@
                 android:id="@+id/tillDatePicker"/>
         </LinearLayout>
     </ScrollView>
-
-
-
-            <!---<LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center_horizontal">
-                <Button
-                    style="?android:attr/buttonStyleSmall"
-                    android:id="@+id/cancelButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cancel"/>
-
-                <Button
-                    style="?android:attr/buttonStyleSmall"
-                    android:id="@+id/loadGraphButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Load graph" />
-            </LinearLayout>
-            -->
 </LinearLayout>

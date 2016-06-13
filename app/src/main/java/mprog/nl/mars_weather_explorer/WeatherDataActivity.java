@@ -29,15 +29,14 @@ import java.util.Date;
 
 // TODO Add menu for search on sol or date
 // TODO Add dialog for search on earth date
-// TODO Add actionbar function: icon and dialog for date search in graph data fragment
 // TODO Create dot navigation at the bottom
 // TODO Make data model classes
 // TODO Make method to handle Json to data models
 // TODO Create load photo save in memory
 // TODO Handle the save of settings with sharedPref
 // TODO Add the latest SOL to the sharedPref and check later to update
-// TODO Fix FragmentManager warning "not updated inline; expected state 3 found 2"
 // TODO Handle fragment lifecycle loading data only when needed.
+// TODO handle internet connection check
 
 public class WeatherDataActivity extends AppCompatActivity {
 

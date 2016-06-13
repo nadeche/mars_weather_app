@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 //import android.support.v7.app.AlertDialog;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,9 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -28,14 +31,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by Nadeche
  */
-// TODO Add graphView library and incorporate
-// TODO Add to actionbar search date range function
 
 public class GraphDataFragment extends BaseFragmentSuper implements FragmentLifecycle{
 
@@ -44,6 +47,9 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
     private ArrayList<Double> minCelsius = new ArrayList<>();
     private ArrayList<String> solarDay = new ArrayList<>();
     private LineChart temperatureGraph;
+    private Calendar dateToDay;
+    private Calendar dateLastWeek;
+    private LineData graphLines = null;
 
     public static GraphDataFragment newInstance(){
         GraphDataFragment fragment = new GraphDataFragment();
@@ -57,17 +63,42 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         setHasOptionsMenu(true);
         temperatureGraph = (LineChart) rootView.findViewById(R.id.temperatureLineGraph);
 
-        temperatureGraph.setDescription("Min and Max temperature");
+        temperatureGraph.setDescription("");
 
         XAxis xAxis = temperatureGraph.getXAxis();
         initAxis(xAxis);
         xAxis.setAvoidFirstLastClipping(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         YAxis yAxis = temperatureGraph.getAxisLeft();
+        initAxis(yAxis);
         yAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         yAxis.setDrawZeroLine(true);
+        YAxis rightYAxis = temperatureGraph.getAxisRight();
+        rightYAxis.setEnabled(false);
 
-        setupTemperatureGraph(temperatureGraph);
+        Legend legend = temperatureGraph.getLegend();
+        legend.setTextColor(ContextCompat.getColor(getActivity(),R.color.lightGray));
+        legend.setTextSize(12);
+        legend.setForm(Legend.LegendForm.CIRCLE);
+        legend.setPosition(Legend.LegendPosition.ABOVE_CHART_RIGHT);
+
+        // when created for the first time initiate dates and display date from the last week
+        if (dateToDay == null) {
+            dateToDay = Calendar.getInstance();
+            dateLastWeek = Calendar.getInstance();
+            dateLastWeek.add(Calendar.DAY_OF_YEAR, -7);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String dataTill = dateFormat.format(dateToDay.getTime());
+            String dataFrom = dateFormat.format(dateLastWeek.getTime());
+            try {
+                HttpRequestModel request = new HttpRequestModel(dataFrom, dataTill);
+                new FetchDataAsync(GraphDataFragment.this).execute(request);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         Log.d("onCreateView fragment", "1");
 
@@ -91,14 +122,6 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
     }
 
     private void showChooseDateRangeDialog() {
-        //Dialog dateRangeDialog = new Dialog(getActivity());
-        //dateRangeDialog.setContentView(R.layout.dialog_choose_date_range);
-        //dateRangeDialog.setTitle("Choose a date range");
-
-        //DatePickerFragment testDatePicker = new DatePickerFragment();
-        //testDatePicker.show(getFragmentManager() , "datePicker");
-        //dateRangeDialog.show();
-
         final AlertDialog.Builder dateRangeDialog = new AlertDialog.Builder(getActivity());
         dateRangeDialog.setTitle("Choose a date range");
         final FrameLayout basicFrameLayout = new FrameLayout(getActivity());
@@ -107,20 +130,24 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         dateRangeDialog.setPositiveButton("Load Graph", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // TODO check if till date isn't before from date
                 DatePicker fromDatePicker = (DatePicker) basicFrameLayout.findViewById(R.id.fromDatePicker);
-                int fromDayOfMoth = fromDatePicker.getDayOfMonth();
-                int fromMonth = fromDatePicker.getMonth() + 1;
-                int fromYear = fromDatePicker.getYear();
-                Log.d("from day", String.valueOf(fromDayOfMoth));
-                Log.d("from month", String.valueOf(fromMonth));
-                Log.d("from year", String.valueOf(fromYear));
-                String fromDate = String.valueOf(fromYear)+"-"+String.valueOf(fromMonth)+"-"+String.valueOf(fromDayOfMoth);
-                Log.d("send dateFormat", fromDate);
                 DatePicker tillDatePicker = (DatePicker)basicFrameLayout.findViewById(R.id.tillDatePicker);
-                String tillDate = String.valueOf(tillDatePicker.getYear())+"-"
-                        +String.valueOf(tillDatePicker.getMonth()+ 1)+"-"
-                        +String.valueOf(tillDatePicker.getDayOfMonth());
+
+                Calendar fromCalender = Calendar.getInstance();
+                fromCalender.set(fromDatePicker.getYear(), fromDatePicker.getMonth(), fromDatePicker.getDayOfMonth());
+                Calendar tillCalender = Calendar.getInstance();
+                tillCalender.set(tillDatePicker.getYear(), tillDatePicker.getMonth(), tillDatePicker.getDayOfMonth());
+                // check if the user has selected a viable date range
+                if (fromCalender.after(tillCalender)){
+                    Toast.makeText(getActivity(),"A negative date range was selected", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    return;
+                }
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String fromDate = dateFormat.format(fromCalender.getTime());
+                String tillDate = dateFormat.format(tillCalender.getTime());
+
                 try {
                     HttpRequestModel request = new HttpRequestModel(fromDate, tillDate);
                     new FetchDataAsync(GraphDataFragment.this).execute(request);
@@ -144,13 +171,12 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         DatePicker tillDatePicker = (DatePicker)basicFrameLayout.findViewById(R.id.tillDatePicker);
 
         // set maximum date
-        Calendar calendar = Calendar.getInstance();
-        fromDatePicker.setMaxDate(calendar.getTimeInMillis());
-        tillDatePicker.setMaxDate(calendar.getTimeInMillis());
-        // set from date standard 7 days back
-        calendar.add(Calendar.DAY_OF_YEAR, -7);
-        fromDatePicker.updateDate(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        fromDatePicker.setMaxDate(dateToDay.getTimeInMillis());
+        tillDatePicker.setMaxDate(dateToDay.getTimeInMillis());
+        // set from datePicker standard 7 days back
+        fromDatePicker.updateDate(dateLastWeek.get(Calendar.YEAR),dateLastWeek.get(Calendar.MONTH), dateLastWeek.get(Calendar.DAY_OF_MONTH));
         // set minimum date
+        Calendar calendar = Calendar.getInstance();
         calendar.set(2012, Calendar.AUGUST, 22);
         fromDatePicker.setMinDate(calendar.getTimeInMillis());
         tillDatePicker.setMinDate(calendar.getTimeInMillis());
@@ -165,16 +191,21 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         axis.setDrawLabels(true);
         // draw axis line
         axis.setDrawAxisLine(true);
+        axis.setTextColor(ContextCompat.getColor(getActivity(), R.color.lightGray));
     }
 
     @Override
     public void setJsonToView(JSONObject jsonObject, HttpRequestModel requestModel) {
+        maxCelsius.removeAll(maxCelsius);
+        minCelsius.removeAll(minCelsius);
+        solarDay.removeAll(solarDay);
         try {
             JSONArray pagesJsonArray = jsonObject.getJSONArray("pages");
-            for (int i = 0 ; i < pagesJsonArray.length(); i++) {
+            // iterate backwards so the first data come first in the result lists
+            for (int i = pagesJsonArray.length()-1 ; i >= 0; i--) {
                 JSONObject pageJsonObject = pagesJsonArray.getJSONObject(i);
                 JSONArray resultDaysJsonArray = pageJsonObject.getJSONArray("results");
-                for (int j = 0; j < resultDaysJsonArray.length(); j++) {
+                for (int j = resultDaysJsonArray.length()-1; j >= 0 ; j--) {
                     JSONObject dailyDataJsonObject = resultDaysJsonArray.getJSONObject(j);
                     maxCelsius.add(dailyDataJsonObject.getDouble("max_temp"));
                     minCelsius.add(dailyDataJsonObject.getDouble("min_temp"));
@@ -183,46 +214,50 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }finally {
+            setupTemperatureGraph(temperatureGraph, maxCelsius, minCelsius, solarDay);
         }
     }
 
-    private void setupTemperatureGraph(LineChart temperatureGraph) {
+    private void setupTemperatureGraph(LineChart temperatureGraph,
+                                       ArrayList<Double> maxCelsius,
+                                       ArrayList<Double> minCelsius,
+                                       ArrayList<String> xValues) {
+
         // setting up line data
         ArrayList<Entry> maxTemp = new ArrayList<Entry>();
         ArrayList<Entry> minTemp = new ArrayList<Entry>();
-        int[] max = {-12, -14, -20, -12};
-        createEntries(maxTemp,max);
-        int[] min = {-72, -78, -65};
-        createEntries(minTemp, min);
+        createEntries(maxTemp,maxCelsius);
+        createEntries(minTemp, minCelsius);
 
         // setting up line sets
         LineDataSet maxTempSet = new LineDataSet(maxTemp, "Maximum temperature");
         styleLine(maxTempSet);
-        maxTempSet.setColor(getResources().getColor(R.color.colorAccent));
+        maxTempSet.setColor(ContextCompat.getColor(getActivity(),R.color.colorAccent));
 
         LineDataSet minTempSet = new LineDataSet(minTemp, "Minimum temperature");
         styleLine(minTempSet);
+        minTempSet.setColor(ContextCompat.getColor(getActivity(),R.color.minimumTempColor));
 
         // setting up graph
         ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
         dataSets.add(maxTempSet);
         dataSets.add(minTempSet);
 
-        ArrayList<String> xValues = new ArrayList<String>();
-        String[] xLabels = {"3", "4", "5", "6"};
-        for (int i = 0; i < xLabels.length; i++) {
-            xValues.add(xLabels[i]);
+        // when a graph was drawn before: clear all data from that graph before adding new data
+        if (graphLines != null){
+            temperatureGraph.clear();
         }
-
         // setting lines to graph
-        LineData graphLines = new LineData(xValues, dataSets);
+        graphLines = new LineData(xValues, dataSets);
         temperatureGraph.setData(graphLines);
+        temperatureGraph.notifyDataSetChanged();
         temperatureGraph.invalidate();
     }
 
-    private void createEntries(ArrayList<Entry> entries, int[] yData) {
-        for (int i = 0; i < yData.length; i++) {
-            entries.add(new Entry((float) yData[i], i));
+    private void createEntries(ArrayList<Entry> entries, ArrayList<Double> yData) {
+        for (int i = 0; i < yData.size(); i++) {
+            entries.add(new Entry(yData.get(i).floatValue(), i));
         }
     }
 

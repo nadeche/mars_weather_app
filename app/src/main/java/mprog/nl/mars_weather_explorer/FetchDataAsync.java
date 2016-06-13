@@ -43,6 +43,7 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject
     @Override
     protected JSONObject doInBackground(HttpRequestModel... requestModels) {
         requestModel = requestModels[0];
+
         if (requestModel.photoRequest || requestModel.latestWeatherData || requestModel.sol > -1) {
             return getSmallData(requestModel);
         }
@@ -59,6 +60,8 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject
 
         // pass fetched Json back to the calling fragment for display on screen
         fragment.setJsonToView(jsonObject, requestModel);
+        Log.d("request type weather", String.valueOf(requestModel.latestWeatherData));
+        Log.d("request type photo", String.valueOf(requestModel.photoRequest));
     }
 
     private JSONObject getSmallData(HttpRequestModel requestModel) {

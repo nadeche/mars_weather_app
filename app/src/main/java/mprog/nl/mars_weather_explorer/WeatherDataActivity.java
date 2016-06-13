@@ -50,7 +50,7 @@ public class WeatherDataActivity extends AppCompatActivity {
      */
     private SectionsPagerAdapter mSectionsPagerAdapter; // contains the adapter used to swipe through fragments
     private Dialog setTemperatureUnitDialog;            // contains dialog to change the temperature unit used in the app
-
+    private SharedPreferencesManager preferencesManager;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -72,12 +72,10 @@ public class WeatherDataActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(pageChangeListener);
 
-        // initialize the dialogs
+        // initialize the dialog
         setTemperatureUnitDialog = new Dialog(this);
 
-
-
-
+        preferencesManager = SharedPreferencesManager.getInctance(this);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -157,9 +155,11 @@ public class WeatherDataActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
+                    preferencesManager.setCelsiusUnit(!isChecked);
                     temperatureUnit[0] = "Fahrenheit";
                 }
                 else{
+                    preferencesManager.setCelsiusUnit(!isChecked);
                     temperatureUnit[0] = "Celsius";
                 }
             }

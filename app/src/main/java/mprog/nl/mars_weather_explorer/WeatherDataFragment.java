@@ -92,10 +92,18 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
-        // when weather data is not yet initialised get the latest weather date
+        // when weather data is not yet initialised get the latest weather data and photo
         if (weatherData == null){
             // get the latest weather data
             getLatestWeatherData();
+            // get the latest rover photo according to the latest sol and the last preferred rover camera
+            /*SharedPreferencesManager preferencesManager = SharedPreferencesManager.getInctance(getActivity());
+            try {
+                HttpRequestModel request = new HttpRequestModel(preferencesManager.getLatestSol(), preferencesManager.getCamera());
+                new FetchDataAsync(WeatherDataFragment.this).execute(request);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }*/
         }
         // when weather data is initialised reset the data to screen
         else {
@@ -158,13 +166,9 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         cameraListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         camerasSpinner.setAdapter(cameraListAdapter);
 
-        // TODO make init number picker method
         // initialize number picker with the latest solar day as a maximum
         final NumberPicker numberPicker = (NumberPicker)loadPhotoDialog.findViewById(R.id.solNumberPicker);
-        // TODO handle latest sol as maximum
-        numberPicker.setMaxValue(1362);
-        numberPicker.setMinValue(15);
-        numberPicker.setWrapSelectorWheel(true);
+        numberPickerInit(numberPicker);
 
         // retrieve the selected camera from the spinner
         final String[] camera = new String[1];
@@ -187,6 +191,9 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         getButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // save the camera name chosen as preference to load when the app opens
+                SharedPreferencesManager preferencesManager = SharedPreferencesManager.getInctance(getActivity());
+                preferencesManager.setCamera(camera[0]);
                 try {
                     HttpRequestModel request = new HttpRequestModel(numberPicker.getValue(), camera[0]);
                     new FetchDataAsync(WeatherDataFragment.this).execute(request);
@@ -218,10 +225,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
 
         // initialize number picker with the latest solar day as a maximum
         final NumberPicker numberPicker = (NumberPicker)changeDateDialog.findViewById(R.id.solNumberPicker);
-        // TODO handle latest sol as maximum
-        numberPicker.setMaxValue(1355);
-        numberPicker.setMinValue(15);
-        numberPicker.setWrapSelectorWheel(true);
+        numberPickerInit(numberPicker);
 
         Button cancelButton = (Button)changeDateDialog.findViewById(R.id.cancelButton);
         Button getButton = (Button)changeDateDialog.findViewById(R.id.loadPhotoButton);
@@ -247,6 +251,16 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
             }
         });
         changeDateDialog.show();
+    }
+    /**
+     * Initializes a numberPicker with a maximum of the latest requested sol and
+     * a minimum of the first sol when weather data is provided
+     * lets the wheel wrap around.
+     * */
+    private void numberPickerInit(NumberPicker numberPicker){
+        numberPicker.setMaxValue(SharedPreferencesManager.getInctance(getActivity()).getLatestSol());
+        numberPicker.setMinValue(15);
+        numberPicker.setWrapSelectorWheel(true);
     }
 
     /**
@@ -325,8 +339,13 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
             Date date = originalDateFormat.parse(weatherDataJsonObj.getString("terrestrial_date"));
             weatherData.setTerrestrial_date(dateFormat.format(date));
 
-            // save the other returned data in a weatherDataModel
+
             weatherData.setSol(weatherDataJsonObj.getLong("sol"));
+            // when the latest weather data where requested save the sol for other initialisations
+            if (requestModel.latestWeatherData) {
+                SharedPreferencesManager.getInctance(getActivity()).setLatestSol((int)weatherData.getSol());
+            }
+            // save the other returned data in a weatherDataModel
             weatherData.setMax_temp_C(weatherDataJsonObj.getDouble("max_temp"));
             weatherData.setMin_temp_C(weatherDataJsonObj.getDouble("min_temp"));
             weatherData.setMax_temp_F(weatherDataJsonObj.optDouble("max_temp_fahrenheit"));
@@ -354,9 +373,16 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         solTextView.setText(String.valueOf(weatherData.getSol()));
         earthDateTextView.setText(weatherData.getTerrestrial_date());
 
-        // set a degrees celsius character behind the temperatures values
-        maxTempTextView.setText(String.valueOf(weatherData.getMax_temp_C())+ (char) 0x00B0 + "C");
-        minTempTextView.setText(String.valueOf(weatherData.getMin_temp_C()) + (char) 0x00B0 + "C");
+        if (SharedPreferencesManager.getInctance(getActivity()).isCelsiusUnit()) {
+            // set a degrees celsius character behind the temperatures values
+            maxTempTextView.setText(String.valueOf(weatherData.getMax_temp_C())+ (char) 0x00B0 + "C");
+            minTempTextView.setText(String.valueOf(weatherData.getMin_temp_C()) + (char) 0x00B0 + "C");
+        }
+        else {
+            maxTempTextView.setText(String.valueOf(weatherData.getMax_temp_F())+ (char) 0x00B0 + "F");
+            minTempTextView.setText(String.valueOf(weatherData.getMin_temp_F()) + (char) 0x00B0 + "F");
+        }
+
 
         // display "no data" when there is no weather status
         if(weatherData.getAtmo_opacity().equals("null")) {

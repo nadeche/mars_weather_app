@@ -2,6 +2,7 @@ package mprog.nl.mars_weather_explorer;
 
 import android.app.ProgressDialog;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -19,7 +20,10 @@ public abstract class BaseFragmentSuper extends Fragment {
     }
 
     public void hideProgressDialog() {
-        progressDialog.dismiss();
+        if (progressDialog.isShowing()){
+            progressDialog.dismiss();
+            Log.d("progressDialog", "dismissed");
+        }
     }
 
     public abstract void setJsonToView(JSONObject jsonObject, HttpRequestModel requestModel);

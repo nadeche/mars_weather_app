@@ -138,6 +138,9 @@ public class WeatherDataActivity extends AppCompatActivity {
         Switch temperatureSwitch = (Switch)setTemperatureUnitDialog.findViewById(R.id.temperatureSwitch);
         final String[] temperatureUnit = new String[1];
         temperatureUnit[0] = "Nothing changed";
+
+        temperatureSwitch.setChecked(!preferencesManager.isCelsiusUnit());
+
         temperatureSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

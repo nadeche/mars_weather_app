@@ -34,7 +34,6 @@ import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 /**
  * Created by Nadeche
@@ -48,7 +47,7 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
     private ArrayList<String> solarDay = new ArrayList<>();
     private LineChart temperatureGraph;
     private Calendar dateToDay;
-    private Calendar dateLastWeek;
+    private Calendar dateTwoWeeksAgo;
     private LineData graphLines = null;
 
     public static GraphDataFragment newInstance(){
@@ -82,15 +81,15 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         legend.setForm(Legend.LegendForm.CIRCLE);
         legend.setPosition(Legend.LegendPosition.ABOVE_CHART_RIGHT);
 
-        // when created for the first time initiate dates and display date from the last week
+        // when created for the first time initiate dates and display date from the last two weeks
         if (dateToDay == null) {
             dateToDay = Calendar.getInstance();
-            dateLastWeek = Calendar.getInstance();
-            dateLastWeek.add(Calendar.DAY_OF_YEAR, -7);
+            dateTwoWeeksAgo = Calendar.getInstance();
+            dateTwoWeeksAgo.add(Calendar.DAY_OF_YEAR, -14);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String dataTill = dateFormat.format(dateToDay.getTime());
-            String dataFrom = dateFormat.format(dateLastWeek.getTime());
+            String dataFrom = dateFormat.format(dateTwoWeeksAgo.getTime());
             try {
                 HttpRequestModel request = new HttpRequestModel(dataFrom, dataTill);
                 new FetchDataAsync(GraphDataFragment.this).execute(request);
@@ -171,15 +170,18 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         DatePicker tillDatePicker = (DatePicker)basicFrameLayout.findViewById(R.id.tillDatePicker);
 
         // set maximum date
-        fromDatePicker.setMaxDate(dateToDay.getTimeInMillis());
-        tillDatePicker.setMaxDate(dateToDay.getTimeInMillis());
+        Calendar dateNow = Calendar.getInstance();
+        fromDatePicker.setMaxDate(dateNow.getTimeInMillis());
+        tillDatePicker.setMaxDate(dateNow.getTimeInMillis());
         // set from datePicker standard 7 days back
-        fromDatePicker.updateDate(dateLastWeek.get(Calendar.YEAR),dateLastWeek.get(Calendar.MONTH), dateLastWeek.get(Calendar.DAY_OF_MONTH));
+        fromDatePicker.updateDate(dateTwoWeeksAgo.get(Calendar.YEAR), dateTwoWeeksAgo.get(Calendar.MONTH), dateTwoWeeksAgo.get(Calendar.DAY_OF_MONTH));
+        tillDatePicker.updateDate(dateNow.get(Calendar.YEAR),dateNow.get(Calendar.MONTH), dateNow.get(Calendar.DAY_OF_MONTH));
+
         // set minimum date
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2012, Calendar.AUGUST, 22);
-        fromDatePicker.setMinDate(calendar.getTimeInMillis());
-        tillDatePicker.setMinDate(calendar.getTimeInMillis());
+        Calendar dateMinimum = Calendar.getInstance();
+        dateMinimum.set(2012, Calendar.AUGUST, 22);
+        fromDatePicker.setMinDate(dateMinimum.getTimeInMillis());
+        tillDatePicker.setMinDate(dateMinimum.getTimeInMillis());
 
         dialog.show();
     }

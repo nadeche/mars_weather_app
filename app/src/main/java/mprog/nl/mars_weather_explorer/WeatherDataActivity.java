@@ -22,8 +22,6 @@ import android.widget.Toast;
 // TODO Make data model classes
 // TODO Make method to handle Json to data models
 // TODO Create load photo save in memory
-// TODO Handle the save of settings with sharedPref
-// TODO Add the latest SOL to the sharedPref and check later to update
 // TODO Handle fragment lifecycle loading data only when needed.
 // TODO handle internet connection check
 

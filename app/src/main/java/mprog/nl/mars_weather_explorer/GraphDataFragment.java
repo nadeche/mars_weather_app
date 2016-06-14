@@ -49,6 +49,7 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
     private Calendar dateToDay;
     private Calendar dateTwoWeeksAgo;
     private LineData graphLines = null;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public static GraphDataFragment newInstance(){
         GraphDataFragment fragment = new GraphDataFragment();
@@ -87,7 +88,7 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
             dateTwoWeeksAgo = Calendar.getInstance();
             dateTwoWeeksAgo.add(Calendar.DAY_OF_YEAR, -14);
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String dataTill = dateFormat.format(dateToDay.getTime());
             String dataFrom = dateFormat.format(dateTwoWeeksAgo.getTime());
             try {
@@ -143,7 +144,7 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
                     return;
                 }
 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 String fromDate = dateFormat.format(fromCalender.getTime());
                 String tillDate = dateFormat.format(tillCalender.getTime());
 
@@ -197,27 +198,30 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
     }
 
     @Override
-    public void setJsonToView(JSONObject jsonObject, HttpRequestModel requestModel) {
-        maxCelsius.removeAll(maxCelsius);
-        minCelsius.removeAll(minCelsius);
-        solarDay.removeAll(solarDay);
-        try {
-            JSONArray pagesJsonArray = jsonObject.getJSONArray("pages");
-            // iterate backwards so the first data come first in the result lists
-            for (int i = pagesJsonArray.length()-1 ; i >= 0; i--) {
-                JSONObject pageJsonObject = pagesJsonArray.getJSONObject(i);
-                JSONArray resultDaysJsonArray = pageJsonObject.getJSONArray("results");
-                for (int j = resultDaysJsonArray.length()-1; j >= 0 ; j--) {
-                    JSONObject dailyDataJsonObject = resultDaysJsonArray.getJSONObject(j);
-                    maxCelsius.add(dailyDataJsonObject.getDouble("max_temp"));
-                    minCelsius.add(dailyDataJsonObject.getDouble("min_temp"));
-                    solarDay.add(String.valueOf(dailyDataJsonObject.getLong("sol")));
+    public void setJsonToView(ReturnDataRequestModel returnDataRequest) {
+        JSONObject jsonObject = returnDataRequest.getJsonObject();
+        if ( jsonObject!= null){
+            maxCelsius.removeAll(maxCelsius);
+            minCelsius.removeAll(minCelsius);
+            solarDay.removeAll(solarDay);
+            try {
+                JSONArray pagesJsonArray = jsonObject.getJSONArray("pages");
+                // iterate backwards so the first data come first in the result lists
+                for (int i = pagesJsonArray.length()-1 ; i >= 0; i--) {
+                    JSONObject pageJsonObject = pagesJsonArray.getJSONObject(i);
+                    JSONArray resultDaysJsonArray = pageJsonObject.getJSONArray("results");
+                    for (int j = resultDaysJsonArray.length()-1; j >= 0 ; j--) {
+                        JSONObject dailyDataJsonObject = resultDaysJsonArray.getJSONObject(j);
+                        maxCelsius.add(dailyDataJsonObject.getDouble("max_temp"));
+                        minCelsius.add(dailyDataJsonObject.getDouble("min_temp"));
+                        solarDay.add(String.valueOf(dailyDataJsonObject.getLong("sol")));
+                    }
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }finally {
+                setupTemperatureGraph(temperatureGraph, maxCelsius, minCelsius, solarDay);
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }finally {
-            setupTemperatureGraph(temperatureGraph, maxCelsius, minCelsius, solarDay);
         }
     }
 

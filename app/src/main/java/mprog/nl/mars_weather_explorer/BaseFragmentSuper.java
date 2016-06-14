@@ -25,5 +25,5 @@ public abstract class BaseFragmentSuper extends Fragment {
         }
     }
 
-    public abstract void setJsonToView(JSONObject jsonObject, HttpRequestModel requestModel);
+    public abstract void setJsonToView(ReturnDataRequestModel returnDataRequest);
 }

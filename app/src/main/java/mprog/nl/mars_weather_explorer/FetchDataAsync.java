@@ -1,8 +1,12 @@
 package mprog.nl.mars_weather_explorer;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -24,7 +27,7 @@ import java.net.URL;
  * While fetching data it displays a progress dialog to the user.
  * The data is passed back to the calling fragment for further processing.
  * */
-public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject> {
+public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnDataRequestModel> {
 
     BaseFragmentSuper fragment;
     HttpRequestModel requestModel;
@@ -44,28 +47,39 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject
     }
 
     @Override
-    protected JSONObject doInBackground(HttpRequestModel... requestModels) {
+    protected ReturnDataRequestModel doInBackground(HttpRequestModel... requestModels) {
+        ReturnDataRequestModel returnDataRequest = new ReturnDataRequestModel(requestModels[0], hasInternetConnection());
         requestModel = requestModels[0];
 
-        if (requestModel.photoRequest || requestModel.latestWeatherData || requestModel.sol > -1) {
-            return getSmallData(requestModel);
+        if (returnDataRequest.isInternetConnection()){
+
+            if (requestModel.photoRequest || requestModel.latestWeatherData || requestModel.sol > -1) {
+                returnDataRequest.setJsonObject(getSmallData(requestModel));
+            }
+            else {
+                returnDataRequest.setJsonObject(getBigData(requestModel));
+                            }
         }
-        else {
-            return getBigData(requestModel);
-        }
+
+        return returnDataRequest;
     }
 
     @Override
-    protected void onPostExecute(JSONObject jsonObject) {
-        super.onPostExecute(jsonObject);
+    protected void onPostExecute(ReturnDataRequestModel returnDataRequest) {
+        super.onPostExecute(returnDataRequest);
 
         TaskCount--;
         if (TaskCount == 0){
             fragment.hideProgressDialog();
         }
 
+        if (!returnDataRequest.isInternetConnection()) {
+            Toast.makeText(fragment.getActivity(), "No internet connection available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // pass fetched Json back to the calling fragment for display on screen
-        fragment.setJsonToView(jsonObject, requestModel);
+        fragment.setJsonToView(returnDataRequest);
     }
 
     private JSONObject getSmallData(HttpRequestModel requestModel) {
@@ -159,5 +173,13 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject
             }
         }
         return null;
+    }
+
+    private boolean hasInternetConnection() {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager)fragment.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 }

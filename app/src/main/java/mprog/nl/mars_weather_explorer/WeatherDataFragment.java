@@ -300,7 +300,6 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
      * */
     private void setJsonPhotoToView(JSONObject jsonObject) {
 
-        // TODO Fix save of photo so it doesn't forget when swiping.
         if(jsonObject != null){
             try {
                 JSONArray photosJsonArray = jsonObject.getJSONArray("photos");

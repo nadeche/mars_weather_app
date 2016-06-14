@@ -21,7 +21,6 @@ import android.widget.Toast;
 // TODO Create dot navigation at the bottom
 // TODO Make data model classes
 // TODO Make method to handle Json to data models
-// TODO Create load photo save in memory
 // TODO Handle fragment lifecycle loading data only when needed.
 // TODO handle internet connection check
 

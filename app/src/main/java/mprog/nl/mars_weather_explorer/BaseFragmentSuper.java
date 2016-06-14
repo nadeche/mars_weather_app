@@ -7,11 +7,11 @@ import android.util.Log;
 import org.json.JSONObject;
 
 /**
- * Created by Nadeche on 6-6-2016.
+ * Created by Nadeche
  */
 public abstract class BaseFragmentSuper extends Fragment {
 
-    private ProgressDialog progressDialog;  // contains the progressDialog that shows when async is busy
+    private static ProgressDialog progressDialog;  // contains the progressDialog that shows when async is busy
 
     public void showProgressDialog() {
         progressDialog = new ProgressDialog(getActivity());
@@ -20,9 +20,8 @@ public abstract class BaseFragmentSuper extends Fragment {
     }
 
     public void hideProgressDialog() {
-        if (progressDialog.isShowing()){
+        if (progressDialog != null && progressDialog.isShowing()){
             progressDialog.dismiss();
-            Log.d("progressDialog", "dismissed");
         }
     }
 

@@ -1,31 +1,20 @@
 package mprog.nl.mars_weather_explorer;
 
 import android.app.Dialog;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.NumberPicker;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.net.MalformedURLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 // TODO Add menu for search on sol or date
 // TODO Add dialog for search on earth date
@@ -75,7 +64,7 @@ public class WeatherDataActivity extends AppCompatActivity {
         // initialize the dialog
         setTemperatureUnitDialog = new Dialog(this);
 
-        preferencesManager = SharedPreferencesManager.getInctance(this);
+        preferencesManager = SharedPreferencesManager.getInstance(this);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

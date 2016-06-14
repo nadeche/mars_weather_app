@@ -26,7 +26,7 @@ public class SharedPreferencesManager {
         latestSol = sharedPreferences.getInt("latestSol", 1363);
     }
 
-    public static SharedPreferencesManager getInctance(Activity activity){
+    public static SharedPreferencesManager getInstance(Activity activity){
         if(preferencesManager == null){
             preferencesManager = new SharedPreferencesManager(activity);
         }

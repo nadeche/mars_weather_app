@@ -28,16 +28,19 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject
 
     BaseFragmentSuper fragment;
     HttpRequestModel requestModel;
-
+    public static int TaskCount = 0;
 
     FetchDataAsync (BaseFragmentSuper context) {
         this.fragment = context;
+        TaskCount++;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        fragment.showProgressDialog();
+        if (TaskCount == 1){
+            fragment.showProgressDialog();
+        }
     }
 
     @Override
@@ -56,12 +59,13 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, JSONObject
     protected void onPostExecute(JSONObject jsonObject) {
         super.onPostExecute(jsonObject);
 
-        fragment.hideProgressDialog();
+        TaskCount--;
+        if (TaskCount == 0){
+            fragment.hideProgressDialog();
+        }
 
         // pass fetched Json back to the calling fragment for display on screen
         fragment.setJsonToView(jsonObject, requestModel);
-        Log.d("request type weather", String.valueOf(requestModel.latestWeatherData));
-        Log.d("request type photo", String.valueOf(requestModel.photoRequest));
     }
 
     private JSONObject getSmallData(HttpRequestModel requestModel) {

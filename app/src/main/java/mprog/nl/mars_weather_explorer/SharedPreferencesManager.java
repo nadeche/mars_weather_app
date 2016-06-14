@@ -15,6 +15,7 @@ public class SharedPreferencesManager {
     private boolean celsiusUnit;
     private String camera;
     private int latestSol;
+    private String imageFilePath;
 
     private static SharedPreferencesManager preferencesManager = null;
 
@@ -24,6 +25,7 @@ public class SharedPreferencesManager {
         celsiusUnit = sharedPreferences.getBoolean("celsiusUnit", true);
         camera = sharedPreferences.getString("camera", "Front Hazard Avoidance Camera");
         latestSol = sharedPreferences.getInt("latestSol", 1363);
+        imageFilePath = sharedPreferences.getString("imageFilePath", "");
     }
 
     public static SharedPreferencesManager getInstance(Activity activity){
@@ -63,4 +65,13 @@ public class SharedPreferencesManager {
         sharedPreferencesEditor.commit();
     }
 
+    public String getImageFilePath() {
+        return imageFilePath;
+    }
+
+    public void setImageFilePath(String imageFilePath) {
+        this.imageFilePath = imageFilePath;
+        sharedPreferencesEditor.putString("imageFilePath", imageFilePath);
+        sharedPreferencesEditor.commit();
+    }
 }

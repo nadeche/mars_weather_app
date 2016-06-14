@@ -1,6 +1,8 @@
 package mprog.nl.mars_weather_explorer;
 
 import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +25,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -105,9 +110,18 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
                 e.printStackTrace();
             }
         }
-        // when weather data is initialised reset the data to screen
+        // when weather data is initialised reset the data to screen and get last loaded photo from internal storage
         else {
             setDataToView(weatherData);
+
+            try {
+                File imageFile = new File(SharedPreferencesManager.getInstance(getActivity()).getImageFilePath());
+                Bitmap bitmapImg = BitmapFactory.decodeStream(new FileInputStream(imageFile));
+                roverImageView.setImageBitmap(bitmapImg);
+            }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
         Log.d("onCreateView fragment", "0");
@@ -154,7 +168,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
 
     /**
      * This method shows the user a dialog where they can choose a camera from Curiosity
-     * and a Martian solar day. By clicking on the load photo button the photo is loaded with FatchDataAsync().
+     * and a Martian solar day. By clicking on the load photo button the photo is loaded with FetchDataAsync().
      * The cancel button closes the dialog and does nothing more.
      * */
     private void showLoadPhotoDialog(){
@@ -292,7 +306,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
                 JSONArray photosJsonArray = jsonObject.getJSONArray("photos");
                 JSONObject firstPhotoJsonObject = photosJsonArray.getJSONObject(0);
                 String photoLink = firstPhotoJsonObject.getString("img_src");
-                new DownloadPhotoAsync(roverImageView).execute(photoLink);
+                new DownloadPhotoAsync(getActivity(), roverImageView).execute(photoLink);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

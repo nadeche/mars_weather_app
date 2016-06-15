@@ -22,7 +22,6 @@ import android.widget.Toast;
 // TODO Make data model classes
 // TODO Make method to handle Json to data models
 // TODO Handle fragment lifecycle loading data only when needed.
-// TODO handle internet connection check
 
 public class WeatherDataActivity extends AppCompatActivity {
 

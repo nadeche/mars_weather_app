@@ -34,6 +34,8 @@ import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Nadeche
@@ -201,25 +203,50 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
     public void setJsonToView(ReturnDataRequestModel returnDataRequest) {
         JSONObject jsonObject = returnDataRequest.getJsonObject();
         if ( jsonObject!= null){
+            Map<Integer, Double> tempMax = new HashMap<>();
+            Map<Integer, Double> tempMin = new HashMap<>();
             maxCelsius.removeAll(maxCelsius);
             minCelsius.removeAll(minCelsius);
             solarDay.removeAll(solarDay);
+            int maxSol = 0;
+            int minSol = 0;
             try {
                 JSONArray pagesJsonArray = jsonObject.getJSONArray("pages");
                 // iterate backwards so the first data come first in the result lists
-                for (int i = pagesJsonArray.length()-1 ; i >= 0; i--) {
+                int pagesArrayLength = pagesJsonArray.length()-1;
+                for (int i = pagesArrayLength ; i >= 0; i--) {
                     JSONObject pageJsonObject = pagesJsonArray.getJSONObject(i);
                     JSONArray resultDaysJsonArray = pageJsonObject.getJSONArray("results");
-                    for (int j = resultDaysJsonArray.length()-1; j >= 0 ; j--) {
+                    int resultDaysArrayLength = resultDaysJsonArray.length()-1;
+                    for (int j = resultDaysArrayLength; j >= 0 ; j--) {
                         JSONObject dailyDataJsonObject = resultDaysJsonArray.getJSONObject(j);
-                        maxCelsius.add(dailyDataJsonObject.getDouble("max_temp"));
-                        minCelsius.add(dailyDataJsonObject.getDouble("min_temp"));
-                        solarDay.add(String.valueOf(dailyDataJsonObject.getLong("sol")));
+                        int sol = dailyDataJsonObject.getInt("sol");
+                        tempMax.put(sol, dailyDataJsonObject.getDouble("max_temp"));
+                        tempMin.put(sol, dailyDataJsonObject.getDouble("min_temp"));
+
+                        if (i == pagesArrayLength && j == resultDaysArrayLength){
+                            minSol = dailyDataJsonObject.getInt("sol");
+                        }
+                        else if (i == 0 && j == 0) {
+                            maxSol = dailyDataJsonObject.getInt("sol");
+                        }
                     }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }finally {
+
+                for (int i = minSol; i <= maxSol; i++){
+                    if (tempMax.containsKey(i)){
+                        maxCelsius.add(tempMax.get(i));
+                        minCelsius.add(tempMin.get(i));
+                    }
+                    else {
+                        maxCelsius.add(null);
+                        minCelsius.add(null);
+                    }
+                    solarDay.add(String.valueOf(i));
+                }
                 setupTemperatureGraph(temperatureGraph, maxCelsius, minCelsius, solarDay);
             }
         }
@@ -263,7 +290,9 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
 
     private void createEntries(ArrayList<Entry> entries, ArrayList<Double> yData) {
         for (int i = 0; i < yData.size(); i++) {
-            entries.add(new Entry(yData.get(i).floatValue(), i));
+            if (yData.get(i) != null){
+                entries.add(new Entry(yData.get(i).floatValue(), i));
+            }
         }
     }
 

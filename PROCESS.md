@@ -35,3 +35,19 @@ Also I am thinking about changing all dialogs to AlertDialogs in the app. This s
 Today I fixed some bugs from last week. I need to think about how the user changes the used temperature unit. Now it is part of the activity but I can't update the view from there because it is part of the fragment. It is redundent to have a settings dialog for only one setting. Maybe a menue item in the actionbar that acts as a swich would be better.
 The total planning of completing the project is a bit sensitive. I still need to implement new things, the news feed and the widget. The choise depends on how complicated these things are to inplement.
 In order to handle the downloaded roverphoto I decided to save the last downloaded photo internaly on device so it would also be available for the implementation of the widget.
+## Day 16| 15-06-2016
+Today I researched how to implement a widget. I have a working dumy widget that can open the app with the press of a button when clicked. But how the get actual information in the widget is an other thing. After today I think I have an idea of how to design the code structure. The update function from the app needs to call a extended servic class otherwise the updat method gets timed out when collecting data(after 5 sec). The service needs to create an instance of a model class that contains the data fields to display in the widget. The model class needs to fill its data fields from within by connceting to internet. Because of context related issues I can't use the async that already exists. And because the widget ui is not directly connceted with the service, I have to wait setting the vies unlit all internet calls are fineshed. The service can that set the vies with the data from the model class.
+The only thing that is not clear now is if I should declare the service class within the widget class or in a seperate class. I found different tutorials that do one or the other. Android Developers is not very informative in this case.
+The other thing I still need to figure out is how to get a picture. I can't acces my SharedPreferences because I don't have the Activity to pass from my widget. The internal filepath to where the photo is saved needs to come from somewhere else, but where and how?
+
+
+
+
+
+
+
+
+
+
+
+

@@ -7,8 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+
 /**
- * Created by Nadeche on 15-6-2016.
+ * Created by Nadeche
  */
 public class MarsWeatherWidgetProvider extends AppWidgetProvider {
 

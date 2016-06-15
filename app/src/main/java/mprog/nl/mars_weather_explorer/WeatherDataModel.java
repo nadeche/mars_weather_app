@@ -1,7 +1,7 @@
 package mprog.nl.mars_weather_explorer;
 
 /**
- * Created by Nadeche on 6-6-2016.
+ * Created by Nadeche
  */
 public class WeatherDataModel {
 

@@ -3,6 +3,7 @@ package mprog.nl.mars_weather_explorer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
@@ -19,8 +20,8 @@ public class SharedPreferencesManager {
 
     private static SharedPreferencesManager preferencesManager = null;
 
-    private SharedPreferencesManager(Activity activity){
-        sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
+    private SharedPreferencesManager(Context context){
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPreferencesEditor = sharedPreferences.edit();
         celsiusUnit = sharedPreferences.getBoolean("celsiusUnit", true);
         camera = sharedPreferences.getString("camera", "Front Hazard Avoidance Camera");
@@ -28,9 +29,9 @@ public class SharedPreferencesManager {
         imageFilePath = sharedPreferences.getString("imageFilePath", "");
     }
 
-    public static SharedPreferencesManager getInstance(Activity activity){
+    public static SharedPreferencesManager getInstance(Context context){
         if(preferencesManager == null){
-            preferencesManager = new SharedPreferencesManager(activity);
+            preferencesManager = new SharedPreferencesManager(context);
         }
         return preferencesManager;
     }

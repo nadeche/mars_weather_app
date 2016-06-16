@@ -28,6 +28,7 @@
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info_mars_weather" />
         </receiver>
+        <service android:name=".UpdateWidgetService"/>
     </application>
 
 </manifest>

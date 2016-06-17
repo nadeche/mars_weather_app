@@ -15,6 +15,7 @@ public class HttpRequestModel {
     public int sol;                     // the martian solar date to find
     public boolean latestWeatherData;   // is true if the latest weather data is requested
     public boolean photoRequest;        // is true if a curiosity photo is requested
+    public String cameraName;
 
     // personal NASA API key to get rover photos from the NASA database
     private static final String NASAapiKEY = "it3AjXuLitEdyfChV0ramuFS0cq12GvJVKTjgllC";
@@ -24,6 +25,7 @@ public class HttpRequestModel {
         latestWeatherData = true;
         sol = -1;
         photoRequest = false;
+        cameraName = null;
         url = new URL("http://marsweather.ingenology.com/v1/latest/?format=json");
     }
 
@@ -32,6 +34,7 @@ public class HttpRequestModel {
         latestWeatherData = false;
         this.sol = sol;
         photoRequest = false;
+        cameraName = null;
         url = new URL("http://marsweather.ingenology.com/v1/archive/?sol=" + sol + "&format=json");
     }
 
@@ -40,6 +43,7 @@ public class HttpRequestModel {
         latestWeatherData = false;
         sol = -1;
         photoRequest = false;
+        cameraName = null;
         url = new URL("http://marsweather.ingenology.com/v1/archive/?terrestrial_date_end="+till+"&terrestrial_date_start="+from+"&format=json");
     }
 
@@ -48,6 +52,7 @@ public class HttpRequestModel {
         latestWeatherData = false;
         this.sol = sol;
         photoRequest = true;
+        this.cameraName = camera;
         // convert camera name to camera abbreviation to use in http request
         switch (camera) {
             case "Front Hazard Avoidance Camera":

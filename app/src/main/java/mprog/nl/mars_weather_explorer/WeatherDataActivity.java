@@ -1,6 +1,7 @@
 package mprog.nl.mars_weather_explorer;
 
 import android.app.Dialog;
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +25,15 @@ import android.widget.Toast;
 // TODO Make data model classes
 // TODO Make method to handle Json to data models
 // TODO Handle fragment lifecycle loading data only when needed.
+// TODO Handle size of bitmaps to reduce size for widget
+// TODO wait screen while startup app
+// TODO placement photo in app when enlarged
+// TODO home needs different title
+// TODO wait notice when photo is loading
+// TODO spinnerView selection on last choice
+// TODO save photo function?
+// TODO handle unit change in graph
+// TODO add axis label's to graph
 
 public class WeatherDataActivity extends AppCompatActivity {
 
@@ -131,11 +141,13 @@ public class WeatherDataActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        // update widget photo
-        Log.d("intent to widget", "is made");
-        Intent widgetChangPhoto = new Intent(MarsWeatherWidgetProvider.ACTION_PHOTO_CHANGED);
-        getApplicationContext().sendBroadcast(widgetChangPhoto);
-        Log.d("intent to widget", "is sent");
+        // call update widget
+        Intent updateWidgetIntent = new Intent(this, MarsWeatherWidgetProvider.class);
+        updateWidgetIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = {R.layout.widget_mars_weather};
+        updateWidgetIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(updateWidgetIntent);
+
         super.onStop();
     }
 

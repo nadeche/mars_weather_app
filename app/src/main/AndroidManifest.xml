@@ -24,7 +24,6 @@
         <receiver android:name="MarsWeatherWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="mprog.nl.mars_weather_explorer.PHOTO_CHANGED"/>
             </intent-filter>
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info_mars_weather" />

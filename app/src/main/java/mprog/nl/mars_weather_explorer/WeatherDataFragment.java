@@ -210,10 +210,6 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         getButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // save the camera name chosen as preference to load when the app opens
-                SharedPreferencesManager preferencesManager = SharedPreferencesManager.getInstance(getActivity());
-                preferencesManager.setCamera(camera[0]);
-                photoTitleTextView.setText(camera[0]);
                 try {
                     HttpRequestModel request = new HttpRequestModel(numberPicker.getValue(), camera[0]);
                     new FetchDataAsync(WeatherDataFragment.this).execute(request);
@@ -292,7 +288,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
     @Override
     public void setJsonToView(ReturnDataRequestModel returnDataRequest) {
         if(returnDataRequest.getRequestModel().photoRequest){
-            setJsonPhotoToView(returnDataRequest.getJsonObject());
+            setJsonPhotoToView(returnDataRequest.getJsonObject(), returnDataRequest.getRequestModel().cameraName);
         }
         else {
             setJsonWeatherDataToView(returnDataRequest.getJsonObject(),returnDataRequest.getRequestModel());
@@ -304,7 +300,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
      * When the received object is empty it means there are not photos available for the requested camera and Martian solar day.
      * In that case the user gets notified by a toast.
      * */
-    private void setJsonPhotoToView(JSONObject jsonObject) {
+    private void setJsonPhotoToView(JSONObject jsonObject, String cameraName) {
 
         if(jsonObject != null){
             try {
@@ -312,6 +308,10 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
                 JSONObject firstPhotoJsonObject = photosJsonArray.getJSONObject(0);
                 String photoLink = firstPhotoJsonObject.getString("img_src");
                 new DownloadPhotoAsync(getActivity(), roverImageView).execute(photoLink);
+                // save the camera name chosen as preference to load when the app opens
+                SharedPreferencesManager preferencesManager = SharedPreferencesManager.getInstance(getActivity());
+                preferencesManager.setCamera(cameraName);
+                photoTitleTextView.setText(cameraName);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

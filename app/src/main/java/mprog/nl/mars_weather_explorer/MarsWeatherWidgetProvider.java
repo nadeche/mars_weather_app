@@ -20,8 +20,6 @@ import java.io.FileNotFoundException;
  */
 public class MarsWeatherWidgetProvider extends AppWidgetProvider {
 
-    public static final String ACTION_PHOTO_CHANGED = "mprog.nl.mars_weather_explorer.PHOTO_CHANGED";
-
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
@@ -40,24 +38,5 @@ public class MarsWeatherWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        Log.d("onReceive", "is called");
-        if (intent.getAction().equals(ACTION_PHOTO_CHANGED)){
-            Log.d("intent equals", ACTION_PHOTO_CHANGED);
-            try {
-                File imageFile = new File(SharedPreferencesManager.getInstance(context).getImageFilePath());
-                Bitmap bitmapImg = BitmapFactory.decodeStream(new FileInputStream(imageFile));
-                Log.d("image decoded", "succes");
-                RemoteViews widgetLayout = new RemoteViews(context.getPackageName(),
-                        R.layout.widget_mars_weather);
-                widgetLayout.setImageViewBitmap(R.id.backgroundImgView, bitmapImg);
-                Log.d("background photo", "should have changed");
-                ComponentName thisWidget = new ComponentName(context, MarsWeatherWidgetProvider.class);
-                AppWidgetManager.getInstance(context).updateAppWidget(thisWidget, widgetLayout);
-                Log.d("widget layout", "updated");
-            }
-            catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

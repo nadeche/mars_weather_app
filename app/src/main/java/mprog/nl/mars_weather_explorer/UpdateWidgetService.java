@@ -44,15 +44,11 @@ public class UpdateWidgetService extends Service {
             WeatherDataModel weatherData = null;
             try {
                 HttpRequestModel request = new HttpRequestModel();
-                Log.d(" onS reuest url", request.getUrl().toString());
                 JSONObject jsonData = getData(request);
                 if (jsonData != null){
-                    Log.d("onS return json", jsonData.toString());
                     WeatherDataManager manager = new WeatherDataManager();
                     weatherData = manager.jsonToData(jsonData, request);
                 }
-
-
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -73,10 +69,11 @@ public class UpdateWidgetService extends Service {
                     widgetLayout.setTextViewText(R.id.minTemperatureTextView,
                             String.valueOf(String.valueOf(weatherData.getMin_temp_F()) + (char) 0x00B0 + "F"));
                 }
+                widgetLayout.setTextViewText(R.id.solDateTextViewWidget, String.valueOf(weatherData.getSol()));
             }
 
             Bitmap bitmapImg = null;
-            if (preferencesManager.getLatestSol() > weatherData.getSol()){
+            if (preferencesManager.getLatestSol() < weatherData.getSol()){
                 try {
                     HttpRequestModel request = new HttpRequestModel((int) weatherData.getSol(), preferencesManager.getCamera());
                     JSONObject jsonPhoto = getData(request);
@@ -99,7 +96,7 @@ public class UpdateWidgetService extends Service {
             // intent to lunch mars weather explorer activity on button click
             Intent intentButtonClick = new Intent(this.getApplicationContext(), WeatherDataActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0 , intentButtonClick, 0);
-            widgetLayout.setOnClickPendingIntent(R.id.lunchAppButton, pendingIntent);
+            widgetLayout.setOnClickPendingIntent(R.id.backgroundImgView, pendingIntent);
 
             appWidgetManager.updateAppWidget(widgetId, widgetLayout);
         }
@@ -117,7 +114,6 @@ public class UpdateWidgetService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d("Thread and run","entered");
                 HttpURLConnection urlConnection = null;
                 BufferedReader reader = null;
                 try {
@@ -126,7 +122,6 @@ public class UpdateWidgetService extends Service {
 
                     // only when the http response code equals 200 aka ok process response
                     if(urlConnection.getResponseCode()  == 200) {
-                        Log.d("Run url connection", "ok");
                         InputStream stream = urlConnection.getInputStream();
 
                         reader = new BufferedReader(new InputStreamReader(stream));
@@ -142,7 +137,6 @@ public class UpdateWidgetService extends Service {
                         JSONObject jsonObject = new JSONObject(builder.toString());
                         jsonArray.put(jsonObject);
                         countDownLatch.countDown();
-                        Log.d("Run countdown", "fineshed");
                     }
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
@@ -161,9 +155,7 @@ public class UpdateWidgetService extends Service {
             }
         }).start();
         try {
-            Log.d("GD waiting", "for countdown");
             countDownLatch.await();
-            Log.d("GD countdown fineshed", jsonArray.toString());
             return jsonArray.getJSONObject(0);
         } catch (InterruptedException | JSONException e) {
             e.printStackTrace();

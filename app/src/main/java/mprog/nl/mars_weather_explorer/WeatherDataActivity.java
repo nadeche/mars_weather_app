@@ -1,12 +1,14 @@
 package mprog.nl.mars_weather_explorer;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -125,6 +127,16 @@ public class WeatherDataActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        // update widget photo
+        Log.d("intent to widget", "is made");
+        Intent widgetChangPhoto = new Intent(MarsWeatherWidgetProvider.ACTION_PHOTO_CHANGED);
+        getApplicationContext().sendBroadcast(widgetChangPhoto);
+        Log.d("intent to widget", "is sent");
+        super.onStop();
     }
 
     public void showSetTemperatureUnitDialog(){

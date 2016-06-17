@@ -3,66 +3,63 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="4dp"
     android:background="#55000000">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/backgroundImgView"/>
-
-    <TextView
-        style="@style/TextBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/title"
-        android:text="@string/app_name"
-        android:textStyle="bold"
-        android:textSize="14sp"
-        android:layout_centerHorizontal="true"/>
+        android:id="@+id/backgroundImgView"
+        android:adjustViewBounds="true"/>
 
     <LinearLayout
         style="@style/TextBox"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/solDateTextBox"
         android:orientation="horizontal"
-        android:layout_below="@+id/title">
-        <ImageView
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_sun"/>
+            android:text="Curiosity's Martian solar day:"
+            android:layout_marginRight="2dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/solDateTextViewWidget"
+            android:text="1364"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        style="@style/TextBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_above="@id/solDateTextBox">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/maxTemperatureTextView"
             android:text="max 0 C"
-            android:layout_gravity="center_vertical"/>
-    </LinearLayout>
-    <LinearLayout
-        style="@style/TextBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/title"
-        android:layout_alignParentRight="true">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_moon"/>
+            android:gravity="center_vertical"
+            android:drawableStart="@drawable/ic_sun"
+            android:paddingStart="7dp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/minTemperatureTextView"
             android:text="min 0 C"
-            android:layout_gravity="center_vertical"/>
-    </LinearLayout>
+            android:gravity="center_vertical"
+            android:drawableStart="@drawable/ic_moon"
+            android:layout_alignParentEnd="true"
+            android:paddingEnd="7dp"/>
+    </RelativeLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/lunchAppButton"
-        android:text="Lunch mars weather explorer"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+
 
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package mprog.nl.mars_weather_explorer;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
     private TextView sunriseTextView;       // contains the earth date and time on the martian sunrise
     private TextView sunsetTextView;        // contains the earth date and time on the martian sunset
     private TextView pressureTextView;      // contains the atmospheric pressure on mars
+    private TextView photoTitleTextView;
     private ImageView roverImageView;       // view reference to rover photo in background of weather data
     private Dialog changeDateDialog;        // contains dialog to change the date to view data from
     private Dialog loadPhotoDialog;         // dialog to load a particular photo from curiosity
@@ -94,6 +96,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         sunsetTextView = (TextView)rootView.findViewById(R.id.sunsetTextView);
         pressureTextView = (TextView)rootView.findViewById(R.id.pressureTextView);
         roverImageView = (ImageView)rootView.findViewById(R.id.roverImageView);
+        photoTitleTextView = (TextView)rootView.findViewById(R.id.photoTitleTextView);
         //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
@@ -103,6 +106,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
             getLatestWeatherData();
             // get the latest rover photo according to the latest sol and the last preferred rover camera
             SharedPreferencesManager preferencesManager = SharedPreferencesManager.getInstance(getActivity());
+            photoTitleTextView.setText(preferencesManager.getCamera());
             try {
                 HttpRequestModel request = new HttpRequestModel(preferencesManager.getLatestSol(), preferencesManager.getCamera());
                 new FetchDataAsync(WeatherDataFragment.this).execute(request);
@@ -113,9 +117,10 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         // when weather data is initialised reset the data to screen and get last loaded photo from internal storage
         else {
             setDataToView(weatherData);
-
+            SharedPreferencesManager preferencesManager = SharedPreferencesManager.getInstance(getActivity());
+            photoTitleTextView.setText(preferencesManager.getCamera());
             try {
-                File imageFile = new File(SharedPreferencesManager.getInstance(getActivity()).getImageFilePath());
+                File imageFile = new File(preferencesManager.getImageFilePath());
                 Bitmap bitmapImg = BitmapFactory.decodeStream(new FileInputStream(imageFile));
                 roverImageView.setImageBitmap(bitmapImg);
             }
@@ -208,6 +213,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
                 // save the camera name chosen as preference to load when the app opens
                 SharedPreferencesManager preferencesManager = SharedPreferencesManager.getInstance(getActivity());
                 preferencesManager.setCamera(camera[0]);
+                photoTitleTextView.setText(camera[0]);
                 try {
                     HttpRequestModel request = new HttpRequestModel(numberPicker.getValue(), camera[0]);
                     new FetchDataAsync(WeatherDataFragment.this).execute(request);

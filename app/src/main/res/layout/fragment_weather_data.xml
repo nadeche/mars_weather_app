@@ -234,5 +234,5 @@
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
         android:layout_above="@id/weatherDataGrid"
-        android:id="@+id/textView2" />
+        android:id="@+id/photoTitleTextView" />
 </RelativeLayout>

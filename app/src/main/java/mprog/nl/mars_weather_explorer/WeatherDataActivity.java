@@ -3,17 +3,14 @@ package mprog.nl.mars_weather_explorer;
 import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
+import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -25,7 +22,6 @@ import android.widget.Toast;
 // TODO Make data model classes
 // TODO Make method to handle Json to data models
 // TODO Handle fragment lifecycle loading data only when needed.
-// TODO Handle size of bitmaps to reduce size for widget
 // TODO wait screen while startup app
 // TODO placement photo in app when enlarged
 // TODO home needs different title
@@ -34,6 +30,7 @@ import android.widget.Toast;
 // TODO save photo function?
 // TODO handle unit change in graph
 // TODO add axis label's to graph
+// TODO handle rotation
 
 public class WeatherDataActivity extends AppCompatActivity {
 

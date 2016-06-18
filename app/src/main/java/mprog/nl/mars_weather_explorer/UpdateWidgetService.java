@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import org.json.JSONArray;
@@ -178,6 +177,8 @@ public class UpdateWidgetService extends Service {
                         try {
                             InputStream inputStream = new java.net.URL(photoLink).openStream();
                             photoBitMap = BitmapFactory.decodeStream(inputStream);
+                            PhotoManager photoManager = new PhotoManager();
+                            photoBitMap = photoManager.getPhoto(getApplicationContext(), photoBitMap);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

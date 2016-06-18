@@ -6,7 +6,6 @@ import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -34,6 +33,9 @@ public class DownloadPhotoAsync extends AsyncTask <String, Void, Bitmap> {
         try {
             InputStream inputStream = new java.net.URL(urls[0]).openStream();
             photoBitMap = BitmapFactory.decodeStream(inputStream);
+            PhotoManager photoManager = new PhotoManager();
+            photoBitMap = photoManager.getPhoto(context, photoBitMap);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,6 +46,8 @@ public class DownloadPhotoAsync extends AsyncTask <String, Void, Bitmap> {
         roverPhoto.setImageBitmap(loadedPhoto);
         saveToInternalStorage(loadedPhoto);
     }
+
+
 
     private void saveToInternalStorage(Bitmap bitmapImage){
 

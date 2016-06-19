@@ -1,7 +1,6 @@
 package mprog.nl.mars_weather_explorer;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -146,7 +145,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
                 // let the user pick a different solar day
                 showChooseNewSolDialog();
                 return true;
-            case R.id.action_home:
+            case R.id.action_load_latest_data:
                 // get the latest weather data
                 getLatestWeatherData();
                 return true;

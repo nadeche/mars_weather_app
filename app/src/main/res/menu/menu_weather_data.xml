@@ -16,8 +16,7 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/action_home"
-        android:icon="@drawable/ic_home"
-        android:title="Home"
-        app:showAsAction="ifRoom"/>
+        android:id="@+id/action_load_latest_data"
+        android:title="Load latest data"
+        app:showAsAction="never"/>
 </menu>

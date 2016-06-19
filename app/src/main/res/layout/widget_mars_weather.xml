@@ -9,10 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/backgroundImgView"
-        android:adjustViewBounds="true"/>
+        android:adjustViewBounds="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"/>
 
     <LinearLayout
-        style="@style/TextBox"
+        style="@style/TextBox.NoMarginBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/solDateTextBox"
@@ -25,12 +27,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Curiosity's Martian solar day:"
+            android:textSize="10sp"
             android:layout_marginRight="2dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/solDateTextViewWidget"
             android:text="1364"
+            android:textSize="12sp"
             android:textStyle="bold"/>
     </LinearLayout>
 
@@ -45,6 +49,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/maxTemperatureTextView"
             android:text="max 0 C"
+            android:textStyle="bold"
             android:gravity="center_vertical"
             android:drawableStart="@drawable/ic_sun"
             android:paddingStart="7dp"/>
@@ -54,6 +59,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/minTemperatureTextView"
             android:text="min 0 C"
+            android:textStyle="bold"
             android:gravity="center_vertical"
             android:drawableStart="@drawable/ic_moon"
             android:layout_alignParentEnd="true"

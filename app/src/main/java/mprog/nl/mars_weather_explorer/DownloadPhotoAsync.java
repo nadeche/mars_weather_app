@@ -1,6 +1,7 @@
 package mprog.nl.mars_weather_explorer;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
@@ -20,10 +21,19 @@ public class DownloadPhotoAsync extends AsyncTask <String, Void, Bitmap> {
 
     private Activity context;
     ImageView roverPhoto;
+    private ProgressDialog progressDialog;
 
     public DownloadPhotoAsync(Activity context, ImageView roverImageView) {
         this.context = context;
         this.roverPhoto = roverImageView;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Photo loading...");
+        progressDialog.show();
     }
 
     @Override
@@ -45,6 +55,7 @@ public class DownloadPhotoAsync extends AsyncTask <String, Void, Bitmap> {
     protected void onPostExecute(Bitmap loadedPhoto) {
         roverPhoto.setImageBitmap(loadedPhoto);
         saveToInternalStorage(loadedPhoto);
+        progressDialog.dismiss();
     }
 
 

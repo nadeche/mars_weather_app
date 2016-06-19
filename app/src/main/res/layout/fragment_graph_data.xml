@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="@dimen/dialog_margin"
-    android:paddingBottom="@dimen/dialog_margin">
+    android:paddingBottom="4dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/graphTitle"
         android:text="Maximun and minimum temperature over time"
         android:textStyle="bold"
         android:textSize="15sp"
@@ -19,6 +20,28 @@
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/temperatureLineGraph"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/graphTitle"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="12dp"/>
 
-</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Martian solar days"
+        android:textSize="10sp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:textColor="#8b8b8b"/>
+
+    <mprog.nl.mars_weather_explorer.VerticalTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Temparature"
+        android:textSize="10sp"
+        android:gravity="bottom"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="1dp"
+        android:textColor="#8b8b8b"/>
+</RelativeLayout>

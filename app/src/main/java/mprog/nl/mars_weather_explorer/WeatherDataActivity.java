@@ -16,6 +16,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
+
 // TODO Add menu for search on sol or date
 // TODO Add dialog for search on earth date
 // TODO Create dot navigation at the bottom
@@ -24,7 +26,6 @@ import android.widget.Toast;
 // TODO Handle fragment lifecycle loading data only when needed.
 // TODO wait screen while startup app
 // TODO save photo function?
-// TODO handle rotation
 // TODO change unit change option in UI
 
 public class WeatherDataActivity extends AppCompatActivity {
@@ -40,6 +41,7 @@ public class WeatherDataActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter; // contains the adapter used to swipe through fragments
     private Dialog setTemperatureUnitDialog;            // contains dialog to change the temperature unit used in the app
     private SharedPreferencesManager preferencesManager;
+    DotIndicator dotIndicator;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -66,6 +68,8 @@ public class WeatherDataActivity extends AppCompatActivity {
 
         preferencesManager = SharedPreferencesManager.getInstance(this);
 
+        dotIndicator = (DotIndicator) findViewById(R.id.dotNavigation);
+
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +92,8 @@ public class WeatherDataActivity extends AppCompatActivity {
 
         @Override
         public void onPageSelected(int newPosition) {
+
+            dotIndicator.setSelectedItem(newPosition, true);
 
             FragmentLifecycle fragmentToShow = (FragmentLifecycle)mSectionsPagerAdapter.getItem(newPosition);
             fragmentToShow.onResumeFragment();

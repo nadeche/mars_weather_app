@@ -20,7 +20,6 @@ import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
 
 // TODO Add menu for search on sol or date
 // TODO Add dialog for search on earth date
-// TODO Create dot navigation at the bottom
 // TODO Make data model classes
 // TODO Make method to handle Json to data models
 // TODO Handle fragment lifecycle loading data only when needed.

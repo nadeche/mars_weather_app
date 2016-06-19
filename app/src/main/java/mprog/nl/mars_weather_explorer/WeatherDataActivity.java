@@ -24,7 +24,6 @@ import android.widget.Toast;
 // TODO Handle fragment lifecycle loading data only when needed.
 // TODO wait screen while startup app
 // TODO placement photo in app when enlarged
-// TODO home needs different title
 // TODO wait notice when photo is loading
 // TODO spinnerView selection on last choice
 // TODO save photo function?

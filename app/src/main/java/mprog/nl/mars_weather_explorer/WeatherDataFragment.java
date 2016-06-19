@@ -58,6 +58,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
     private Dialog loadPhotoDialog;         // dialog to load a particular photo from curiosity
     private String TAG = "WeatherDataFragment";
     private WeatherDataModel weatherData;
+    private SharedPreferencesManager preferencesManager;
 
     public WeatherDataFragment() {
     }
@@ -99,12 +100,13 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
+        preferencesManager = SharedPreferencesManager.getInstance(getActivity());
+
         // when weather data is not yet initialised get the latest weather data and photo
         if (weatherData == null){
             // get the latest weather data
             getLatestWeatherData();
             // get the latest rover photo according to the latest sol and the last preferred rover camera
-            SharedPreferencesManager preferencesManager = SharedPreferencesManager.getInstance(getActivity());
             photoTitleTextView.setText(preferencesManager.getCamera());
             try {
                 HttpRequestModel request = new HttpRequestModel(preferencesManager.getLatestSol(), preferencesManager.getCamera());
@@ -116,7 +118,6 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         // when weather data is initialised reset the data to screen and get last loaded photo from internal storage
         else {
             setDataToView(weatherData);
-            SharedPreferencesManager preferencesManager = SharedPreferencesManager.getInstance(getActivity());
             photoTitleTextView.setText(preferencesManager.getCamera());
             try {
                 File imageFile = new File(preferencesManager.getImageFilePath());
@@ -183,6 +184,11 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         ArrayAdapter<CharSequence> cameraListAdapter = ArrayAdapter.createFromResource(getActivity(),R.array.curiosity_cameras_list, android.R.layout.simple_spinner_item);
         cameraListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         camerasSpinner.setAdapter(cameraListAdapter);
+        // set selection on previous selected camera
+        if (!preferencesManager.getCamera().isEmpty()){
+            int spinnerPosition = cameraListAdapter.getPosition(preferencesManager.getCamera());
+            camerasSpinner.setSelection(spinnerPosition);
+        }
 
         // initialize number picker with the latest solar day as a maximum
         final NumberPicker numberPicker = (NumberPicker)loadPhotoDialog.findViewById(R.id.solNumberPicker);
@@ -273,7 +279,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
      * lets the wheel wrap around.
      * */
     private void numberPickerInit(NumberPicker numberPicker){
-        numberPicker.setMaxValue(SharedPreferencesManager.getInstance(getActivity()).getLatestSol());
+        numberPicker.setMaxValue(preferencesManager.getLatestSol());
         numberPicker.setMinValue(15);
         numberPicker.setWrapSelectorWheel(true);
     }
@@ -308,7 +314,6 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
                 String photoLink = firstPhotoJsonObject.getString("img_src");
                 new DownloadPhotoAsync(getActivity(), roverImageView).execute(photoLink);
                 // save the camera name chosen as preference to load when the app opens
-                SharedPreferencesManager preferencesManager = SharedPreferencesManager.getInstance(getActivity());
                 preferencesManager.setCamera(cameraName);
                 photoTitleTextView.setText(cameraName);
             } catch (JSONException e) {
@@ -361,7 +366,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
                 weatherData.setSol(weatherDataJsonObj.getLong("sol"));
                 // when the latest weather data where requested save the sol for other initialisations
                 if (requestModel.latestWeatherData) {
-                    SharedPreferencesManager.getInstance(getActivity()).setLatestSol((int)weatherData.getSol());
+                    preferencesManager.setLatestSol((int)weatherData.getSol());
                 }
                 // save the other returned data in a weatherDataModel
                 weatherData.setMax_temp_C(weatherDataJsonObj.getDouble("max_temp"));
@@ -393,7 +398,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         solTextView.setText(String.valueOf(weatherData.getSol()));
         earthDateTextView.setText(weatherData.getTerrestrial_date());
 
-        if (SharedPreferencesManager.getInstance(getActivity()).isCelsiusUnit()) {
+        if (preferencesManager.isCelsiusUnit()) {
             // set a degrees celsius character behind the temperatures values
             maxTempTextView.setText(String.valueOf(weatherData.getMax_temp_C())+ (char) 0x00B0 + "C");
             minTempTextView.setText(String.valueOf(weatherData.getMin_temp_C()) + (char) 0x00B0 + "C");

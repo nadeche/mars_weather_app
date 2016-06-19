@@ -24,8 +24,6 @@ import android.widget.Toast;
 // TODO Handle fragment lifecycle loading data only when needed.
 // TODO wait screen while startup app
 // TODO save photo function?
-// TODO handle unit change in graph
-// TODO add axis label's to graph
 // TODO handle rotation
 // TODO change unit change option in UI
 

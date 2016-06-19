@@ -3,7 +3,6 @@ package mprog.nl.mars_weather_explorer;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-//import android.support.v7.app.AlertDialog;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,6 +36,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+//import android.support.v7.app.AlertDialog;
+
 /**
  * Created by Nadeche
  */
@@ -44,13 +45,14 @@ import java.util.Map;
 public class GraphDataFragment extends BaseFragmentSuper implements FragmentLifecycle{
 
     private String TAG = "GraphDataFragment";
-    private ArrayList<Double> maxCelsius = new ArrayList<>();
-    private ArrayList<Double> minCelsius = new ArrayList<>();
+    private ArrayList<Double> maxTemperature = new ArrayList<>();
+    private ArrayList<Double> minTemperature = new ArrayList<>();
     private ArrayList<String> solarDay = new ArrayList<>();
     private LineChart temperatureGraph;
     private Calendar dateToDay;
     private Calendar dateTwoWeeksAgo;
     private LineData graphLines = null;
+    private VerticalTextView yAxisTextView;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public static GraphDataFragment newInstance(){
@@ -64,6 +66,7 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         View rootView = inflater.inflate(R.layout.fragment_graph_data, container, false);
         setHasOptionsMenu(true);
         temperatureGraph = (LineChart) rootView.findViewById(R.id.temperatureLineGraph);
+        yAxisTextView = (VerticalTextView) rootView.findViewById(R.id.yAxisTitle);
 
         temperatureGraph.setDescription("");
 
@@ -205,8 +208,8 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         if ( jsonObject!= null){
             Map<Integer, Double> tempMax = new HashMap<>();
             Map<Integer, Double> tempMin = new HashMap<>();
-            maxCelsius.removeAll(maxCelsius);
-            minCelsius.removeAll(minCelsius);
+            maxTemperature.removeAll(maxTemperature);
+            minTemperature.removeAll(minTemperature);
             solarDay.removeAll(solarDay);
             int maxSol = 0;
             int minSol = 0;
@@ -221,8 +224,15 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
                     for (int j = resultDaysArrayLength; j >= 0 ; j--) {
                         JSONObject dailyDataJsonObject = resultDaysJsonArray.getJSONObject(j);
                         int sol = dailyDataJsonObject.getInt("sol");
-                        tempMax.put(sol, dailyDataJsonObject.getDouble("max_temp"));
-                        tempMin.put(sol, dailyDataJsonObject.getDouble("min_temp"));
+                        if (SharedPreferencesManager.getInstance(getActivity()).isCelsiusUnit()){
+                            tempMax.put(sol, dailyDataJsonObject.getDouble("max_temp"));
+                            tempMin.put(sol, dailyDataJsonObject.getDouble("min_temp"));
+                        }
+                        else {
+                            tempMax.put(sol, dailyDataJsonObject.getDouble("max_temp_fahrenheit"));
+                            tempMin.put(sol, dailyDataJsonObject.getDouble("min_temp_fahrenheit"));
+                        }
+
 
                         if (i == pagesArrayLength && j == resultDaysArrayLength){
                             minSol = dailyDataJsonObject.getInt("sol");
@@ -238,30 +248,40 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
 
                 for (int i = minSol; i <= maxSol; i++){
                     if (tempMax.containsKey(i)){
-                        maxCelsius.add(tempMax.get(i));
-                        minCelsius.add(tempMin.get(i));
+                        maxTemperature.add(tempMax.get(i));
+                        if (tempMin.containsKey(i)){
+                            minTemperature.add(tempMin.get(i));
+                        }
+                        else {
+                            minTemperature.add(null);
+                        }
                     }
                     else {
-                        maxCelsius.add(null);
-                        minCelsius.add(null);
+                        maxTemperature.add(null);
+                        if (tempMin.containsKey(i)){
+                            minTemperature.add(tempMin.get(i));
+                        }
+                        else {
+                            minTemperature.add(null);
+                        }
                     }
                     solarDay.add(String.valueOf(i));
                 }
-                setupTemperatureGraph(temperatureGraph, maxCelsius, minCelsius, solarDay);
+                setupTemperatureGraph(temperatureGraph, maxTemperature, minTemperature, solarDay);
             }
         }
     }
 
     private void setupTemperatureGraph(LineChart temperatureGraph,
-                                       ArrayList<Double> maxCelsius,
-                                       ArrayList<Double> minCelsius,
+                                       ArrayList<Double> maxTemperature,
+                                       ArrayList<Double> minTemperature,
                                        ArrayList<String> xValues) {
 
         // setting up line data
         ArrayList<Entry> maxTemp = new ArrayList<Entry>();
         ArrayList<Entry> minTemp = new ArrayList<Entry>();
-        createEntries(maxTemp,maxCelsius);
-        createEntries(minTemp, minCelsius);
+        createEntries(maxTemp,maxTemperature);
+        createEntries(minTemp, minTemperature);
 
         // setting up line sets
         LineDataSet maxTempSet = new LineDataSet(maxTemp, "Maximum temperature");
@@ -286,6 +306,7 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         temperatureGraph.setData(graphLines);
         temperatureGraph.notifyDataSetChanged();
         temperatureGraph.invalidate();
+        setYAxisTitleTempUnit();
     }
 
     private void createEntries(ArrayList<Entry> entries, ArrayList<Double> yData) {
@@ -301,6 +322,15 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         lineSet.setLineWidth(2f);
         lineSet.setDrawValues(false);
         lineSet.setDrawCircles(false);
+    }
+
+    private void setYAxisTitleTempUnit(){
+        if (SharedPreferencesManager.getInstance(getActivity()).isCelsiusUnit()){
+            yAxisTextView.setText("Temperature " + (char) 0x00B0 + "C");
+        }
+        else {
+            yAxisTextView.setText("Temperature " + (char) 0x00B0 + "F");
+        }
     }
 
     @Override

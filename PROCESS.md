@@ -46,8 +46,8 @@ Today I added to the widget that when you choose a differend photo in the app th
 On the presentations of today I noticed that I am not as far behind as I thought, other people are much more behind than me. This calms me a bit. Altough I cleared the entire weekend again to work on this project. Maybe an extra feature in my app I can bould when I have to litle time to implement a news feed is to be able to save a loaded photo to your gallery for personal use.
 ## Day 19| 18-06-2016
 Today I have been buzzy with the freeking resizing of my photo's. Why do they have to make it so complicated??? First I tryed to resize with the use of BitmapFactory and BitmapFactory.Options according to the example on android.developers. This dit not work, weired algorythem. Then I tryed to use a libary (Glide) this dit not work either because it needed the output width and height and I only have the Width on the device screen. Since the photo's I load are all differend sizes and ratio's. What I want is to fit big photos to the widht of the screen device. Now I have a solution finally after a day of struggeling using a createBirmap function on the loaded bitmap itself. This needs a matrix object whihc I initialise by giving it the ratio by which it needs to downscale the photo. This ratio I calculate by deviding the device screenwidht by the photo width. Finally now it works. And it works for the widget as well when it downloads a photo it can also use the same method to rescale the image by use of a manager class. This class I can use for refactoring in the net week.
-
-
+## Day 20| 19-06-2016
+Today I had to choose between bowing up photos that are smaller than the screensize which makes them very pixelly or displaing them at the right size wich makes them very small. I decided that eitherway the user wil probably load a different photo so blowing up the photo regartless of size seems like the simpleler solution program wise. 
 
 
 

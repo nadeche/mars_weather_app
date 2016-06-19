@@ -23,7 +23,6 @@ import android.widget.Toast;
 // TODO Make method to handle Json to data models
 // TODO Handle fragment lifecycle loading data only when needed.
 // TODO wait screen while startup app
-// TODO placement photo in widget when enlarged
 // TODO save photo function?
 // TODO handle unit change in graph
 // TODO add axis label's to graph

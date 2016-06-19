@@ -22,6 +22,7 @@ public class PhotoManager {
         int photoBitmapHeight = photoBitmap.getHeight();
 
         if (photoBitmapWidth > screenWidth){
+
             float scaleRatio = ((float) screenWidth) / photoBitmapWidth;
 
             // Create a matrix for the manipulation

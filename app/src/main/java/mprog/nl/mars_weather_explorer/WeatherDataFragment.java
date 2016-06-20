@@ -32,6 +32,7 @@ import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by Nadeche
@@ -377,7 +378,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
                 weatherData.setAtmo_opacity(weatherDataJsonObj.getString("atmo_opacity"));
                 weatherData.setWind_speed(weatherDataJsonObj.optLong("wind_speed"));
                 weatherData.setSeason(weatherDataJsonObj.getString("season"));
-                // TODO Handle date and time format
+                // TODO Handle date and time format here
                 weatherData.setSunrise(weatherDataJsonObj.getString("sunrise"));
                 weatherData.setSunset(weatherDataJsonObj.getString("sunset"));
 
@@ -420,9 +421,34 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         windSpeedTextView.setText(String.valueOf(weatherData.getWind_speed()));
         seasonDataTextView.setText(weatherData.getSeason());
         pressureTextView.setText(String.valueOf(weatherData.getPressure()));
-        // TODO handle layout for date and time to fit gridLayout
-        //sunriseTextView.setText(weatherData.getSunrise());
-        //sunsetTextView.setText(weatherData.getSunset());
+
+        // convert time and dates to device time and date
+        String sunRiseDateTime = convertUTCtoLocalTime(weatherData.getSunrise());
+        String sunSetDateTime = convertUTCtoLocalTime(weatherData.getSunset());
+        sunriseTextView.setText(sunRiseDateTime);
+        sunsetTextView.setText(sunSetDateTime);
+    }
+
+    /**
+     * Method to convert the sunrise and set time to local time.
+     * It takes a dateTime string in format: year-month-dayThour:minute:secondZ.
+     * It converts the date to: num-day text-month hour:minute
+     * when the parse was un success full it returns a string containing "None".
+     * */
+    private String convertUTCtoLocalTime(String originalDate) {
+        SimpleDateFormat dateFormatIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        dateFormatIn.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat dateFormatOut = new SimpleDateFormat("dd MMM HH:mm");
+        dateFormatOut.setTimeZone(TimeZone.getDefault());
+        try {
+            // convert string to date in UTC
+            Date dateUTC = dateFormatIn.parse(originalDate);
+            // convert UTC date to local time in right format
+            return dateFormatOut.format(dateUTC);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "None";
     }
 
     @Override

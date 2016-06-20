@@ -1,7 +1,5 @@
 package mprog.nl.mars_weather_explorer;
 
-import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,6 +7,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by Nadeche
@@ -60,9 +59,9 @@ public class WeatherDataManager {
                 weatherData.setAtmo_opacity(weatherDataJsonObj.getString("atmo_opacity"));
                 weatherData.setWind_speed(weatherDataJsonObj.optLong("wind_speed"));
                 weatherData.setSeason(weatherDataJsonObj.getString("season"));
-                // TODO Handle date and time format
-                weatherData.setSunrise(weatherDataJsonObj.getString("sunrise"));
-                weatherData.setSunset(weatherDataJsonObj.getString("sunset"));
+                // convert time and dates to device time and date
+                weatherData.setSunrise(convertUTCtoLocalTime(weatherDataJsonObj.getString("sunrise")));
+                weatherData.setSunset(convertUTCtoLocalTime(weatherDataJsonObj.getString("sunset")));
 
                 return weatherData;
             } catch (JSONException | ParseException e) {
@@ -70,5 +69,27 @@ public class WeatherDataManager {
             }
         }
         return null;
+    }
+
+    /**
+     * Method to convert the sunrise and set time to local time.
+     * It takes a dateTime string in format: year-month-dayThour:minute:secondZ.
+     * It converts the date to: num-day text-month hour:minute
+     * when the parse was un success full it returns a string containing "None".
+     * */
+    private String convertUTCtoLocalTime(String originalDate) {
+        SimpleDateFormat dateFormatIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        dateFormatIn.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat dateFormatOut = new SimpleDateFormat("dd MMM HH:mm");
+        dateFormatOut.setTimeZone(TimeZone.getDefault());
+        try {
+            // convert string to date in UTC
+            Date dateUTC = dateFormatIn.parse(originalDate);
+            // convert UTC date to local time in right format
+            return dateFormatOut.format(dateUTC);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "None";
     }
 }

@@ -49,7 +49,10 @@ Today I have been buzzy with the freeking resizing of my photo's. Why do they ha
 ## Day 20| 19-06-2016
 Today I had to choose between bowing up photos that are smaller than the screensize which makes them very pixelly or displaing them at the right size wich makes them very small. I decided that eitherway the user wil probably load a different photo so blowing up the photo regartless of size seems like the simpleler solution program wise.
 I added a library to my project to implement a dotnavigation at the bottom of the screen. To write it myself seemed a bit rediundent altough I did research how to make this feature. The library I use now I choose because it seemed simple to implement at the time and after fixing a few bugs it actually is. The libary is called [SlidingIntroScreen](https://github.com/MatthewTamlin/SlidingIntroScreen) and is a project that has still recent updates on githib. This means for me that the project has good compatibility for aplications running on the latest android versions.
-
+## Day 21| 20-06-2016
+This morning I helped one of my fellow students with a problem in code. This took longer than expected so I didn't have as much time to work today as I would have liked. But my fellow student was very happy.
+In the afternoon I have been very buzzy with getting the sunset and rise converted to the device time zone and in a format that fits in the UI as it is. In the end I settled for displaing the day, moth and the hour and minute. The year is not relevant for the user and neighter is the timezone the user is at the moment. In this way the data fits in in the UI. I choose to display the month in letters because than it can't be cunfued with the day in some cases because not everyone expects the day to come first.
+Then I spend time on changing the UI for the used temperature scale. To just have one switchable setting under settings seemd a bit redundent. Now there is a menu item that changes to the opposite of what is selectet. Just pressing on that menu item changes the seved preference. When the menu is reopened the menu item title changes to the opposite. The only problem I have now is how to update the fragments where the data is displayed when the preference is changed. Since this menu item resides in the activity and not in one of the fragments. Now the date changes only when the date is reloaded.
 
 
 

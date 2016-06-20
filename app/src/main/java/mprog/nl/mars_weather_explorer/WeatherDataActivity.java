@@ -10,11 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.Switch;
-import android.widget.Toast;
 
 import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
 
@@ -40,7 +35,10 @@ public class WeatherDataActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter; // contains the adapter used to swipe through fragments
     private Dialog setTemperatureUnitDialog;            // contains dialog to change the temperature unit used in the app
     private SharedPreferencesManager preferencesManager;
-    DotIndicator dotIndicator;
+    private DotIndicator dotIndicator;
+    private static final String USE_CELSIUS = "Use Celsius scale";
+    private static final String USE_FAHRENHEIT = "Use Fahrenheit scale";
+
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -113,6 +111,17 @@ public class WeatherDataActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem useScale = menu.findItem(R.id.action_change_unit);
+        if (preferencesManager.isCelsiusUnit()){
+            useScale.setTitle(USE_FAHRENHEIT);
+        }
+        else {
+            useScale.setTitle(USE_CELSIUS);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -127,10 +136,14 @@ public class WeatherDataActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                showSetTemperatureUnitDialog();
+            case R.id.action_change_unit:
+                if (item.getTitle().equals(USE_FAHRENHEIT)){
+                    preferencesManager.setCelsiusUnit(false);
+                }
+                else {
+                    preferencesManager.setCelsiusUnit(true);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -149,7 +162,7 @@ public class WeatherDataActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    public void showSetTemperatureUnitDialog(){
+    /*public void showSetTemperatureUnitDialog(){
         setTemperatureUnitDialog.setContentView(R.layout.dialog_temperature_setting);
         setTemperatureUnitDialog.setTitle("Setting");
 
@@ -192,5 +205,5 @@ public class WeatherDataActivity extends AppCompatActivity {
 
         setTemperatureUnitDialog.show();
     }
-
+*/
 }

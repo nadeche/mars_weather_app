@@ -1,10 +1,12 @@
 package mprog.nl.mars_weather_explorer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Nadeche
@@ -17,6 +19,7 @@ public class SharedPreferencesManager {
     private String camera;
     private int latestSol;
     private String imageFilePath;
+    private List<BaseFragmentSuper> baseFragments = new ArrayList<>();
 
     private static SharedPreferencesManager preferencesManager = null;
 
@@ -54,6 +57,10 @@ public class SharedPreferencesManager {
         this.celsiusUnit = celsiusUnit;
         sharedPreferencesEditor.putBoolean("celsiusUnit", celsiusUnit);
         sharedPreferencesEditor.commit();
+
+        for (BaseFragmentSuper baseFragment:baseFragments){
+            baseFragment.onTemperatureUnitChanged();
+        }
     }
 
     public int getLatestSol() {
@@ -74,5 +81,21 @@ public class SharedPreferencesManager {
         this.imageFilePath = imageFilePath;
         sharedPreferencesEditor.putString("imageFilePath", imageFilePath);
         sharedPreferencesEditor.commit();
+    }
+
+    public void regiterBaseFragmentSuper(BaseFragmentSuper baseFragment){
+        boolean classExists = false;
+        for (BaseFragmentSuper fragment: baseFragments){
+            if (fragment.getClass() == baseFragment.getClass()){
+                classExists = true;
+                break;
+            }
+        }
+        if (!classExists){
+            baseFragments.add(baseFragment);
+            Log.d("registerBaseFragment", baseFragment.getClass().toString());
+        }
+
+
     }
 }

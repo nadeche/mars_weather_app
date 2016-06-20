@@ -54,9 +54,12 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
     private LineData graphLines = null;
     private VerticalTextView yAxisTextView;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private String graphFromDate;
+    private String graphTillDate;
 
     public static GraphDataFragment newInstance(){
         GraphDataFragment fragment = new GraphDataFragment();
+        SharedPreferencesManager.getInstance(fragment.getActivity()).regiterBaseFragmentSuper(fragment);
         return fragment;
     }
 
@@ -94,17 +97,10 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
             dateTwoWeeksAgo.add(Calendar.DAY_OF_YEAR, -14);
 
             //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String dataTill = dateFormat.format(dateToDay.getTime());
-            String dataFrom = dateFormat.format(dateTwoWeeksAgo.getTime());
-            try {
-                HttpRequestModel request = new HttpRequestModel(dataFrom, dataTill);
-                new FetchDataAsync(GraphDataFragment.this).execute(request);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+            graphTillDate = dateFormat.format(dateToDay.getTime());
+            graphFromDate = dateFormat.format(dateTwoWeeksAgo.getTime());
+            loadGraphWithDates();
         }
-
-
         Log.d("onCreateView fragment", "1");
 
         return rootView;
@@ -123,6 +119,15 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void loadGraphWithDates(){
+        try {
+            HttpRequestModel request = new HttpRequestModel(graphFromDate, graphTillDate);
+            new FetchDataAsync(GraphDataFragment.this).execute(request);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -150,15 +155,10 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
                 }
 
                 //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                String fromDate = dateFormat.format(fromCalender.getTime());
-                String tillDate = dateFormat.format(tillCalender.getTime());
+                graphFromDate = dateFormat.format(fromCalender.getTime());
+                graphTillDate = dateFormat.format(tillCalender.getTime());
 
-                try {
-                    HttpRequestModel request = new HttpRequestModel(fromDate, tillDate);
-                    new FetchDataAsync(GraphDataFragment.this).execute(request);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
+                loadGraphWithDates();
                 dialog.dismiss();
             }
         });
@@ -233,7 +233,6 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
                             tempMin.put(sol, dailyDataJsonObject.getDouble("min_temp_fahrenheit"));
                         }
 
-
                         if (i == pagesArrayLength && j == resultDaysArrayLength){
                             minSol = dailyDataJsonObject.getInt("sol");
                         }
@@ -270,6 +269,11 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
                 setupTemperatureGraph(temperatureGraph, maxTemperature, minTemperature, solarDay);
             }
         }
+    }
+
+    @Override
+    public void onTemperatureUnitChanged() {
+        loadGraphWithDates();
     }
 
     private void setupTemperatureGraph(LineChart temperatureGraph,

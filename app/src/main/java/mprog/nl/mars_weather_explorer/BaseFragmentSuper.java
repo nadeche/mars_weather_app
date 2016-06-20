@@ -2,9 +2,6 @@ package mprog.nl.mars_weather_explorer;
 
 import android.app.ProgressDialog;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-
-import org.json.JSONObject;
 
 /**
  * Created by Nadeche
@@ -26,4 +23,6 @@ public abstract class BaseFragmentSuper extends Fragment {
     }
 
     public abstract void setJsonToView(ReturnDataRequestModel returnDataRequest);
+
+    public abstract void onTemperatureUnitChanged();
 }

@@ -70,6 +70,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
      */
     public static WeatherDataFragment newInstance(int sectionNumber) {
         WeatherDataFragment fragment = new WeatherDataFragment();
+        SharedPreferencesManager.getInstance(fragment.getActivity()).regiterBaseFragmentSuper(fragment);
         //Bundle args = new Bundle();
         //args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         //fragment.setArguments(args);
@@ -118,7 +119,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         }
         // when weather data is initialised reset the data to screen and get last loaded photo from internal storage
         else {
-            setDataToView(weatherData);
+            setDataToView();
             photoTitleTextView.setText(preferencesManager.getCamera());
             try {
                 File imageFile = new File(preferencesManager.getImageFilePath());
@@ -301,6 +302,11 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         }
     }
 
+    @Override
+    public void onTemperatureUnitChanged() {
+        setTemperatureToTextViews();
+    }
+
     /**
      * This method converts a received JsonObject to a .jpg url and loads the photo async with DownloadPhotoAsync.
      * When the received object is empty it means there are not photos available for the requested camera and Martian solar day.
@@ -382,7 +388,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
                 weatherData.setSunrise(weatherDataJsonObj.getString("sunrise"));
                 weatherData.setSunset(weatherDataJsonObj.getString("sunset"));
 
-                setDataToView(weatherData);
+                setDataToView();
             } catch (JSONException | ParseException e) {
                 e.printStackTrace();
             }
@@ -390,16 +396,8 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
 
     }
 
-    /**
-     * This method displays the received weather data to the screen.
-     * It checks whether the weather status has a value.
-     * */
-    public void setDataToView(WeatherDataModel weatherData) {
-
-        solTextView.setText(String.valueOf(weatherData.getSol()));
-        earthDateTextView.setText(weatherData.getTerrestrial_date());
-
-        if (preferencesManager.isCelsiusUnit()) {
+    public void setTemperatureToTextViews(){
+        if (SharedPreferencesManager.getInstance(getActivity()).isCelsiusUnit()) {
             // set a degrees celsius character behind the temperatures values
             maxTempTextView.setText(String.valueOf(weatherData.getMax_temp_C())+ (char) 0x00B0 + "C");
             minTempTextView.setText(String.valueOf(weatherData.getMin_temp_C()) + (char) 0x00B0 + "C");
@@ -408,7 +406,18 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
             maxTempTextView.setText(String.valueOf(weatherData.getMax_temp_F())+ (char) 0x00B0 + "F");
             minTempTextView.setText(String.valueOf(weatherData.getMin_temp_F()) + (char) 0x00B0 + "F");
         }
+    }
 
+    /**
+     * This method displays the received weather data to the screen.
+     * It checks whether the weather status has a value.
+     * */
+    public void setDataToView() {
+
+        solTextView.setText(String.valueOf(weatherData.getSol()));
+        earthDateTextView.setText(weatherData.getTerrestrial_date());
+
+        setTemperatureToTextViews();
 
         // display "no data" when there is no weather status
         if(weatherData.getAtmo_opacity().equals("null")) {

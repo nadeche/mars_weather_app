@@ -1,15 +1,12 @@
 package mprog.nl.mars_weather_explorer;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import org.json.JSONObject;
 
 /**
  * Created by Nadeche
@@ -26,6 +23,7 @@ public class NewsFeedFragment extends BaseFragmentSuper implements FragmentLifec
 
     public static NewsFeedFragment newInstance (){
         NewsFeedFragment fragment = new NewsFeedFragment();
+        SharedPreferencesManager.getInstance(fragment.getActivity()).regiterBaseFragmentSuper(fragment);
         return fragment;
     }
 
@@ -47,6 +45,11 @@ public class NewsFeedFragment extends BaseFragmentSuper implements FragmentLifec
     @Override
     public void setJsonToView(ReturnDataRequestModel returnDataRequest) {
 
+    }
+
+    @Override
+    public void onTemperatureUnitChanged() {
+        // TODO
     }
 
     @Override

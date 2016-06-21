@@ -20,7 +20,9 @@ import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
 // TODO Handle fragment lifecycle loading data only when needed.
 // TODO wait screen while startup app
 // TODO save photo function?
-// TODO change unit change option in UI
+// TODO replace dialogs to alertDialogs
+// TODO make appIcon and widgetPreview
+// TODO enhance widget layout
 
 public class WeatherDataActivity extends AppCompatActivity {
 
@@ -66,15 +68,6 @@ public class WeatherDataActivity extends AppCompatActivity {
         preferencesManager = SharedPreferencesManager.getInstance(this);
 
         dotIndicator = (DotIndicator) findViewById(R.id.dotNavigation);
-
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
     }
 
@@ -161,49 +154,4 @@ public class WeatherDataActivity extends AppCompatActivity {
 
         super.onStop();
     }
-
-    /*public void showSetTemperatureUnitDialog(){
-        setTemperatureUnitDialog.setContentView(R.layout.dialog_temperature_setting);
-        setTemperatureUnitDialog.setTitle("Setting");
-
-        Button cancelButton = (Button)setTemperatureUnitDialog.findViewById(R.id.cancelButton);
-        Button saveButton = (Button)setTemperatureUnitDialog.findViewById(R.id.saveButton);
-        Switch temperatureSwitch = (Switch)setTemperatureUnitDialog.findViewById(R.id.temperatureSwitch);
-        final String[] temperatureUnit = new String[1];
-        temperatureUnit[0] = "Nothing changed";
-
-        temperatureSwitch.setChecked(!preferencesManager.isCelsiusUnit());
-
-        temperatureSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    preferencesManager.setCelsiusUnit(!isChecked);
-                    temperatureUnit[0] = "Fahrenheit";
-                }
-                else{
-                    preferencesManager.setCelsiusUnit(!isChecked);
-                    temperatureUnit[0] = "Celsius";
-                }
-            }
-        });
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(WeatherDataActivity.this,"Saved " + temperatureUnit[0], Toast.LENGTH_SHORT).show();
-                setTemperatureUnitDialog.dismiss();
-            }
-        });
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(WeatherDataActivity.this,"Canceled", Toast.LENGTH_SHORT).show();
-                setTemperatureUnitDialog.dismiss();
-            }
-        });
-
-        setTemperatureUnitDialog.show();
-    }
-*/
 }

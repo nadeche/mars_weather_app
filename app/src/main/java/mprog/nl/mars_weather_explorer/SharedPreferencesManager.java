@@ -3,7 +3,6 @@ package mprog.nl.mars_weather_explorer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +82,7 @@ public class SharedPreferencesManager {
         sharedPreferencesEditor.commit();
     }
 
-    public void regiterBaseFragmentSuper(BaseFragmentSuper baseFragment){
+    public void registerBaseFragmentSuper(BaseFragmentSuper baseFragment){
         boolean classExists = false;
         for (BaseFragmentSuper fragment: baseFragments){
             if (fragment.getClass() == baseFragment.getClass()){
@@ -93,9 +92,6 @@ public class SharedPreferencesManager {
         }
         if (!classExists){
             baseFragments.add(baseFragment);
-            Log.d("registerBaseFragment", baseFragment.getClass().toString());
         }
-
-
     }
 }

@@ -21,10 +21,11 @@ public class NewsFeedFragment extends BaseFragmentSuper implements FragmentLifec
 
     private String TAG = "NewsFeedFragment";
 
-    public static NewsFeedFragment newInstance (){
-        NewsFeedFragment fragment = new NewsFeedFragment();
-        SharedPreferencesManager.getInstance(fragment.getActivity()).regiterBaseFragmentSuper(fragment);
-        return fragment;
+    private static NewsFeedFragment instance = new NewsFeedFragment();
+
+    public static NewsFeedFragment getInstance(){
+        SharedPreferencesManager.getInstance(instance.getActivity()).registerBaseFragmentSuper(instance);
+        return instance;
     }
 
     private ListView newsFeedListView;

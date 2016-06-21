@@ -35,69 +35,70 @@ public class UpdateWidgetService extends Service {
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this.getApplicationContext());
 
-
         SharedPreferencesManager preferencesManager = SharedPreferencesManager.getInstance(getApplicationContext());
-        int[] allWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+        if (intent != null){
+            int[] allWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
 
-        for (int widgetId : allWidgetIds) {
-            WeatherDataModel weatherData = null;
-            try {
-                HttpRequestModel request = new HttpRequestModel();
-                JSONObject jsonData = getData(request);
-                if (jsonData != null){
-                    WeatherDataManager manager = new WeatherDataManager();
-                    weatherData = manager.jsonToData(jsonData, request);
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
-            RemoteViews widgetLayout = new RemoteViews(this.getApplicationContext().getPackageName(),
-                    R.layout.widget_mars_weather);
-
-            if (weatherData != null){
-                if (preferencesManager.isCelsiusUnit()){
-                    widgetLayout.setTextViewText(R.id.maxTemperatureTextView,
-                            String.valueOf(String.valueOf(weatherData.getMax_temp_C())+ (char) 0x00B0 + "C"));
-                    widgetLayout.setTextViewText(R.id.minTemperatureTextView,
-                            String.valueOf(String.valueOf(weatherData.getMin_temp_C()) + (char) 0x00B0 + "C"));
-                }
-                else {
-                    widgetLayout.setTextViewText(R.id.maxTemperatureTextView,
-                            String.valueOf(String.valueOf(weatherData.getMax_temp_F())+ (char) 0x00B0 + "F"));
-                    widgetLayout.setTextViewText(R.id.minTemperatureTextView,
-                            String.valueOf(String.valueOf(weatherData.getMin_temp_F()) + (char) 0x00B0 + "F"));
-                }
-                widgetLayout.setTextViewText(R.id.solDateTextViewWidget, String.valueOf(weatherData.getSol()));
-            }
-
-            Bitmap bitmapImg = null;
-            if (preferencesManager.getLatestSol() < weatherData.getSol()){
+            for (int widgetId : allWidgetIds) {
+                WeatherDataModel weatherData = null;
                 try {
-                    HttpRequestModel request = new HttpRequestModel((int) weatherData.getSol(), preferencesManager.getCamera());
-                    JSONObject jsonPhoto = getData(request);
-                    bitmapImg = getPhoto(jsonPhoto);
+                    HttpRequestModel request = new HttpRequestModel();
+                    JSONObject jsonData = getData(request);
+                    if (jsonData != null){
+                        WeatherDataManager manager = new WeatherDataManager();
+                        weatherData = manager.jsonToWeatherData(jsonData, request);
+                    }
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-            }
-            else {
-                try {
-                    File imageFile = new File(preferencesManager.getImageFilePath());
-                    bitmapImg = BitmapFactory.decodeStream(new FileInputStream(imageFile));
-                }
-                catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-            widgetLayout.setImageViewBitmap(R.id.backgroundImgView, bitmapImg);
 
-            // intent to lunch mars weather explorer activity on button click
-            Intent intentButtonClick = new Intent(this.getApplicationContext(), WeatherDataActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0 , intentButtonClick, 0);
-            widgetLayout.setOnClickPendingIntent(R.id.backgroundImgView, pendingIntent);
+                RemoteViews widgetLayout = new RemoteViews(this.getApplicationContext().getPackageName(),
+                        R.layout.widget_mars_weather);
 
-            appWidgetManager.updateAppWidget(widgetId, widgetLayout);
+                if (weatherData != null){
+                    if (preferencesManager.isCelsiusUnit()){
+                        widgetLayout.setTextViewText(R.id.maxTemperatureTextView,
+                                String.valueOf(String.valueOf(weatherData.getMax_temp_C())+ (char) 0x00B0 + "C"));
+                        widgetLayout.setTextViewText(R.id.minTemperatureTextView,
+                                String.valueOf(String.valueOf(weatherData.getMin_temp_C()) + (char) 0x00B0 + "C"));
+                    }
+                    else {
+                        widgetLayout.setTextViewText(R.id.maxTemperatureTextView,
+                                String.valueOf(String.valueOf(weatherData.getMax_temp_F())+ (char) 0x00B0 + "F"));
+                        widgetLayout.setTextViewText(R.id.minTemperatureTextView,
+                                String.valueOf(String.valueOf(weatherData.getMin_temp_F()) + (char) 0x00B0 + "F"));
+                    }
+                    widgetLayout.setTextViewText(R.id.solDateTextViewWidget, String.valueOf(weatherData.getSol()));
+                }
+
+                Bitmap bitmapImg = null;
+                if (preferencesManager.getLatestSol() < weatherData.getSol()){
+                    try {
+                        HttpRequestModel request = new HttpRequestModel((int) weatherData.getSol(), preferencesManager.getCamera());
+                        JSONObject jsonPhoto = getData(request);
+                        bitmapImg = getPhoto(jsonPhoto);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    try {
+                        File imageFile = new File(preferencesManager.getImageFilePath());
+                        bitmapImg = BitmapFactory.decodeStream(new FileInputStream(imageFile));
+                    }
+                    catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+                widgetLayout.setImageViewBitmap(R.id.backgroundImgView, bitmapImg);
+
+                // intent to lunch mars weather explorer activity on button click
+                Intent intentButtonClick = new Intent(this.getApplicationContext(), WeatherDataActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0 , intentButtonClick, 0);
+                widgetLayout.setOnClickPendingIntent(R.id.backgroundImgView, pendingIntent);
+
+                appWidgetManager.updateAppWidget(widgetId, widgetLayout);
+            }
         }
         return super.onStartCommand(intent, flags, startId);
     }

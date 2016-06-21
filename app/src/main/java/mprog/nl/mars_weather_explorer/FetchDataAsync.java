@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -41,7 +40,7 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        if (TaskCount == 1){
+        if (TaskCount == 1 && fragment.isAdded()){
             fragment.showProgressDialog();
         }
     }
@@ -69,7 +68,7 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
         super.onPostExecute(returnDataRequest);
 
         TaskCount--;
-        if (TaskCount == 0){
+        if (TaskCount == 0 && fragment.isAdded()){
             fragment.hideProgressDialog();
         }
 
@@ -126,7 +125,6 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String urlString = requestModel.getUrl().toString();
-        Log.d("urlString before do", urlString);
         URL url = null;
         JSONArray resultPages = new JSONArray();
         try {
@@ -151,7 +149,6 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
                     JSONObject page = new JSONObject(builder.toString());
                     urlString = page.getString("next");
                     resultPages.put(page);
-                    Log.d("urlString end of do", urlString);
                 }
             }while (!urlString.equals("null"));
 

@@ -61,20 +61,19 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
     private WeatherDataModel weatherData;
     private SharedPreferencesManager preferencesManager;
 
-    public WeatherDataFragment() {
-    }
+    private static WeatherDataFragment instance = new WeatherDataFragment();
 
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static WeatherDataFragment newInstance(int sectionNumber) {
-        WeatherDataFragment fragment = new WeatherDataFragment();
-        SharedPreferencesManager.getInstance(fragment.getActivity()).regiterBaseFragmentSuper(fragment);
+    public static WeatherDataFragment getInstance(int sectionNumber) {
+
+        SharedPreferencesManager.getInstance(instance.getActivity()).registerBaseFragmentSuper(instance);
         //Bundle args = new Bundle();
         //args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         //fragment.setArguments(args);
-        return fragment;
+        return instance;
     }
 
     @Override
@@ -298,7 +297,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
             setJsonPhotoToView(returnDataRequest.getJsonObject(), returnDataRequest.getRequestModel().cameraName);
         }
         else {
-            setJsonWeatherDataToView(returnDataRequest.getJsonObject(),returnDataRequest.getRequestModel());
+            setJsonToWeatherData(returnDataRequest.getJsonObject(),returnDataRequest.getRequestModel());
         }
     }
 
@@ -337,7 +336,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
      * it means there is no data available and the user gets notified by toast.
      * When all goes well setWeatherDataToView() gets called to display the weather data.
      * */
-    private void setJsonWeatherDataToView(JSONObject jsonObject, HttpRequestModel requestModel){
+    private void setJsonToWeatherData(JSONObject jsonObject, HttpRequestModel requestModel){
         // TODO handle data from a particular earth date
 
         if (jsonObject != null) {

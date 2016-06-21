@@ -14,7 +14,7 @@ import java.util.TimeZone;
  */
 public class WeatherDataManager {
 
-    public WeatherDataModel jsonToData(JSONObject jsonObject, HttpRequestModel request){
+    public WeatherDataModel jsonToWeatherData(JSONObject jsonObject, HttpRequestModel request){
         if (jsonObject != null) {
             try {
                 /* when the returned Json object of a requested solar day is empty quit this action

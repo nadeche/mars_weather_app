@@ -57,10 +57,11 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
     private String graphFromDate;
     private String graphTillDate;
 
-    public static GraphDataFragment newInstance(){
-        GraphDataFragment fragment = new GraphDataFragment();
-        SharedPreferencesManager.getInstance(fragment.getActivity()).regiterBaseFragmentSuper(fragment);
-        return fragment;
+    private static GraphDataFragment instance = new GraphDataFragment();
+
+    public static GraphDataFragment getInstance(){
+        SharedPreferencesManager.getInstance(instance.getActivity()).registerBaseFragmentSuper(instance);
+        return instance;
     }
 
     @Override
@@ -91,7 +92,7 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         legend.setPosition(Legend.LegendPosition.ABOVE_CHART_RIGHT);
 
         // when created for the first time initiate dates and display date from the last two weeks
-        if (dateToDay == null) {
+        if (temperatureGraph.isEmpty()) {
             dateToDay = Calendar.getInstance();
             dateTwoWeeksAgo = Calendar.getInstance();
             dateTwoWeeksAgo.add(Calendar.DAY_OF_YEAR, -14);

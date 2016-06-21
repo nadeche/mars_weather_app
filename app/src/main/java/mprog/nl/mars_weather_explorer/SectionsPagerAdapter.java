@@ -27,13 +27,13 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 Log.d("pagerAdapter 0 position", String.valueOf(position));
                 // Return a PlaceholderFragment (defined as a static inner class below).
-                return WeatherDataFragment.newInstance(position + 1);
+                return WeatherDataFragment.getInstance(position + 1);
             case 1:
                 Log.d("pagerAdapter 1 position", String.valueOf(position));
-                return GraphDataFragment.newInstance();
+                return GraphDataFragment.getInstance();
             case 2:
                 Log.d("pagerAdapter 2 position", String.valueOf(position));
-                return NewsFeedFragment.newInstance();
+                return NewsFeedFragment.getInstance();
         }
         return null;
 

@@ -16,10 +16,10 @@ import android.widget.ImageView;
  * This class contains an AsyncTask implementation in order to download a photo.
  * On construction it needs the Activity and the ImageView where the photo will be displayed.
  * When called it takes a string containing the url where the photo can be found.
- * In the background the photo gets downloaded and resized to fit the dimension in width of the
- * used screen device.
+ * In the background the photo gets downloaded and resized to fit the width of the
+ * screen.
  * Finally the photo is displayed in the given imageView and the photo is saved to internal storage.
- * During these operation a progress dialog is displayed to the user saying "Loading photo..."
+ * During these operations a progress dialog is displayed to the user saying "Loading photo..."
  * */
 public class DownloadPhotoAsync extends AsyncTask <String, Void, Bitmap> {
 

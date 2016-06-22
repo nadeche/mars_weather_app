@@ -8,9 +8,9 @@ import android.app.ProgressDialog;
 import android.support.v4.app.Fragment;
 
 /**
- * This class acts as a base for all fragment's in the app.
+ * This class acts as a base for all fragments in the app.
  * It handles the progressDialog when the fragment calls the FetchDataAsync task.
- * And has an abstract method setJasonToView(ReturnDataRequestModel returnDataRequest)
+ * And has an abstract method setJsonToView(ReturnDataRequestModel returnDataRequest)
  * which is called in the FetchDataAsync task in order to return the fetched
  * data to the right fragment.
  * The abstract method onTemperatureUnitChanged() is called when the user changes
@@ -41,7 +41,7 @@ public abstract class BaseFragmentSuper extends Fragment {
 
     /**
      * Called in FetchDataAsync in onPostExecute to return the fetched data
-     * and information about the made request to the fragment that made the request.
+     * and information about the request to the fragment that made the request.
      * */
     public abstract void setJsonToView(ReturnDataRequestModel returnDataRequest);
 

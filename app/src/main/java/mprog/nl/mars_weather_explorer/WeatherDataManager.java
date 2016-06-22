@@ -14,7 +14,7 @@ import java.util.TimeZone;
  */
 public class WeatherDataManager {
 
-    public WeatherDataModel jsonToWeatherData(JSONObject jsonObject, HttpRequestModel request){
+    public static WeatherDataModel jsonToWeatherData(JSONObject jsonObject, HttpRequestModel request){
         if (jsonObject != null) {
             try {
                 /* when the returned Json object of a requested solar day is empty quit this action
@@ -77,7 +77,7 @@ public class WeatherDataManager {
      * It converts the date to: num-day text-month hour:minute
      * when the parse was un success full it returns a string containing "None".
      * */
-    private String convertUTCtoLocalTime(String originalDate) {
+    private static String convertUTCtoLocalTime(String originalDate) {
         SimpleDateFormat dateFormatIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         dateFormatIn.setTimeZone(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat dateFormatOut = new SimpleDateFormat("dd MMM HH:mm");

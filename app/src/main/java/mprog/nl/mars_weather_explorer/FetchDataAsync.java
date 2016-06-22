@@ -6,9 +6,6 @@ package mprog.nl.mars_weather_explorer;
  * Created by Nadeche Studer
  * */
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -16,27 +13,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * This class runs in the background of the activity to get data from the API's.
+ * This class runs in the background of the activity to get data from the APIs.
  * When constructed it needs the fragment context from where the call is made
  * to pass the data back later and handle the display of a progress dialog.
  * When called it needs to be passed a Request model to tell what kind of data to get.
- * Before it tries to get data from internet it checks if there is a internet connection available.
- * If not the user gets notified in onPostExecute by Toast notification.
+ * Before it tries to get data from internet it checks if there is an internet connection available.
+ * If not, the user gets notified in onPostExecute by Toast notification.
  * While fetching data it displays a progress dialog to the user saying "Loading data...".
  * The data is passed back to the calling fragment for further processing.
  * */
 public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnDataRequestModel> {
 
-    private BaseFragmentSuper fragment;         // fragment reference to the calling fragment
-    private HttpRequestModel requestModel;      // reference to the request information
+    private BaseFragmentSuper fragment;         // reference to the calling fragment
     private static int TASKCOUNT = 0;           // single instance representing how many times this task is called
 
     FetchDataAsync (BaseFragmentSuper context) {
@@ -60,8 +53,9 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
     protected ReturnDataRequestModel doInBackground(HttpRequestModel... requestModels) {
 
         // prepare a return object by passing it the requestModel and if there is a internet connection
-        ReturnDataRequestModel returnDataRequest = new ReturnDataRequestModel(requestModels[0], hasInternetConnection());
-        requestModel = requestModels[0];
+        ReturnDataRequestModel returnDataRequest = new ReturnDataRequestModel(requestModels[0],
+                InternetManager.hasInternetConnection(fragment.getActivity()));
+        HttpRequestModel requestModel = requestModels[0];
 
         // when there is an internet connection, check what kind of request was made
         if (returnDataRequest.isInternetConnection()){
@@ -105,39 +99,17 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
      * */
     private JSONObject getSinglePageData(HttpRequestModel requestModel) {
         HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
         try {
             urlConnection = (HttpURLConnection) requestModel.getUrl().openConnection();
             urlConnection.connect();
 
-            // only when the http response code equals 200 aka an ok response get the data
-            if(urlConnection.getResponseCode()  == 200) {
-                InputStream stream = urlConnection.getInputStream();
+            return InternetManager.convertDataToJson(urlConnection);
 
-                reader = new BufferedReader(new InputStreamReader(stream));
-                StringBuilder builder = new StringBuilder();
-                String line;
-
-                // convert received data to a string
-                while ((line = reader.readLine()) != null) {
-                    builder.append(line);
-                }
-
-                // convert complete data to Json object
-                return new JSONObject(builder.toString());
-            }
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }finally {
             if(urlConnection != null){
                 urlConnection.disconnect();
-            }
-            try {
-                if(reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
         return null;
@@ -150,11 +122,10 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
      * */
     private JSONObject getMultiplePagesData(HttpRequestModel requestModel) {
         HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
 
         // get the first url
         String urlString = requestModel.getUrl().toString();
-        URL url = null;
+        URL url;
 
         // construct an array to put all json object pages in
         JSONArray resultPages = new JSONArray();
@@ -164,27 +135,15 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.connect();
 
-                // only when the http response code equals 200 aka an ok response get the data
-                if (urlConnection.getResponseCode() == 200) {
-                    InputStream stream = urlConnection.getInputStream();
+                // retrieve the data from internet
+                JSONObject page = InternetManager.convertDataToJson(urlConnection);
 
-                    reader = new BufferedReader(new InputStreamReader(stream));
-                    StringBuilder builder = new StringBuilder();
-                    String line;
+                // retrieve the url of the next page of data
+                urlString = page.getString("next");
 
-                    // convert received data to a string
-                    while ((line = reader.readLine()) != null) {
-                        builder.append(line);
-                    }
+                // put the collected JsonObject in the array holding all pages
+                resultPages.put(page);
 
-                    JSONObject page = new JSONObject(builder.toString());
-
-                    // retrieve the url of the next page of data
-                    urlString = page.getString("next");
-
-                    // put the collected JsonObject in the array holding all pages
-                    resultPages.put(page);
-                }
             // keep requesting data until there is no new url in the last returned page
             }while (!urlString.equals("null"));
 
@@ -198,23 +157,7 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
             if(urlConnection != null){
                 urlConnection.disconnect();
             }
-            try {
-                if(reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return null;
-    }
-
-    /** This method checks returns true if there is an internet connection available */
-    private boolean hasInternetConnection() {
-
-        ConnectivityManager connectivityManager = (ConnectivityManager)fragment.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 }

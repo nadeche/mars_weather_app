@@ -1,5 +1,11 @@
 package mprog.nl.mars_weather_explorer;
 
+/**
+ * UpdateWidgetService.java
+ *
+ * Created by Nadeche Studer
+ * */
+
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
@@ -13,21 +19,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.util.concurrent.CountDownLatch;
 
-
 /**
- * Created by Nadeche
- */
+ * This service provides the widget with data information.
+ * It collects data about the weather on Mars and loads a photo from memory
+ * or from internet.
+ * */
 public class UpdateWidgetService extends Service {
 
     // TODO split into separate methods
@@ -37,67 +41,66 @@ public class UpdateWidgetService extends Service {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this.getApplicationContext());
 
         SharedPreferencesManager preferencesManager = SharedPreferencesManager.getInstance(getApplicationContext());
-        if (intent != null){
+
+        // check to make sure it is not a call from when the app force closes
+        if (intent != null) {
+
+            // collect all widget ids of all installed widget instances and update them all
             int[] allWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
 
+            // retrieve the latest weather data
+            WeatherDataModel weatherData = getWeatherData();
+
             for (int widgetId : allWidgetIds) {
-                WeatherDataModel weatherData = null;
-                try {
-                    HttpRequestModel request = new HttpRequestModel();
-                    JSONObject jsonData = getData(request);
-                    if (jsonData != null){
-                        WeatherDataManager manager = new WeatherDataManager();
-                        weatherData = manager.jsonToWeatherData(jsonData, request);
-                    }
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
 
                 RemoteViews widgetLayout = new RemoteViews(this.getApplicationContext().getPackageName(),
                         R.layout.widget_mars_weather);
 
-                if (weatherData != null){
-                    if (preferencesManager.isCelsiusUnit()){
+                if (weatherData != null) {
+                    // set the data to textViews
+                    if (preferencesManager.isCelsiusUnit()) {
                         widgetLayout.setTextViewText(R.id.maxTemperatureTextView,
-                                String.valueOf(String.valueOf(weatherData.getMax_temp_C())+ (char) 0x00B0 + "C"));
+                                String.valueOf(String.valueOf(weatherData.getMax_temp_C()) + (char) 0x00B0 + "C"));
                         widgetLayout.setTextViewText(R.id.minTemperatureTextView,
                                 String.valueOf(String.valueOf(weatherData.getMin_temp_C()) + (char) 0x00B0 + "C"));
-                    }
-                    else {
+                    } else {
                         widgetLayout.setTextViewText(R.id.maxTemperatureTextView,
-                                String.valueOf(String.valueOf(weatherData.getMax_temp_F())+ (char) 0x00B0 + "F"));
+                                String.valueOf(String.valueOf(weatherData.getMax_temp_F()) + (char) 0x00B0 + "F"));
                         widgetLayout.setTextViewText(R.id.minTemperatureTextView,
                                 String.valueOf(String.valueOf(weatherData.getMin_temp_F()) + (char) 0x00B0 + "F"));
                     }
                     widgetLayout.setTextViewText(R.id.solDateTextViewWidget, String.valueOf(weatherData.getSol()));
+
+                    // load a photo from internet when there is new weather data available since the app was opened
+                    Bitmap bitmapImg = null;
+                    if (preferencesManager.getLatestSol() < weatherData.getSol()) {
+                        try {
+                            HttpRequestModel request = new HttpRequestModel((int) weatherData.getSol(), preferencesManager.getCamera());
+                            JSONObject jsonPhoto = getData(request);
+                            bitmapImg = getPhoto(jsonPhoto);
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    // when there is no new data available load the photo from memory
+                    else {
+                        try {
+                            File imageFile = new File(preferencesManager.getImageFilePath());
+                            bitmapImg = BitmapFactory.decodeStream(new FileInputStream(imageFile));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    // display the photo in the widget
+                    widgetLayout.setImageViewBitmap(R.id.backgroundImgView, bitmapImg);
                 }
 
-                Bitmap bitmapImg = null;
-                if (preferencesManager.getLatestSol() < weatherData.getSol()){
-                    try {
-                        HttpRequestModel request = new HttpRequestModel((int) weatherData.getSol(), preferencesManager.getCamera());
-                        JSONObject jsonPhoto = getData(request);
-                        bitmapImg = getPhoto(jsonPhoto);
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else {
-                    try {
-                        File imageFile = new File(preferencesManager.getImageFilePath());
-                        bitmapImg = BitmapFactory.decodeStream(new FileInputStream(imageFile));
-                    }
-                    catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-                widgetLayout.setImageViewBitmap(R.id.backgroundImgView, bitmapImg);
-
-                // intent to lunch mars weather explorer activity on button click
-                Intent intentButtonClick = new Intent(this.getApplicationContext(), WeatherDataActivity.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0 , intentButtonClick, 0);
+                // intent to lunch mars weather explorer app on click on the widget
+                Intent intentWidgetClick = new Intent(this.getApplicationContext(), WeatherDataActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0 , intentWidgetClick, 0);
                 widgetLayout.setOnClickPendingIntent(R.id.backgroundImgView, pendingIntent);
 
+                // update the widget individual widget
                 appWidgetManager.updateAppWidget(widgetId, widgetLayout);
             }
         }
@@ -109,85 +112,98 @@ public class UpdateWidgetService extends Service {
         return null;
     }
 
-    private JSONObject getData(final HttpRequestModel request){
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-        final JSONArray jsonArray = new JSONArray();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                HttpURLConnection urlConnection = null;
-                BufferedReader reader = null;
-                try {
-                    urlConnection = (HttpURLConnection)request.getUrl().openConnection();
-                    urlConnection.connect();
-
-                    // only when the http response code equals 200 aka ok process response
-                    if(urlConnection.getResponseCode()  == 200) {
-                        InputStream stream = urlConnection.getInputStream();
-
-                        reader = new BufferedReader(new InputStreamReader(stream));
-                        StringBuilder builder = new StringBuilder();
-                        String line;
-
-                        // convert received data to a string
-                        while ((line = reader.readLine()) != null) {
-                            builder.append(line);
-                        }
-
-                        // convert complete data to Json object
-                        JSONObject jsonObject = new JSONObject(builder.toString());
-                        jsonArray.put(jsonObject);
-                        countDownLatch.countDown();
-                    }
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                }finally {
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
-                    try {
-                        if (reader != null) {
-                            reader.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
+    /**
+     * This method makes a request to get weather data and converts it to usable fields
+     * which are returned in a weatherDataModel
+     * */
+    private WeatherDataModel getWeatherData(){
         try {
-            countDownLatch.await();
-            return jsonArray.getJSONObject(0);
-        } catch (InterruptedException | JSONException e) {
+            HttpRequestModel request = new HttpRequestModel();
+            JSONObject jsonData = getData(request);
+            if (jsonData != null){
+                return WeatherDataManager.jsonToWeatherData(jsonData, request);
+            }
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    /** This method gets api data on a separate thread */
+    private JSONObject getData(final HttpRequestModel request){
+
+        // only get data if there is an internet connection
+        if (InternetManager.hasInternetConnection(this.getApplicationContext())){
+
+            // initiate a countdown mechanism to await the thread to finish before the code gets further executed
+            final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+            // this array gets filled on the tread and can be retrieved after the thread finishes
+            final JSONArray jsonArray = new JSONArray();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    HttpURLConnection urlConnection = null;
+                    try {
+                        urlConnection = (HttpURLConnection)request.getUrl().openConnection();
+                        urlConnection.connect();
+
+                        // retrieve the data from internet and save it in json
+                        JSONObject jsonObject = InternetManager.convertDataToJson(urlConnection);
+                        jsonArray.put(jsonObject);
+
+                        // let the awaiting code know the data is available
+                        countDownLatch.countDown();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }finally {
+                        if (urlConnection != null) {
+                            urlConnection.disconnect();
+                        }
+                    }
+                }
+            }).start();
+            try {
+                // wait un till the thread is finished before continuing
+                countDownLatch.await();
+                return jsonArray.getJSONObject(0);
+            } catch (InterruptedException | JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /** This method downloads a photo on a separate thread */
     private Bitmap getPhoto(JSONObject jsonPhoto){
         if(jsonPhoto != null){
             try {
                 JSONArray photosJsonArray = jsonPhoto.getJSONArray("photos");
+                // pick the first photo that is returned to download
                 JSONObject firstPhotoJsonObject = photosJsonArray.getJSONObject(0);
                 final String photoLink = firstPhotoJsonObject.getString("img_src");
+
+                // initiate countdown mechanism to to await the thread to finish before the code gets further executed
                 final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+                // this array gets filled on the tread and can be retrieved after the thread finishes
                 final Bitmap[] bitmaps = new Bitmap[1];
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        /*Bitmap photoBitMap = null;
-                        try {
-                            //TODO move to photoManager
-                            InputStream inputStream = new java.net.URL(photoLink).openStream();
-                            photoBitMap = BitmapFactory.decodeStream(inputStream);
-                            photoBitMap = PhotoManager.resizePhoto(getApplicationContext(), photoBitMap);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }*/
+
+                        // download the photo
                         bitmaps[0] = PhotoManager.downloadPhoto(getApplicationContext(),photoLink);
+
+                        // let the awaiting code know the data is available
                         countDownLatch.countDown();
                     }
                 }).start();
+
+                // wait un till the thread is finished before continuing
                 countDownLatch.await();
                 return bitmaps[0];
             } catch (JSONException | InterruptedException e) {

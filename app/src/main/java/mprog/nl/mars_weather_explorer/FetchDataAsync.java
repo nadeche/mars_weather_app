@@ -53,11 +53,11 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
         if (returnDataRequest.isInternetConnection()){
 
             if (requestModel.photoRequest || requestModel.latestWeatherData || requestModel.sol > -1) {
-                returnDataRequest.setJsonObject(getSmallData(requestModel));
+                returnDataRequest.setJsonObject(getSinglePageData(requestModel));
             }
             else {
-                returnDataRequest.setJsonObject(getBigData(requestModel));
-                            }
+                returnDataRequest.setJsonObject(getMultiplePagesData(requestModel));
+            }
         }
 
         return returnDataRequest;
@@ -81,7 +81,7 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
         fragment.setJsonToView(returnDataRequest);
     }
 
-    private JSONObject getSmallData(HttpRequestModel requestModel) {
+    private JSONObject getSinglePageData(HttpRequestModel requestModel) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         try {
@@ -121,7 +121,7 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
         return null;
     }
 
-    private JSONObject getBigData(HttpRequestModel requestModel) {
+    private JSONObject getMultiplePagesData(HttpRequestModel requestModel) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String urlString = requestModel.getUrl().toString();

@@ -11,6 +11,7 @@ import android.util.DisplayMetrics;
  */
 public class PhotoManager {
 
+    // TODO make static
     public Bitmap getPhoto(Context context, Bitmap photoBitmap) {
 
         // get the with of the device screen

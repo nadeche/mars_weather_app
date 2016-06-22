@@ -443,6 +443,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
      * It converts the date to: num-day text-month hour:minute
      * when the parse was un success full it returns a string containing "None".
      * */
+    // TODO remove, as it already exists elsewhere
     private String convertUTCtoLocalTime(String originalDate) {
         SimpleDateFormat dateFormatIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         dateFormatIn.setTimeZone(TimeZone.getTimeZone("UTC"));

@@ -45,9 +45,12 @@ import java.util.Map;
 public class GraphDataFragment extends BaseFragmentSuper implements FragmentLifecycle{
 
     private String TAG = "GraphDataFragment";
+
+    // TODO should not be fields, use clear() method of graph instead
     private ArrayList<Double> maxTemperature = new ArrayList<>();
     private ArrayList<Double> minTemperature = new ArrayList<>();
     private ArrayList<String> solarDay = new ArrayList<>();
+
     private LineChart temperatureGraph;
     private Calendar dateToDay;
     private Calendar dateTwoWeeksAgo;
@@ -72,6 +75,7 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         temperatureGraph = (LineChart) rootView.findViewById(R.id.temperatureLineGraph);
         yAxisTextView = (VerticalTextView) rootView.findViewById(R.id.yAxisTitle);
 
+        // TODO put in separate method
         temperatureGraph.setDescription("");
 
         XAxis xAxis = temperatureGraph.getXAxis();
@@ -249,22 +253,18 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
                 for (int i = minSol; i <= maxSol; i++){
                     if (tempMax.containsKey(i)){
                         maxTemperature.add(tempMax.get(i));
-                        if (tempMin.containsKey(i)){
-                            minTemperature.add(tempMin.get(i));
-                        }
-                        else {
-                            minTemperature.add(null);
-                        }
                     }
                     else {
                         maxTemperature.add(null);
-                        if (tempMin.containsKey(i)){
-                            minTemperature.add(tempMin.get(i));
-                        }
-                        else {
-                            minTemperature.add(null);
-                        }
                     }
+
+                    if (tempMin.containsKey(i)){
+                        minTemperature.add(tempMin.get(i));
+                    }
+                    else {
+                        minTemperature.add(null);
+                    }
+
                     solarDay.add(String.valueOf(i));
                 }
                 setupTemperatureGraph(temperatureGraph, maxTemperature, minTemperature, solarDay);

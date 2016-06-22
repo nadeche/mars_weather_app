@@ -41,6 +41,7 @@ public class DownloadPhotoAsync extends AsyncTask <String, Void, Bitmap> {
 
         Bitmap photoBitMap = null;
         try {
+            //TODO move to photoManager
             InputStream inputStream = new java.net.URL(urls[0]).openStream();
             photoBitMap = BitmapFactory.decodeStream(inputStream);
             PhotoManager photoManager = new PhotoManager();
@@ -59,7 +60,7 @@ public class DownloadPhotoAsync extends AsyncTask <String, Void, Bitmap> {
     }
 
 
-
+    // TODO make static and move to photoManager with context
     private void saveToInternalStorage(Bitmap bitmapImage){
 
         ContextWrapper contextWrapper = new ContextWrapper(context);

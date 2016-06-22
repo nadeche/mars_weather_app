@@ -30,6 +30,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public class UpdateWidgetService extends Service {
 
+    // TODO split into separate methods
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -176,6 +177,7 @@ public class UpdateWidgetService extends Service {
                     public void run() {
                         Bitmap photoBitMap = null;
                         try {
+                            //TODO move to photoManager
                             InputStream inputStream = new java.net.URL(photoLink).openStream();
                             photoBitMap = BitmapFactory.decodeStream(inputStream);
                             PhotoManager photoManager = new PhotoManager();

@@ -1,13 +1,16 @@
 package mprog.nl.mars_weather_explorer;
 
+/**
+ * HttpRequestModel.java
+ *
+ * Created by Nadeche Studer
+ * */
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by Nadeche
- *
- * This class contains information about the type of date request to be done.
+ * This class acts as a model that contains information about the type of date request to be done.
  */
 public class HttpRequestModel {
 
@@ -15,12 +18,12 @@ public class HttpRequestModel {
     public int sol;                     // the martian solar date to find
     public boolean latestWeatherData;   // is true if the latest weather data is requested
     public boolean photoRequest;        // is true if a curiosity photo is requested
-    public String cameraName;
+    public String cameraName;           // the name of the camera to get a photo from
 
     // personal NASA API key to get rover photos from the NASA database
     private static final String NASAapiKEY = "it3AjXuLitEdyfChV0ramuFS0cq12GvJVKTjgllC";
 
-    // constructor to get the latest weather data
+    /** Constructor to get the latest weather data */
     HttpRequestModel() throws MalformedURLException {
         latestWeatherData = true;
         sol = -1;
@@ -29,7 +32,7 @@ public class HttpRequestModel {
         url = new URL("http://marsweather.ingenology.com/v1/latest/?format=json");
     }
 
-    // constructor to get weather data from a particular Martian solar day
+    /** Constructor to get weather data from a particular Martian solar day */
     HttpRequestModel(int sol) throws MalformedURLException {
         latestWeatherData = false;
         this.sol = sol;
@@ -38,7 +41,7 @@ public class HttpRequestModel {
         url = new URL("http://marsweather.ingenology.com/v1/archive/?sol=" + sol + "&format=json");
     }
 
-    // constructor to get weather data from an earth date till an earth date
+    /** Constructor to get weather data from an earth date till an earth date */
     HttpRequestModel (String from, String till) throws MalformedURLException {
         latestWeatherData = false;
         sol = -1;
@@ -47,7 +50,7 @@ public class HttpRequestModel {
         url = new URL("http://marsweather.ingenology.com/v1/archive/?terrestrial_date_end="+till+"&terrestrial_date_start="+from+"&format=json");
     }
 
-    // constructor to get a photo from Curiosity by Martian solar day and camera type
+    /** Constructor to get a photo from Curiosity by Martian solar day and camera type */
     HttpRequestModel(int sol, String camera) throws MalformedURLException {
         latestWeatherData = false;
         this.sol = sol;

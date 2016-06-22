@@ -1,5 +1,11 @@
 package mprog.nl.mars_weather_explorer;
 
+/**
+ * VerticalTextView.java
+ *
+ * Created Pointer Null edited on 24 oct. 2011, found on stackoverflow.com
+ * @ link: http://stackoverflow.com/questions/1258275/vertical-rotated-label-in-android/7855852#7855852
+ * */
 import android.content.Context;
 import android.graphics.Canvas;
 import android.text.TextPaint;
@@ -8,21 +14,18 @@ import android.view.Gravity;
 import android.widget.TextView;
 
 /**
- * Created Pointer Null edited on 24 oct. 2011, found on stackoverflow.com
- * @ link: http://stackoverflow.com/questions/1258275/vertical-rotated-label-in-android/7855852#7855852
- *
- * Class to convert a textView to a vertical textView.
- * By giving the textView a gravity attribute of bottom the text will be rotated -90 degrees,
- * with the start letter at the bottom.
- * When no gravity is specified the text is rotated 90 degrees in the other direction,
- * resulting in the start letter at the top.
+ * This class is an implementation of a custom view.
+ * It converts a textView to a vertical textView.
  */
 public class VerticalTextView extends TextView {
+
     final boolean topDown;
 
     public VerticalTextView(Context context, AttributeSet attrs){
         super(context, attrs);
         final int gravity = getGravity();
+
+        // When the textView has a gravity attribute of bottom the start letter will be on the bottom after rotating
         if(Gravity.isVertical(gravity) && (gravity&Gravity.VERTICAL_GRAVITY_MASK) == Gravity.BOTTOM) {
             setGravity((gravity&Gravity.HORIZONTAL_GRAVITY_MASK) | Gravity.TOP);
             topDown = false;
@@ -45,14 +48,16 @@ public class VerticalTextView extends TextView {
 
         canvas.save();
 
+        // rotate the textView with the start letter at the top
         if(topDown){
             canvas.translate(getWidth(), 0);
             canvas.rotate(90);
-        }else {
+        }
+        // rotate the textView with the start letter at the bottom
+        else {
             canvas.translate(0, getHeight());
             canvas.rotate(-90);
         }
-
 
         canvas.translate(getCompoundPaddingLeft(), getExtendedPaddingTop());
 

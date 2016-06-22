@@ -175,17 +175,16 @@ public class UpdateWidgetService extends Service {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Bitmap photoBitMap = null;
+                        /*Bitmap photoBitMap = null;
                         try {
                             //TODO move to photoManager
                             InputStream inputStream = new java.net.URL(photoLink).openStream();
                             photoBitMap = BitmapFactory.decodeStream(inputStream);
-                            PhotoManager photoManager = new PhotoManager();
-                            photoBitMap = photoManager.getPhoto(getApplicationContext(), photoBitMap);
+                            photoBitMap = PhotoManager.resizePhoto(getApplicationContext(), photoBitMap);
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }
-                        bitmaps[0] = photoBitMap;
+                        }*/
+                        bitmaps[0] = PhotoManager.downloadPhoto(getApplicationContext(),photoLink);
                         countDownLatch.countDown();
                     }
                 }).start();

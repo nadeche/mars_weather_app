@@ -1,88 +1,60 @@
 package mprog.nl.mars_weather_explorer;
 
+/**
+ * DownloadPhotoAsync.java
+ *
+ * Created by Nadeche Studer
+ * */
+
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 /**
- * Created by Nadeche
- */
+ * This class contains an AsyncTask implementation in order to download a photo.
+ * On construction it needs the Activity and the ImageView where the photo will be displayed.
+ * When called it takes a string containing the url where the photo can be found.
+ * In the background the photo gets downloaded and resized to fit the dimension in width of the
+ * used screen device.
+ * Finally the photo is displayed in the given imageView and the photo is saved to internal storage.
+ * During these operation a progress dialog is displayed to the user saying "Loading photo..."
+ * */
 public class DownloadPhotoAsync extends AsyncTask <String, Void, Bitmap> {
 
-    private Activity context;
-    ImageView roverPhoto;
-    private ProgressDialog progressDialog;
+    private Activity activity;               // the reference to the activity from the calling fragment
+    private ImageView roverPhoto;            // the reference to imageView where the downloaded photo will be displayed
+    private ProgressDialog progressDialog;   // the progress dialog displayed while the task is busy
 
-    public DownloadPhotoAsync(Activity context, ImageView roverImageView) {
-        this.context = context;
-        this.roverPhoto = roverImageView;
+    public DownloadPhotoAsync(Activity activity, ImageView roverImageView) {
+        this.activity = activity;
+        roverPhoto = roverImageView;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Photo loading...");
+        progressDialog = new ProgressDialog(activity);
+        progressDialog.setMessage(activity.getString(R.string.loading_photo));
         progressDialog.show();
     }
 
     @Override
     protected Bitmap doInBackground(String... urls) {
 
-        Bitmap photoBitMap = null;
-        try {
-            //TODO move to photoManager
-            InputStream inputStream = new java.net.URL(urls[0]).openStream();
-            photoBitMap = BitmapFactory.decodeStream(inputStream);
-            PhotoManager photoManager = new PhotoManager();
-            photoBitMap = photoManager.getPhoto(context, photoBitMap);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return photoBitMap;
+        // let the photoManager download the photo and resize it before return
+        return PhotoManager.downloadPhoto(activity, urls[0]);
     }
 
+    @Override
     protected void onPostExecute(Bitmap loadedPhoto) {
+
+        // set the downloaded photo to the imageView
         roverPhoto.setImageBitmap(loadedPhoto);
-        saveToInternalStorage(loadedPhoto);
+
+        // the photoManager saves the photo
+        PhotoManager.saveToInternalStorage(activity, loadedPhoto);
         progressDialog.dismiss();
-    }
-
-
-    // TODO make static and move to photoManager with context
-    private void saveToInternalStorage(Bitmap bitmapImage){
-
-        ContextWrapper contextWrapper = new ContextWrapper(context);
-        // path to /data/user/0/mprog.nl.mars_weather_explorer/app_roverImageDir
-        File directory = contextWrapper.getDir("roverImageDir", Context.MODE_PRIVATE);
-        // Create image file
-        File imgFile = new File(directory, "roverImage.jpg");
-
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(imgFile);
-            // Use the compress method on the BitMap object to write the image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fileOutputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        SharedPreferencesManager.getInstance(context).setImageFilePath(imgFile.getAbsolutePath());
     }
 }

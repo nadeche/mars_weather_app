@@ -104,7 +104,7 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
             urlConnection.connect();
 
             // retrieve the data in json format
-            return InternetManager.convertDataToJson(urlConnection);
+            return InternetManager.downloadDataToJson(urlConnection);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -137,7 +137,7 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
                 urlConnection.connect();
 
                 // retrieve the data from internet
-                JSONObject page = InternetManager.convertDataToJson(urlConnection);
+                JSONObject page = InternetManager.downloadDataToJson(urlConnection);
 
                 // retrieve the url of the next page of data
                 urlString = page.getString("next");

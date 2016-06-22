@@ -33,7 +33,7 @@ public class InternetManager {
     }
 
     /** This method is used to get data via the internet and convert it to a json object for further processing */
-    public static JSONObject convertDataToJson(HttpURLConnection urlConnection) {
+    public static JSONObject downloadDataToJson(HttpURLConnection urlConnection) {
         BufferedReader reader = null;
         try {
             // only when the http response code equals 200 aka an ok response get the data

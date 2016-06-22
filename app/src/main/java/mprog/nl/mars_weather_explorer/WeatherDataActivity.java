@@ -1,10 +1,13 @@
 package mprog.nl.mars_weather_explorer;
 
-import android.app.Dialog;
+/**
+ * WeatherDataFragment.java
+ *
+ * Created by Nadeche Studer
+ * */
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,38 +16,17 @@ import android.view.MenuItem;
 
 import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
 
-// TODO Add menu for search on sol or date
-// TODO Add dialog for search on earth date
-// TODO Make data model classes
-// TODO Make method to handle Json to data models
 // TODO Handle fragment lifecycle loading data only when needed.
-// TODO wait screen while startup app
-// TODO save photo function?
-// TODO replace dialogs to alertDialogs
-// TODO make appIcon and widgetPreview
-// TODO enhance widget layout
-
+/**
+ * This class contains the activity that starts when the app starts.
+ * It handles the display of the actionbar and the dots at the bottom
+ * indicating which fragment is currently in view.
+ * */
 public class WeatherDataActivity extends AppCompatActivity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SwipeViewsAdapter mSwipeViewsAdapter; // contains the adapter used to swipe through fragments
-    private Dialog setTemperatureUnitDialog;            // contains dialog to change the temperature unit used in the app
-    private SharedPreferencesManager preferencesManager;
-    private DotIndicator dotIndicator;
-    private static final String USE_CELSIUS = "Use Celsius scale";
-    private static final String USE_FAHRENHEIT = "Use Fahrenheit scale";
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
+    private SwipeViewsAdapter swipeViewsAdapter;            // contains the adapter used to swipe through fragments
+    private SharedPreferencesManager preferencesManager;    // used to exchange information with the saves preferences
+    private DotIndicator dotIndicator;                      // used to display the dot navigation at the bottom of the screen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,22 +35,17 @@ public class WeatherDataActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSwipeViewsAdapter = new SwipeViewsAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSwipeViewsAdapter);
-        mViewPager.addOnPageChangeListener(pageChangeListener);
+        swipeViewsAdapter = new SwipeViewsAdapter(getSupportFragmentManager());
 
-        // initialize the dialog
-        setTemperatureUnitDialog = new Dialog(this);
+        // Set up the ViewPager with the swipeViewsAdapter so the fragments are chained to the activity
+        ViewPager viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager.setAdapter(swipeViewsAdapter);
+        viewPager.addOnPageChangeListener(pageChangeListener);
 
         preferencesManager = SharedPreferencesManager.getInstance(this);
 
         dotIndicator = (DotIndicator) findViewById(R.id.dotNavigation);
-
     }
 
     /**
@@ -83,12 +60,13 @@ public class WeatherDataActivity extends AppCompatActivity {
         @Override
         public void onPageSelected(int newPosition) {
 
+            // change the highlighted dot to the new position in the navigation
             dotIndicator.setSelectedItem(newPosition, true);
 
-            FragmentLifecycle fragmentToShow = (FragmentLifecycle) mSwipeViewsAdapter.getItem(newPosition);
+            FragmentLifecycle fragmentToShow = (FragmentLifecycle) swipeViewsAdapter.getItem(newPosition);
             fragmentToShow.onResumeFragment();
 
-            FragmentLifecycle fragmentToHide = (FragmentLifecycle) mSwipeViewsAdapter.getItem(currentPosition);
+            FragmentLifecycle fragmentToHide = (FragmentLifecycle) swipeViewsAdapter.getItem(currentPosition);
             fragmentToHide.onPauseFragment();
 
             currentPosition = newPosition;
@@ -107,31 +85,30 @@ public class WeatherDataActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem useScale = menu.findItem(R.id.action_change_unit);
+
+        // show the correct menu title according to which temperature unit is preferred
         if (preferencesManager.isCelsiusUnit()){
-            useScale.setTitle(USE_FAHRENHEIT);
+            useScale.setTitle(WeatherDataActivity.this.getString(R.string.menu_title_use_fahrenheit));
         }
         else {
-            useScale.setTitle(USE_CELSIUS);
+            useScale.setTitle(WeatherDataActivity.this.getString(R.string.menu_title_use_celsius));
         }
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_base, menu);
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_change_unit:
-                if (item.getTitle().equals(USE_FAHRENHEIT)){
+
+                // save the new preferred temperature unit
+                if (item.getTitle().equals(WeatherDataActivity.this.getString(R.string.menu_title_use_fahrenheit))){
                     preferencesManager.setCelsiusUnit(false);
                 }
                 else {
@@ -145,7 +122,7 @@ public class WeatherDataActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        // call update widget
+        // call the update of the widget provider when the app is no longer visible
         Intent updateWidgetIntent = new Intent(this, MarsWeatherWidgetProvider.class);
         updateWidgetIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         int[] ids = {R.layout.widget_mars_weather};

@@ -150,7 +150,7 @@ public class UpdateWidgetService extends Service {
                         urlConnection.connect();
 
                         // retrieve the data from internet and save it in json
-                        JSONObject jsonObject = InternetManager.convertDataToJson(urlConnection);
+                        JSONObject jsonObject = InternetManager.downloadDataToJson(urlConnection);
                         jsonArray.put(jsonObject);
 
                         // let the awaiting code know the data is available

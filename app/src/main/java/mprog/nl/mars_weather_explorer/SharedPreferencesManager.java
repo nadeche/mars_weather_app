@@ -1,5 +1,10 @@
 package mprog.nl.mars_weather_explorer;
 
+/**
+ * SharedPreferencesManager.java
+ *
+ * Created by Nadeche Studer
+ * */
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -8,26 +13,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Nadeche
- */
-public class SharedPreferencesManager {
+ * This class is a singleton that updates the SharedPreferences whenever they change.
+ * It provides information to the app and to the widget about the users preferences.
+ * */
+public class SharedPreferencesManager{
 
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor sharedPreferencesEditor;
-    private boolean celsiusUnit;
-    private String camera;
-    private int latestSol;
-    private String imageFilePath;
-    private List<BaseFragmentSuper> baseFragments = new ArrayList<>();
+    private SharedPreferences.Editor sharedPreferencesEditor;           // can make alterations to the saved preferences
+    private boolean celsiusUnit;                                        // true if the user prefers to use the Celsius scale
+    private String camera;                                              // the name of the camera the user has last loaded a photo from
+    private int latestSol;                                              // the last Martian solar day there is data about
+    private String imageFilePath;                                       // the file path where the last downloaded photo is stored
+    private List<BaseFragmentSuper> baseFragments = new ArrayList<>();  // a list of all fragments in the swipe views
 
     private static SharedPreferencesManager preferencesManager = null;
 
     private SharedPreferencesManager(Context context){
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPreferencesEditor = sharedPreferences.edit();
         celsiusUnit = sharedPreferences.getBoolean("celsiusUnit", true);
         camera = sharedPreferences.getString("camera", "Front Hazard Avoidance Camera");
-        latestSol = sharedPreferences.getInt("latestSol", 1363);
+        latestSol = sharedPreferences.getInt("latestSol", 0);
         imageFilePath = sharedPreferences.getString("imageFilePath", "");
     }
 
@@ -52,6 +57,8 @@ public class SharedPreferencesManager {
         return celsiusUnit;
     }
 
+    /** This method loops through all fragments when the temperature unit changes
+     * to let them know the unit is changed and they should act accordingly */
     public void setCelsiusUnit(boolean celsiusUnit) {
         this.celsiusUnit = celsiusUnit;
         sharedPreferencesEditor.putBoolean("celsiusUnit", celsiusUnit);
@@ -82,6 +89,7 @@ public class SharedPreferencesManager {
         sharedPreferencesEditor.commit();
     }
 
+    /** This method checks the list of fragments and adds the fragment if it is not in the list */
     public void registerBaseFragmentSuper(BaseFragmentSuper baseFragment){
         boolean classExists = false;
         for (BaseFragmentSuper fragment: baseFragments){

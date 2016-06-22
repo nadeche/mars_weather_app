@@ -34,7 +34,7 @@ public class WeatherDataActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter; // contains the adapter used to swipe through fragments
+    private SwipeViewsAdapter mSwipeViewsAdapter; // contains the adapter used to swipe through fragments
     private Dialog setTemperatureUnitDialog;            // contains dialog to change the temperature unit used in the app
     private SharedPreferencesManager preferencesManager;
     private DotIndicator dotIndicator;
@@ -55,11 +55,11 @@ public class WeatherDataActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSwipeViewsAdapter = new SwipeViewsAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setAdapter(mSwipeViewsAdapter);
         mViewPager.addOnPageChangeListener(pageChangeListener);
 
         // initialize the dialog
@@ -85,10 +85,10 @@ public class WeatherDataActivity extends AppCompatActivity {
 
             dotIndicator.setSelectedItem(newPosition, true);
 
-            FragmentLifecycle fragmentToShow = (FragmentLifecycle)mSectionsPagerAdapter.getItem(newPosition);
+            FragmentLifecycle fragmentToShow = (FragmentLifecycle) mSwipeViewsAdapter.getItem(newPosition);
             fragmentToShow.onResumeFragment();
 
-            FragmentLifecycle fragmentToHide = (FragmentLifecycle)mSectionsPagerAdapter.getItem(currentPosition);
+            FragmentLifecycle fragmentToHide = (FragmentLifecycle) mSwipeViewsAdapter.getItem(currentPosition);
             fragmentToHide.onPauseFragment();
 
             currentPosition = newPosition;

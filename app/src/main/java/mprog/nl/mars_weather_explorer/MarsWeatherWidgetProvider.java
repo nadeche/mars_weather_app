@@ -13,9 +13,9 @@ import android.content.Intent;
 
 
 /**
- * This class contains an AppWidgetProvider that calls the UpdateWidgetService
+ * This class extends an AppWidgetProvider that calls the UpdateWidgetService
  * when the widget receives an update call.
- */
+ * */
 public class MarsWeatherWidgetProvider extends AppWidgetProvider {
 
     @Override

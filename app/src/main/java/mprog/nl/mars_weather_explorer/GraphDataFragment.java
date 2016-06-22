@@ -44,7 +44,7 @@ import java.util.Map;
 /**
  * This class contains a fragment displaying a graph showing
  * the maximum and minimum temperature over time on Mars.
- * From the actionbar a calender icon opens a dialog where the user can
+ * From the actionbar a calendar icon opens a dialog where the user can
  * select the period of time in earth dates from which to view temperature data about.
  * When the fragment is created data about the last two weeks are loaded and displayed as default.
  * To display the graph the library MPAndroidChart is used link: https://github.com/PhilJay/MPAndroidChart
@@ -62,7 +62,7 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
     private String graphTillDate;               // the earth date till when the graph displays data
 
     // date format how the weather api uses it
-    private SimpleDateFormat dateFormatApi = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat dateFormatApi = new SimpleDateFormat("yyyy-MM-dd");
 
     // the only instance of this fragment to prevent loss of reference to the activity
     private static GraphDataFragment instance = new GraphDataFragment();
@@ -173,15 +173,16 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         final AlertDialog.Builder dateRangeDialog = new AlertDialog.Builder(getActivity());
         dateRangeDialog.setTitle(R.string.choose_date_range_message);
 
-        // get a frameLayout to display the custom layout for this dialog in
+        // get a root element to display the custom layout for this dialog in
         final FrameLayout basicFrameLayout = new FrameLayout(getActivity());
         dateRangeDialog.setView(basicFrameLayout);
+
+        final DatePicker fromDatePicker = (DatePicker) basicFrameLayout.findViewById(R.id.fromDatePicker);
+        final DatePicker tillDatePicker = (DatePicker)basicFrameLayout.findViewById(R.id.tillDatePicker);
 
         dateRangeDialog.setPositiveButton(R.string.load_graph_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                DatePicker fromDatePicker = (DatePicker) basicFrameLayout.findViewById(R.id.fromDatePicker);
-                DatePicker tillDatePicker = (DatePicker)basicFrameLayout.findViewById(R.id.tillDatePicker);
 
                 Calendar fromCalender = Calendar.getInstance();
                 fromCalender.set(fromDatePicker.getYear(), fromDatePicker.getMonth(), fromDatePicker.getDayOfMonth());
@@ -215,9 +216,6 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         AlertDialog dialog = dateRangeDialog.create();
         LayoutInflater inflater = dialog.getLayoutInflater();
         inflater.inflate(R.layout.dialog_choose_date_range, basicFrameLayout);
-
-        DatePicker fromDatePicker = (DatePicker) basicFrameLayout.findViewById(R.id.fromDatePicker);
-        DatePicker tillDatePicker = (DatePicker)basicFrameLayout.findViewById(R.id.tillDatePicker);
 
         // set the maximum date
         Calendar dateNow = Calendar.getInstance();
@@ -346,15 +344,13 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
 
         // put the library list in a object representing one line
         LineDataSet maxTempSet = new LineDataSet(maxTemp, "Maximum temperature");
-        styleLine(maxTempSet);
-        maxTempSet.setColor(ContextCompat.getColor(getActivity(),R.color.colorAccent));
+        styleLine(maxTempSet, ContextCompat.getColor(getActivity(),R.color.colorAccent));
 
         LineDataSet minTempSet = new LineDataSet(minTemp, "Minimum temperature");
-        styleLine(minTempSet);
-        minTempSet.setColor(ContextCompat.getColor(getActivity(),R.color.minimumTempColor));
+        styleLine(minTempSet, ContextCompat.getColor(getActivity(),R.color.minimumTempColor));
 
         // add both lines to the collection of lines
-        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(maxTempSet);
         dataSets.add(minTempSet);
 
@@ -387,11 +383,12 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
     }
 
     /** This method gives the line in the graph general layout parameters */
-    private void styleLine(LineDataSet lineSet){
+    private void styleLine(LineDataSet lineSet, int color){
         lineSet.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineSet.setLineWidth(2f);
         lineSet.setDrawValues(false);
         lineSet.setDrawCircles(false);
+        lineSet.setColor(color);
     }
 
     /** This method displays the title of the yAxis according to the preferred temperature unit */

@@ -34,14 +34,14 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
 
     FetchDataAsync (BaseFragmentSuper context) {
         fragment = context;
-
-        // keep up how many times this task is called
-        TASKCOUNT++;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+
+        // keep track how many times this task is called
+        TASKCOUNT++;
 
         // only on the first call to the asyncTask, show a progress dialog
         if (TASKCOUNT == 1 ){
@@ -54,18 +54,18 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
 
         // prepare a return object by passing it the requestModel and if there is a internet connection
         ReturnDataRequestModel returnDataRequest = new ReturnDataRequestModel(requestModels[0],
-                InternetManager.hasInternetConnection(fragment.getActivity()));
+                InternetManager.isInternetConnectionAvailable(fragment.getActivity()));
         HttpRequestModel requestModel = requestModels[0];
 
         // when there is an internet connection, check what kind of request was made
-        if (returnDataRequest.isInternetConnection()){
+        if (returnDataRequest.internetConnectionAvailable()){
 
-            /* when a photo, the latest weather data or weather data from a particular Martian solar day was made
-            *  make a request to get data in a single return page*/
+            /* when either a photo, the latest weather data or weather data from a particular Martian solar
+             * day request was made, make a request to get data in a single return page */
             if (requestModel.photoRequest || requestModel.latestWeatherData || requestModel.sol > -1) {
                 returnDataRequest.setJsonObject(getSinglePageData(requestModel));
             }
-            // when a weather data from a range of dates is requested make a request to gat data in multiple pages
+            // when weather data for a range of dates is requested, make a request to gat data in multiple pages
             else {
                 returnDataRequest.setJsonObject(getMultiplePagesData(requestModel));
             }
@@ -78,14 +78,14 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
     protected void onPostExecute(ReturnDataRequestModel returnDataRequest) {
         super.onPostExecute(returnDataRequest);
 
-        // sing this task out from taskCount and when it is the last running task close the progress dialog
+        // record that this task is finished and when it is the last running task close the progress dialog
         TASKCOUNT--;
         if (TASKCOUNT == 0 && fragment.isAdded()){
             fragment.hideProgressDialog();
         }
 
-        // when there is no internet connection notify the user by toast
-        if (!returnDataRequest.isInternetConnection()) {
+        // when there was no internet connection notify the user
+        if (!returnDataRequest.internetConnectionAvailable()) {
             Toast.makeText(fragment.getActivity(), R.string.no_internet_message, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -103,6 +103,7 @@ public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnData
             urlConnection = (HttpURLConnection) requestModel.getUrl().openConnection();
             urlConnection.connect();
 
+            // retrieve the data in json format
             return InternetManager.convertDataToJson(urlConnection);
 
         } catch (IOException e) {

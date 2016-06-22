@@ -23,8 +23,8 @@ import java.net.HttpURLConnection;
  */
 public class InternetManager {
 
-    /** This method checks returns true if there is an internet connection available */
-    public static boolean hasInternetConnection(Context context) {
+    /** This method returns true if there is an internet connection available */
+    public static boolean isInternetConnectionAvailable(Context context) {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 

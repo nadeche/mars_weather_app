@@ -35,7 +35,7 @@ public class ReturnDataRequestModel {
         this.jsonObject = jsonObject;
     }
 
-    public boolean isInternetConnection() {
+    public boolean internetConnectionAvailable() {
         return internetConnection;
     }
 }

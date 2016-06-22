@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 /**
  * This class provides methods to handle photo related operations:
@@ -28,7 +29,7 @@ public class PhotoManager {
     public static Bitmap downloadPhoto(Context context, String url){
         Bitmap photoBitMap = null;
         try {
-            InputStream inputStream = new java.net.URL(url).openStream();
+            InputStream inputStream = new URL(url).openStream();
             photoBitMap = BitmapFactory.decodeStream(inputStream);
             photoBitMap = PhotoManager.resizePhoto(context, photoBitMap);
 
@@ -58,7 +59,7 @@ public class PhotoManager {
             Matrix matrix = new Matrix();
             matrix.postScale(scaleRatio, scaleRatio);
 
-            // Resize the bit map with height and width ratio conserved
+            // Resize the bitmap with height, width ratio conserved
             return Bitmap.createBitmap(photoBitmap, 0, 0, photoBitmapWidth, photoBitmapHeight, matrix, false);
         }
         else {
@@ -77,7 +78,7 @@ public class PhotoManager {
         // get the path to /data/user/0/mprog.nl.mars_weather_explorer/app_roverImageDir
         File directory = contextWrapper.getDir("roverImageDir", Context.MODE_PRIVATE);
         //  create the image file or overwrite if it exists
-        File imgFile = new File(directory, "roverImage.jpg");
+        File imgFile = new File(directory, "roverImage.png");
 
         FileOutputStream fileOutputStream = null;
         try {

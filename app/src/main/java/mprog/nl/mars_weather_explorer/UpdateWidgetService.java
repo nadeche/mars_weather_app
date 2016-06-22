@@ -133,7 +133,7 @@ public class UpdateWidgetService extends Service {
     private JSONObject getData(final HttpRequestModel request){
 
         // only get data if there is an internet connection
-        if (InternetManager.hasInternetConnection(this.getApplicationContext())){
+        if (InternetManager.isInternetConnectionAvailable(this.getApplicationContext())){
 
             // initiate a countdown mechanism to await the thread to finish before the code gets further executed
             final CountDownLatch countDownLatch = new CountDownLatch(1);

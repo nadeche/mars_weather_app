@@ -2,7 +2,7 @@
     <string name="app_name">Mars Weather Explorer</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
-    <string name="loading">Loading…</string>
+    <string name="loading">Loading data…</string>
     <string name="toast_no_data">No data available for this date</string>
     <string name="no_data">No data</string>
     <string-array name="curiosity_cameras_list">

@@ -5,4 +5,5 @@
     <color name="colorAccent">#d50000</color>
     <color name="lightGray">#dddddd</color>
     <color name="minimumTempColor">#316fff</color>
+    <color name="zeroLine">#1d8b24</color>
 </resources>

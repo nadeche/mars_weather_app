@@ -1,7 +1,7 @@
 package mprog.nl.mars_weather_explorer;
 
 /**
- * WeatherDataFragment.java
+ * WeatherDataActivity.java
  *
  * Created by Nadeche Studer
  * */

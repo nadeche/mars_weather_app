@@ -10,7 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * This class acts as a model that contains information about the type of date request to be done.
+ * This class acts as a model that contains information about the type of data request to be done.
  */
 public class HttpRequestModel {
 

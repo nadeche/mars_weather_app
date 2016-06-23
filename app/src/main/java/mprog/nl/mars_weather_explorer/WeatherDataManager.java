@@ -1,5 +1,10 @@
 package mprog.nl.mars_weather_explorer;
 
+/**
+ * WeatherDataManager.java
+ *
+ * Created by Nadeche Studer
+ * */
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,14 +15,14 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * Created by Nadeche
+ * This class manages the weather data from how it is received to a form that can be handled in the application.
+ * It can convert data for the app and for the widget.
  */
 public class WeatherDataManager {
 
     /**
-     * This method converts a received JsonObject to a weatherDataModel. If the received object is empty
-     * it means there is no data available and the user gets notified by toast.
-     * When all goes well setWeatherDataToView() gets called to display the weather data.
+     * This method converts a received JsonObject to a weatherDataModel to be used in the app. If the received object is empty
+     * it means there is no data available and false is returned. If all goes well true is returned.
      * */
     public static boolean fillWeatherDataFromJson(JSONObject jsonObject, HttpRequestModel requestModel, WeatherDataModel weatherData,
                                                   SharedPreferencesManager preferencesManager){
@@ -73,6 +78,7 @@ public class WeatherDataManager {
         return true;
     }
 
+    /** This method converts json to weather data used by the widget */
     public static WeatherDataModel jsonToWeatherData(JSONObject jsonObject){
         if (jsonObject != null) {
             try {

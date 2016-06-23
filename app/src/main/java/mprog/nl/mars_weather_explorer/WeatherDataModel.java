@@ -1,22 +1,26 @@
 package mprog.nl.mars_weather_explorer;
 
 /**
- * Created by Nadeche
+ * WeatherDataModel.java
+ *
+ * Created by Nadeche Studer
+ *
+ * This class contains all weather data fields used in the app and the widget.
  */
 public class WeatherDataModel {
 
-    private String terrestrial_date;    // contains the earth date
-    private double min_temp_C;            // contains the minimum temperature in celsius
-    private double max_temp_C;            // contains the maximum temperature in celsius
-    private double min_temp_F = 0;      // contains the minimum temperature in Fahrenheit
-    private double max_temp_F = 0;      // contains the maximum temperature in Fahrenheit
-    private String sunset;              // contains the earth date and time of the Martian sunset
-    private String sunrise;             // contains the earth date and time of the Martian sunrise
-    private Long wind_speed = 0L;       // contains the wind speed Km/h
-    private double pressure;            // contains the atmospheric pressure in Pa
-    private String atmo_opacity;        // contains the weather status
-    private long sol;                   // contains the martian solar day since Curiosity's landing (i.e., Curiosity's landing = 0)
-    private String season;              // contains the martian season
+    private String terrestrial_date;    // the earth date
+    private double min_temp_C;          // the minimum temperature in celsius
+    private double max_temp_C;          // the maximum temperature in celsius
+    private double min_temp_F = 0;      // the minimum temperature in Fahrenheit
+    private double max_temp_F = 0;      // the maximum temperature in Fahrenheit
+    private String sunset;              // the earth date and time of the Martian sunset
+    private String sunrise;             // the earth date and time of the Martian sunrise
+    private Long wind_speed = 0L;       // the wind speed Km/h
+    private double pressure;            // the atmospheric pressure in Pa
+    private String atmo_opacity;        // the weather status
+    private long sol;                   // the martian solar day since Curiosity's landing (i.e., Curiosity's landing = 0)
+    private String season;              // the martian season
 
     public String getAtmo_opacity() {
         return atmo_opacity;

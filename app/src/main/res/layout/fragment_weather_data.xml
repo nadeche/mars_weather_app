@@ -26,14 +26,14 @@
             style="@style/TextBox"
             android:layout_column="0"
             android:layout_row="0"
-            android:text="Martian sol"
+            android:text="@string/martian_sol"
             android:textSize="11sp"
             android:drawableStart="@drawable/ic_curiosity"/>
         <TextView
             style="@style/TextBox"
             android:layout_column="0"
             android:layout_row="1"
-            android:text="Earth date"
+            android:text="@string/earth_date"
             android:textSize="11sp"
             android:layout_columnWeight="1"
             android:drawableStart="@drawable/ic_earth"/>
@@ -41,75 +41,62 @@
             style="@style/TextBox"
             android:layout_column="0"
             android:layout_row="2"
-            android:text="Sun rise"
+            android:text="@string/sun_rise"
             android:textSize="11sp"
-
             android:drawableStart="@drawable/ic_sunrise"/>
         <TextView
             style="@style/TextBox"
             android:layout_column="0"
             android:layout_row="3"
-            android:text="Sun set"
+            android:text="@string/sun_set"
             android:textSize="11sp"
-
             android:drawableStart="@drawable/ic_sunset"/>
         <TextView
             style="@style/TextBox.NoMarginBottom"
             android:layout_column="0"
             android:layout_row="4"
-            android:text="Season"
+            android:text="@string/season"
             android:textSize="11sp"
-
             android:drawableStart="@drawable/ic_calender"/>
         <TextView
             style="@style/TextBox.RightSpace"
             android:layout_column="1"
             android:layout_row="0"
-            android:id="@+id/solDateTextView"
-            android:text="1355"
-            />
+            android:id="@+id/solDateTextView"/>
         <TextView
             style="@style/TextBox.RightSpace"
             android:layout_column="1"
             android:layout_row="1"
             android:id="@+id/earthDateTextView"
-            android:text="03/06/2016"
             android:layout_columnWeight="1"/>
         <TextView
             style="@style/TextBox.RightSpace"
             android:layout_column="1"
             android:layout_row="2"
-            android:id="@+id/sunriseTextView"
-            android:text="20.50"
-            />
+            android:id="@+id/sunriseTextView"/>
         <TextView
             style="@style/TextBox.RightSpace"
             android:layout_column="1"
             android:layout_row="3"
-            android:id="@+id/sunsetTextView"
-            android:text="05.30"
-            />
+            android:id="@+id/sunsetTextView" />
         <TextView
             style="@style/TextBox.RightSpace.NoMarginBottom"
             android:layout_column="1"
             android:layout_row="4"
-            android:id="@+id/seasonTextView"
-            android:text="6"
-            />
+            android:id="@+id/seasonTextView" />
 
         <TextView
             style="@style/TextBox.LeftSpace"
             android:layout_column="2"
             android:layout_row="0"
-            android:text="Max temp"
+            android:text="@string/max_temp"
             android:textSize="11sp"
-
             android:drawableStart="@drawable/ic_sun"/>
         <TextView
             style="@style/TextBox.LeftSpace"
             android:layout_column="2"
             android:layout_row="1"
-            android:text="Min temp"
+            android:text="@string/min_temp"
             android:textSize="11sp"
             android:layout_columnWeight="1"
             android:drawableStart="@drawable/ic_moon"/>
@@ -117,15 +104,14 @@
             style="@style/TextBox.LeftSpace"
             android:layout_column="2"
             android:layout_row="2"
-            android:text="Wind km/h"
+            android:text="@string/wind"
             android:textSize="11sp"
-
             android:drawableStart="@drawable/ic_wind"/>
         <TextView
             style="@style/TextBox.LeftSpace"
             android:layout_column="2"
             android:layout_row="3"
-            android:text="Pressure Pa"
+            android:text="@string/pressure"
             android:textSize="11sp"
             android:paddingEnd="5dp"
             android:drawableStart="@drawable/ic_pressure"/>
@@ -133,51 +119,40 @@
             style="@style/TextBox.LeftSpace.NoMarginBottom"
             android:layout_column="2"
             android:layout_row="4"
-            android:text="Status"
+            android:text="@string/status"
             android:textSize="11sp"
-
             android:drawableStart="@drawable/ic_weather_status"/>
         <TextView
             style="@style/TextBox"
             android:layout_column="3"
             android:layout_row="0"
-            android:id="@+id/maxTempTextView"
-            android:text="-15 C"
-            />
+            android:id="@+id/maxTempTextView" />
         <TextView
             style="@style/TextBox"
             android:layout_column="3"
             android:layout_row="1"
             android:id="@+id/minTempTextView"
-            android:text="-74 C"
             android:layout_columnWeight="2"/>
         <TextView
             style="@style/TextBox"
             android:layout_column="3"
             android:layout_row="2"
-            android:id="@+id/windSpeedTextView"
-            android:text="2"
-            />
+            android:id="@+id/windSpeedTextView" />
         <TextView
             style="@style/TextBox"
             android:layout_column="3"
             android:layout_row="3"
-            android:id="@+id/pressureTextView"
-            android:text="738.0"
-            />
+            android:id="@+id/pressureTextView" />
         <TextView
             style="@style/TextBox.NoMarginBottom"
             android:layout_column="3"
             android:layout_row="4"
-            android:id="@+id/statusTextView"
-            android:text="Sunny"
-            />
+            android:id="@+id/statusTextView" />
     </GridLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Photo Title"
         android:textSize="18sp"
         style="@style/TextBox"
         android:paddingLeft="5dp"

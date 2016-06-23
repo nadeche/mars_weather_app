@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#55000000">
+    android:background="@color/backgroundWidget">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -21,19 +21,20 @@
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:paddingBottom="2dp"
-        android:paddingTop="2dp">
+        android:paddingTop="2dp"
+        android:background="@color/backgroundTextWidget">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Curiosity's Martian solar day:"
+            android:text="@string/curiosity_s_martian_solar_day"
             android:textSize="10sp"
             android:layout_marginRight="2dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/solDateTextViewWidget"
-            android:text="1364"
+            android:text="@string/no_data"
             android:textSize="12sp"
             android:textStyle="bold"/>
     </LinearLayout>
@@ -43,12 +44,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_above="@id/solDateTextBox">
+        android:layout_above="@id/solDateTextBox"
+        android:layout_marginBottom="2dp"
+        android:background="@color/backgroundTextWidget">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/maxTemperatureTextView"
-            android:text="max 0 C"
+            android:text="@string/no_data"
             android:textStyle="bold"
             android:gravity="center_vertical"
             android:drawableStart="@drawable/ic_sun"
@@ -58,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/minTemperatureTextView"
-            android:text="min 0 C"
+            android:text="@string/no_data"
             android:textStyle="bold"
             android:gravity="center_vertical"
             android:drawableStart="@drawable/ic_moon"

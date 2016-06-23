@@ -15,6 +15,25 @@
     <string name="menu_title_use_celsius">Use Celsius scale</string>
     <string name="menu_title_use_fahrenheit">Use Fahrenheit scale</string>
     <string name="no_photos_found_message">No photos found for this camera and day</string>
+    <string name="from">From:</string>
+    <string name="till">Till:</string>
+    <string name="load_a_photo_from_curiosity">Load a photo from Curiosity</string>
+    <string name="select_camera">Select camera</string>
+    <string name="select_martian_solar_day">Select Martian solar day</string>
+    <string name="load_photo">Load photo</string>
+    <string name="graph_title">Maximum and minimum temperature over time</string>
+    <string name="x_axis_title">Martian solar days</string>
+    <string name="martian_sol">Martian sol</string>
+    <string name="earth_date">Earth date</string>
+    <string name="sun_rise">Sun rise</string>
+    <string name="sun_set">Sun set</string>
+    <string name="season">Season</string>
+    <string name="max_temp">Max temp.</string>
+    <string name="min_temp">Min temp.</string>
+    <string name="wind">Wind (km/h)</string>
+    <string name="pressure">Pressure (Pa)</string>
+    <string name="status">Status</string>
+    <string name="curiosity_s_martian_solar_day">Curiosity\'s Martian solar day:</string>
     <string-array name="curiosity_cameras_list">
         <item>Front Hazard Avoidance Camera</item>
         <item>Rear Hazard Avoidance Camera</item>

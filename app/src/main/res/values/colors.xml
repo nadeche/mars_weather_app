@@ -6,4 +6,9 @@
     <color name="lightGray">#dddddd</color>
     <color name="minimumTempColor">#316fff</color>
     <color name="zeroLine">#1d8b24</color>
+    <color name="dotSelected">#b4b4b4</color>
+    <color name="dotUnselected">#8b8b8b</color>
+    <color name="backgroundText">#b4000000</color>
+    <color name="backgroundTextWidget">#6d000000</color>
+    <color name="backgroundWidget">#55000000</color>
 </resources>

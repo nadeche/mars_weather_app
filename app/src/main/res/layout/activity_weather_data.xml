@@ -54,8 +54,8 @@
                 android:id="@+id/dotNavigation"
                 app:numberOfDots="2"
                 app:selectedDotIndex="0"
-                app:unselectedDotColor="#8b8b8b"
-                app:selectedDotColor="#b4b4b4"
+                app:unselectedDotColor="@color/dotUnselected"
+                app:selectedDotColor="@color/dotSelected"
                 app:unselectedDotDiameter="5dp"
                 app:selectedDotDiameter="8dp"/>
         </RelativeLayout>

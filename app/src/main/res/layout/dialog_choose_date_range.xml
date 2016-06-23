@@ -15,8 +15,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="From:"
-                android:gravity="center_horizontal"
+                android:text="@string/from"
                 android:textStyle="bold" />
             <DatePicker
                 style="@style/AppTheme.DatePicker"
@@ -27,8 +26,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Till:"
-                android:gravity="center_horizontal"
+                android:text="@string/till"
                 android:textStyle="bold" />
 
             <DatePicker

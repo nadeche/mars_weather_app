@@ -32,7 +32,7 @@ public class SharedPreferencesManager{
         sharedPreferencesEditor = sharedPreferences.edit();
         celsiusUnit = sharedPreferences.getBoolean("celsiusUnit", true);
         camera = sharedPreferences.getString("camera", "Front Hazard Avoidance Camera");
-        latestSol = sharedPreferences.getInt("latestSol", 0);
+        latestSol = sharedPreferences.getInt("latestSol", 1377);
         imageFilePath = sharedPreferences.getString("imageFilePath", "");
     }
 

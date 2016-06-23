@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Load a photo from Curiosity"
+        android:text="@string/load_a_photo_from_curiosity"
         android:textSize="20sp"
         style="@style/TextAppearance.AppCompat.Title"
         android:layout_margin="@dimen/dialog_margin"/>
@@ -16,7 +16,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select camera"
+        android:text="@string/select_camera"
         android:layout_marginBottom="6dp"
         android:layout_gravity="center_horizontal"/>
     <Spinner
@@ -29,7 +29,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Martian solar day"
+        android:text="@string/select_martian_solar_day"
         android:layout_marginBottom="4dp"
         android:layout_gravity="center_horizontal"/>
     <NumberPicker
@@ -48,7 +48,7 @@
             android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:layout_marginRight="7dp"/>
 
         <Button
@@ -56,7 +56,7 @@
             android:id="@+id/loadPhotoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Load photo" />
+            android:text="@string/load_photo" />
     </LinearLayout>
 
 </LinearLayout>

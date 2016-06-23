@@ -23,7 +23,7 @@ import java.net.URL;
  * This class provides methods to handle photo related operations:
  * download, resize and save.
  */
-public class PhotoManager {
+class PhotoManager {
 
     /** This method downloads a photo from the given url and resizes it before returning the photo */
     public static Bitmap downloadPhoto(Context context, String url){
@@ -40,7 +40,7 @@ public class PhotoManager {
     }
 
     /** This method resizes a photo according to the width of the screen from the device */
-    public static Bitmap resizePhoto(Context context, Bitmap photoBitmap) {
+    private static Bitmap resizePhoto(Context context, Bitmap photoBitmap) {
 
         // get the width of the device screen
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();

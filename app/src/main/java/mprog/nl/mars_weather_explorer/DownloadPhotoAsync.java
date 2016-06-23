@@ -21,11 +21,11 @@ import android.widget.ImageView;
  * Finally the photo is displayed in the given imageView and the photo is saved to internal storage.
  * During these operations a progress dialog is displayed to the user saying "Loading photo..."
  * */
-public class DownloadPhotoAsync extends AsyncTask <String, Void, Bitmap> {
+class DownloadPhotoAsync extends AsyncTask <String, Void, Bitmap> {
 
-    private Activity activity;               // the reference to the activity from the calling fragment
-    private ImageView roverPhoto;            // the reference to imageView where the downloaded photo will be displayed
-    private ProgressDialog progressDialog;   // the progress dialog displayed while the task is busy
+    private final Activity activity;               // the reference to the activity from the calling fragment
+    private final ImageView roverPhoto;            // the reference to imageView where the downloaded photo will be displayed
+    private ProgressDialog progressDialog;         // the progress dialog displayed while the task is busy
 
     public DownloadPhotoAsync(Activity activity, ImageView roverImageView) {
         this.activity = activity;

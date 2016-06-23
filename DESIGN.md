@@ -12,7 +12,7 @@ Swipe navigation between homescreen, graphs and news items list.
 ###### Sketch homescreen with actionbar function
 ![sketch_homescreen_with_actionbarFunction](doc/sketch_homescreen_with_actionbarFunction.jpg)
 
-###### Sketch chose a diferend date to dysplay data from
+###### Sketch chose a different date to display data from
 ![sketch_choseDiferendDateToDysplayData](doc/sketch_choseDiferendDateToDysplayData.jpg)
 
 ###### Sketch display of graphs and choose a difereld timespan to display
@@ -21,7 +21,7 @@ Swipe navigation between homescreen, graphs and news items list.
 ###### sketch display of news items list and news article and widget
 ![sketch_displayNewsAndItems_widget](doc/sketch_displayNewsAndItems_widget.jpg)
 
-##### API's and plugins / libaries
+##### API's and plugins / libraries
 
 The app will use three different APIs as data sources. These APIs all return a JSON object which can be put in Java model classes to work with the data and display it.
 

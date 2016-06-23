@@ -16,7 +16,7 @@ import android.support.v4.app.FragmentPagerAdapter;
  * This class acts as an adapter between the fragment container in the activity layout
  * and the actual fragments to be displayed.
  * */
-public class SwipeViewsAdapter extends FragmentPagerAdapter {
+class SwipeViewsAdapter extends FragmentPagerAdapter {
 
     public SwipeViewsAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);

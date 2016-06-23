@@ -51,9 +51,9 @@ This model contains all weather data fields used in the app and the widget. It i
 ###### MarsWeatherWidgetProvider
 This class extends an *AppWidgetProvider* that calls the **UpdateWidgetService** when the widget receives an update call either from the app or on its own once every 24 hours as specified in the xml of *widget_info_mars_weather.xml*.
 ###### UpdateWidgetService
-This service provides the widget with data. It collects data about the weather on Mars and loads a photo from memory or from internet. To collect data from internet it runs a seperate thread. After the service has run the widget layout is updated and the intent to open the app with a tap on the widget is set.
+This service provides the widget with data. It collects data about the weather on Mars and loads a photo from memory or from internet. To collect data from internet it runs a separate thread. After the service has run the widget layout is updated and the intent to open the app with a tap on the widget is set.
 To collect data it uses the **PhotoManager** and the **InternetManager**.
-##### Custom view classs
+##### Custom view classes
 ###### VerticalTextView
 This class is an implementation of a custom textView. It converts a textView to a vertical textView. This is only used to create a y axis title next to the graph display in the **GraphDataFragment**.
 #### Challenges

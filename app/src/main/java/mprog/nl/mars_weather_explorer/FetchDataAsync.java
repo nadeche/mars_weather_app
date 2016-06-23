@@ -27,9 +27,9 @@ import java.net.URL;
  * While fetching data it displays a progress dialog to the user saying "Loading data...".
  * The data is passed back to the calling fragment for further processing.
  * */
-public class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnDataRequestModel> {
+class FetchDataAsync extends AsyncTask<HttpRequestModel, Void, ReturnDataRequestModel> {
 
-    private BaseFragmentSuper fragment;         // reference to the calling fragment
+    private final BaseFragmentSuper fragment;   // reference to the calling fragment
     private static int TASKCOUNT = 0;           // single instance representing how many times this task is called
 
     FetchDataAsync (BaseFragmentSuper context) {

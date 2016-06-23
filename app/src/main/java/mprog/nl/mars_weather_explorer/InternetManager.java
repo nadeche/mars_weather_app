@@ -21,7 +21,7 @@ import java.net.HttpURLConnection;
 /**
  * This class handles internet related operations that occur in multiple points in the app and the widget.
  */
-public class InternetManager {
+class InternetManager {
 
     /** This method returns true if there is an internet connection available */
     public static boolean isInternetConnectionAvailable(Context context) {

@@ -34,6 +34,12 @@
     <string name="pressure">Pressure (Pa)</string>
     <string name="status">Status</string>
     <string name="curiosity_s_martian_solar_day">Curiosity\'s Martian solar day:</string>
+    <string name="change_martian_solar_day">Change Martian solar day</string>
+    <string name="get_data">Get data</string>
+    <string name="date_range">Date range</string>
+    <string name="load_a_different_photo">Load a different photo</string>
+    <string name="pick_a_date">Pick a date</string>
+    <string name="load_latest_data">Load latest data</string>
     <string-array name="curiosity_cameras_list">
         <item>Front Hazard Avoidance Camera</item>
         <item>Rear Hazard Avoidance Camera</item>

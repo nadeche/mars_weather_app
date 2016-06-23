@@ -61,7 +61,7 @@ public class WeatherDataFragment extends BaseFragmentSuper /*implements Fragment
     private SharedPreferencesManager preferencesManager;// used to exchange information with the saves preferences
 
     // the only instance of this fragment to prevent loss of reference to the activity
-    private static WeatherDataFragment instance = new WeatherDataFragment();
+    private static final WeatherDataFragment instance = new WeatherDataFragment();
 
     public static WeatherDataFragment getInstance() {
         // on construction this fragment is registered in the sharedPreferencesManager
@@ -343,7 +343,7 @@ public class WeatherDataFragment extends BaseFragmentSuper /*implements Fragment
     }
 
     /** This method sets the corresponding temperature data to the textView according to the users preference */
-    public void setTemperatureToTextViews(){
+    private void setTemperatureToTextViews(){
         if (SharedPreferencesManager.getInstance(getActivity()).isCelsiusUnit()) {
             // set a degrees celsius character behind the temperatures values
             maxTempTextView.setText(String.valueOf(weatherData.getMax_temp_C())+ (char) 0x00B0 + "C");
@@ -356,7 +356,7 @@ public class WeatherDataFragment extends BaseFragmentSuper /*implements Fragment
     }
 
     /** This method displays the received weather data to the screen */
-    public void setDataToView() {
+    private void setDataToView() {
 
         solTextView.setText(String.valueOf(weatherData.getSol()));
         earthDateTextView.setText(weatherData.getTerrestrial_date());

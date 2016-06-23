@@ -64,7 +64,7 @@ public class GraphDataFragment extends BaseFragmentSuper {
     private static final SimpleDateFormat dateFormatApi = new SimpleDateFormat("yyyy-MM-dd");
 
     // the only instance of this fragment to prevent loss of reference to the activity
-    private static GraphDataFragment instance = new GraphDataFragment();
+    private static final GraphDataFragment instance = new GraphDataFragment();
 
     public static GraphDataFragment getInstance(){
         // on construction this fragment is registered in the sharedPreferencesManager

@@ -6,17 +6,17 @@
     <item
         android:id="@+id/action_photo_load"
         android:icon="@drawable/ic_photo_camera"
-        android:title="Load a different photo"
+        android:title="@string/load_a_different_photo"
         app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_date_picker"
         android:icon="@drawable/ic_date_picker"
-        android:title="Pick a date"
+        android:title="@string/pick_a_date"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_load_latest_data"
-        android:title="Load latest data"
+        android:title="@string/load_latest_data"
         app:showAsAction="never"/>
 </menu>

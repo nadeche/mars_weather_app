@@ -14,9 +14,9 @@ import org.json.JSONObject;
  */
 public class ReturnDataRequestModel {
 
-    private JSONObject jsonObject;          // contains the returned json data
-    private HttpRequestModel requestModel;  // contains information about the kind of request
-    private boolean internetConnectionAvailable;     // is true if there is an internet connection available
+    private JSONObject jsonObject;                         // contains the returned json data
+    private final HttpRequestModel requestModel;           // contains information about the kind of request
+    private final boolean internetConnectionAvailable;     // is true if there is an internet connection available
 
     public ReturnDataRequestModel (HttpRequestModel requestModel, boolean internetConnectionAvailable){
         this.requestModel = requestModel;

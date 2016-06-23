@@ -14,11 +14,11 @@ import java.net.URL;
  */
 public class HttpRequestModel {
 
-    private URL url;                    // the url of the requested data
-    public int sol;                     // the martian solar date to find
-    public boolean latestWeatherData;   // is true if the latest weather data is requested
-    public boolean photoRequest;        // is true if a curiosity photo is requested
-    public String cameraName;           // the name of the camera to get a photo from
+    private URL url;                          // the url of the requested data
+    public final int sol;                     // the martian solar date to find
+    public final boolean latestWeatherData;   // is true if the latest weather data is requested
+    public final boolean photoRequest;        // is true if a curiosity photo is requested
+    public final String cameraName;           // the name of the camera to get a photo from
 
     // personal NASA API key to get rover photos from the NASA database
     private static final String NASAapiKEY = "it3AjXuLitEdyfChV0ramuFS0cq12GvJVKTjgllC";

@@ -25,7 +25,6 @@ import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
  * */
 public class WeatherDataActivity extends AppCompatActivity {
 
-    private SwipeViewsAdapter swipeViewsAdapter;            // contains the adapter used to swipe through fragments
     private SharedPreferencesManager preferencesManager;    // used to exchange information with the saves preferences
     private DotIndicator dotIndicator;                      // used to display the dot navigation at the bottom of the screen
 
@@ -37,7 +36,8 @@ public class WeatherDataActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        swipeViewsAdapter = new SwipeViewsAdapter(getSupportFragmentManager());
+        // contains the adapter used to swipe through fragments
+        SwipeViewsAdapter swipeViewsAdapter = new SwipeViewsAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the swipeViewsAdapter so the fragments are chained to the activity
         ViewPager viewPager = (ViewPager) findViewById(R.id.container);
@@ -54,7 +54,7 @@ public class WeatherDataActivity extends AppCompatActivity {
      * When in view it will call the fragments onResumeFragment implementation.
      * When moving out of view it will call the fragments implementation of onPauseFragment.
      * */
-    private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+    private final ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
 
         @Override
         public void onPageSelected(int newPosition) {

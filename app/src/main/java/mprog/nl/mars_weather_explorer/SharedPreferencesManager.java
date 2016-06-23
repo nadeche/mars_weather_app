@@ -18,12 +18,12 @@ import java.util.List;
  * */
 public class SharedPreferencesManager{
 
-    private SharedPreferences.Editor sharedPreferencesEditor;           // can make alterations to the saved preferences
-    private boolean celsiusUnit;                                        // true if the user prefers to use the Celsius scale
-    private String camera;                                              // the name of the camera the user has last loaded a photo from
-    private int latestSol;                                              // the last Martian solar day there is data about
-    private String imageFilePath;                                       // the file path where the last downloaded photo is stored
-    private List<BaseFragmentSuper> baseFragments = new ArrayList<>();  // a list of all fragments in the swipe views
+    private final SharedPreferences.Editor sharedPreferencesEditor;           // can make alterations to the saved preferences
+    private boolean celsiusUnit;                                              // true if the user prefers to use the Celsius scale
+    private String camera;                                                    // the name of the camera the user has last loaded a photo from
+    private int latestSol;                                                    // the last Martian solar day there is data about
+    private String imageFilePath;                                             // the file path where the last downloaded photo is stored
+    private final List<BaseFragmentSuper> baseFragments = new ArrayList<>();  // a list of all fragments in the swipe views
 
     private static SharedPreferencesManager instance = null;
 

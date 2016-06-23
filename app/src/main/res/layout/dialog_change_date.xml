@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Change Martian solar day"
+            android:text="@string/change_martian_solar_day"
             android:textSize="15sp"
             android:layout_gravity="center_horizontal"/>
 
@@ -32,7 +32,7 @@
                 android:id="@+id/cancelButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:layout_gravity="left"
                 android:layout_marginRight="7dp"/>
 
@@ -41,7 +41,7 @@
                 android:id="@+id/loadPhotoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Get data"
+                android:text="@string/get_data"
                 android:layout_marginLeft="7dp"/>
         </LinearLayout>
     </LinearLayout>

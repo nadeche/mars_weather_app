@@ -18,7 +18,7 @@ import java.util.TimeZone;
  * This class manages the weather data from how it is received to a form that can be handled in the application.
  * It can convert data for the app and for the widget.
  * */
-public class WeatherDataManager {
+class WeatherDataManager {
 
     /**
      * This method converts a received JsonObject to a weatherDataModel to be used in the app. If the received object is empty

@@ -10,7 +10,6 @@ import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,7 +41,7 @@ import java.net.MalformedURLException;
  * The photos are provided by the Mars Photos api (https://api.nasa.gov/api.html#MarsPhotos).
  * The user can load weather data and photos from any Martian solar day since Curiosity's landing.
  */
-public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLifecycle {
+public class WeatherDataFragment extends BaseFragmentSuper /*implements FragmentLifecycle*/ {
 
     private TextView earthDateTextView;                 // the earth date of the data
     private TextView solTextView;                       // the martian solar day of the data
@@ -58,13 +57,11 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
     private ImageView roverImageView;                   // the rover photo
     private Dialog changeDateDialog;                    // dialog to change the date to view data from
     private Dialog loadPhotoDialog;                     // dialog to load a particular photo from curiosity
-    private String TAG = "WeatherDataFragment";
     private WeatherDataModel weatherData;               // the collection of weather data
     private SharedPreferencesManager preferencesManager;// used to exchange information with the saves preferences
 
     // the only instance of this fragment to prevent loss of reference to the activity
     private static WeatherDataFragment instance = new WeatherDataFragment();
-
 
     public static WeatherDataFragment getInstance() {
         // on construction this fragment is registered in the sharedPreferencesManager
@@ -105,12 +102,6 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
             // get the latest rover photo according to the latest sol and the last preferred rover camera
             photoTitleTextView.setText(preferencesManager.getCamera());
             requestPhoto(preferencesManager.getLatestSol(), preferencesManager.getCamera());
-            /*try {
-                HttpRequestModel request = new HttpRequestModel(preferencesManager.getLatestSol(), preferencesManager.getCamera());
-                new FetchDataAsync(WeatherDataFragment.this).execute(request);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }*/
         }
         // when weather data is initialised recreate the data on screen and get the last loaded photo from internal storage
         else {
@@ -125,8 +116,6 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
                 e.printStackTrace();
             }
         }
-
-        Log.d("onCreateView fragment", "0");
 
         return rootView;
     }
@@ -223,12 +212,6 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
             @Override
             public void onClick(View v) {
                 requestPhoto(numberPicker.getValue(), camera[0]);
-                /*try {
-                    HttpRequestModel request = new HttpRequestModel(numberPicker.getValue(), camera[0]);
-                    new FetchDataAsync(WeatherDataFragment.this).execute(request);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }*/
                 loadPhotoDialog.dismiss();
             }
         });
@@ -393,15 +376,5 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         pressureTextView.setText(String.valueOf(weatherData.getPressure()));
         sunriseTextView.setText(weatherData.getSunrise());
         sunsetTextView.setText(weatherData.getSunset());
-    }
-
-    @Override
-    public void onPauseFragment() {
-        Log.i(TAG, "onPauseFragment()");
-    }
-
-    @Override
-    public void onResumeFragment() {
-        Log.i(TAG, "onResumeFragment()");
     }
 }

@@ -57,21 +57,11 @@ public class WeatherDataActivity extends AppCompatActivity {
      * */
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
 
-        int currentPosition = 0;
-
         @Override
         public void onPageSelected(int newPosition) {
 
             // change the highlighted dot to the new position in the navigation
             dotIndicator.setSelectedItem(newPosition, true);
-
-            FragmentLifecycle fragmentToShow = (FragmentLifecycle) swipeViewsAdapter.getItem(newPosition);
-            fragmentToShow.onResumeFragment();
-
-            FragmentLifecycle fragmentToHide = (FragmentLifecycle) swipeViewsAdapter.getItem(currentPosition);
-            fragmentToHide.onPauseFragment();
-
-            currentPosition = newPosition;
         }
 
         @Override

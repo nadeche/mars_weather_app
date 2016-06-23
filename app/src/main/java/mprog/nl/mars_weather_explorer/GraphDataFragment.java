@@ -5,11 +5,11 @@ package mprog.nl.mars_weather_explorer;
  *
  * Created by Nadeche Studer
  * */
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,12 +47,11 @@ import java.util.Map;
  * From the actionbar a calendar icon opens a dialog where the user can
  * select the period of time in earth dates from which to view temperature data about.
  * When the fragment is created data about the last two weeks are loaded and displayed as default.
- * To display the graph the library MPAndroidChart is used link: https://github.com/PhilJay/MPAndroidChart
- */
+ * To display the graph the library MPAndroidChart is used link: https://github.com/PhilJay/MPAndroidChart.
+ * The weather data is provided by the marsweather.ingenology api (http://marsweather.ingenology.com/).
+ * */
 
-public class GraphDataFragment extends BaseFragmentSuper implements FragmentLifecycle{
-
-    private String TAG = "GraphDataFragment";
+public class GraphDataFragment extends BaseFragmentSuper {
 
     private LineChart temperatureGraph;         // the graph object displayed on screen
     private Calendar dateTwoWeeksAgo;           // the date from two weeks ago used to initiate the dialog
@@ -93,7 +92,6 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
             graphFromDate = dateFormatApi.format(dateTwoWeeksAgo.getTime());
             loadGraphWithDates();
         }
-        Log.d("onCreateView fragment", "1");
 
         return rootView;
     }
@@ -155,7 +153,7 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
     /**
      * This method makes a request to the FetchDataAsync to get weather data from and till
      * a particular earth date
-     *  */
+     * */
     private void loadGraphWithDates(){
         try {
             HttpRequestModel request = new HttpRequestModel(graphFromDate, graphTillDate);
@@ -300,7 +298,7 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
                 e.printStackTrace();
             }finally {
 
-                // loop over the all solar days in range
+                // loop over all solar days in range
                 for (int i = minSol; i <= maxSol; i++){
 
                     // check if there is data for that day otherwise put null to handle gaps in the data
@@ -402,15 +400,5 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         else {
             yAxisTextView.setText(getString(R.string.yaxis_title) + (char) 0x00B0 + "F");
         }
-    }
-
-    @Override
-    public void onPauseFragment() {
-        Log.i(TAG, "onPauseFragment()");
-    }
-
-    @Override
-    public void onResumeFragment() {
-        Log.i(TAG, "onResumeFragment()");
     }
 }

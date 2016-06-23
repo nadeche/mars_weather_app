@@ -34,7 +34,6 @@ import java.util.concurrent.CountDownLatch;
  * */
 public class UpdateWidgetService extends Service {
 
-    // TODO split into separate methods
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 

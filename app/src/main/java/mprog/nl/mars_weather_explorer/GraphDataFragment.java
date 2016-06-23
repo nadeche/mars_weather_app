@@ -177,12 +177,12 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         final FrameLayout basicFrameLayout = new FrameLayout(getActivity());
         dateRangeDialog.setView(basicFrameLayout);
 
-        final DatePicker fromDatePicker = (DatePicker) basicFrameLayout.findViewById(R.id.fromDatePicker);
-        final DatePicker tillDatePicker = (DatePicker)basicFrameLayout.findViewById(R.id.tillDatePicker);
-
         dateRangeDialog.setPositiveButton(R.string.load_graph_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                DatePicker fromDatePicker = (DatePicker) basicFrameLayout.findViewById(R.id.fromDatePicker);
+                DatePicker tillDatePicker = (DatePicker)basicFrameLayout.findViewById(R.id.tillDatePicker);
 
                 Calendar fromCalender = Calendar.getInstance();
                 fromCalender.set(fromDatePicker.getYear(), fromDatePicker.getMonth(), fromDatePicker.getDayOfMonth());
@@ -216,6 +216,9 @@ public class GraphDataFragment extends BaseFragmentSuper implements FragmentLife
         AlertDialog dialog = dateRangeDialog.create();
         LayoutInflater inflater = dialog.getLayoutInflater();
         inflater.inflate(R.layout.dialog_choose_date_range, basicFrameLayout);
+
+        DatePicker fromDatePicker = (DatePicker) basicFrameLayout.findViewById(R.id.fromDatePicker);
+        DatePicker tillDatePicker = (DatePicker)basicFrameLayout.findViewById(R.id.tillDatePicker);
 
         // set the maximum date
         Calendar dateNow = Calendar.getInstance();

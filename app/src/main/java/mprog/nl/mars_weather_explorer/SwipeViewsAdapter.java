@@ -33,7 +33,7 @@ public class SwipeViewsAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 Log.d("pagerAdapter 0 position", String.valueOf(position));
-                return WeatherDataFragment.getInstance(position + 1);
+                return WeatherDataFragment.getInstance();
             case 1:
                 Log.d("pagerAdapter 1 position", String.valueOf(position));
                 return GraphDataFragment.getInstance();

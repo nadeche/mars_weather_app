@@ -21,6 +21,8 @@ import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
  * This class contains the activity that starts when the app starts.
  * It handles the display of the actionbar and the dots at the bottom
  * indicating which fragment is currently in view.
+ * These dots are implemented by the SlidingIntroScreen library
+ * link: https://github.com/MatthewTamlin/SlidingIntroScreen
  * */
 public class WeatherDataActivity extends AppCompatActivity {
 

@@ -28,7 +28,7 @@ import java.net.MalformedURLException;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * This service provides the widget with data information.
+ * This service provides the widget with data.
  * It collects data about the weather on Mars and loads a photo from memory
  * or from internet.
  * */
@@ -57,40 +57,12 @@ public class UpdateWidgetService extends Service {
                         R.layout.widget_mars_weather);
 
                 if (weatherData != null) {
-                    // set the data to textViews
-                    if (preferencesManager.isCelsiusUnit()) {
-                        widgetLayout.setTextViewText(R.id.maxTemperatureTextView,
-                                String.valueOf(String.valueOf(weatherData.getMax_temp_C()) + (char) 0x00B0 + "C"));
-                        widgetLayout.setTextViewText(R.id.minTemperatureTextView,
-                                String.valueOf(String.valueOf(weatherData.getMin_temp_C()) + (char) 0x00B0 + "C"));
-                    } else {
-                        widgetLayout.setTextViewText(R.id.maxTemperatureTextView,
-                                String.valueOf(String.valueOf(weatherData.getMax_temp_F()) + (char) 0x00B0 + "F"));
-                        widgetLayout.setTextViewText(R.id.minTemperatureTextView,
-                                String.valueOf(String.valueOf(weatherData.getMin_temp_F()) + (char) 0x00B0 + "F"));
-                    }
-                    widgetLayout.setTextViewText(R.id.solDateTextViewWidget, String.valueOf(weatherData.getSol()));
+                    // set the weather data to textViews
+                    setDataToTextViews(widgetLayout, preferencesManager, weatherData);
 
-                    // load a photo from internet when there is new weather data available since the app was opened
-                    Bitmap bitmapImg = null;
-                    if (preferencesManager.getLatestSol() < weatherData.getSol()) {
-                        try {
-                            HttpRequestModel request = new HttpRequestModel((int) weatherData.getSol(), preferencesManager.getCamera());
-                            JSONObject jsonPhoto = getData(request);
-                            bitmapImg = getPhoto(jsonPhoto);
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    // when there is no new data available load the photo from memory
-                    else {
-                        try {
-                            File imageFile = new File(preferencesManager.getImageFilePath());
-                            bitmapImg = BitmapFactory.decodeStream(new FileInputStream(imageFile));
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    // load a photo for display on the background
+                    Bitmap bitmapImg = loadPhoto(preferencesManager, weatherData);
+
                     // display the photo in the widget
                     widgetLayout.setImageViewBitmap(R.id.backgroundImgView, bitmapImg);
                 }
@@ -121,12 +93,56 @@ public class UpdateWidgetService extends Service {
             HttpRequestModel request = new HttpRequestModel();
             JSONObject jsonData = getData(request);
             if (jsonData != null){
-                return WeatherDataManager.jsonToWeatherData(jsonData, request);
+                return WeatherDataManager.jsonToWeatherData(jsonData);
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /** This method sets the collected weather data to the textViews of the widget*/
+    private void setDataToTextViews(RemoteViews widgetLayout, SharedPreferencesManager preferencesManager, WeatherDataModel weatherData) {
+        if (preferencesManager.isCelsiusUnit()) {
+            widgetLayout.setTextViewText(R.id.maxTemperatureTextView,
+                    String.valueOf(String.valueOf(weatherData.getMax_temp_C()) + (char) 0x00B0 + "C"));
+            widgetLayout.setTextViewText(R.id.minTemperatureTextView,
+                    String.valueOf(String.valueOf(weatherData.getMin_temp_C()) + (char) 0x00B0 + "C"));
+        } else {
+            widgetLayout.setTextViewText(R.id.maxTemperatureTextView,
+                    String.valueOf(String.valueOf(weatherData.getMax_temp_F()) + (char) 0x00B0 + "F"));
+            widgetLayout.setTextViewText(R.id.minTemperatureTextView,
+                    String.valueOf(String.valueOf(weatherData.getMin_temp_F()) + (char) 0x00B0 + "F"));
+        }
+
+        widgetLayout.setTextViewText(R.id.solDateTextViewWidget, String.valueOf(weatherData.getSol()));
+    }
+
+    /** This method loads a photo either from memory or from internet */
+    private Bitmap loadPhoto(SharedPreferencesManager preferencesManager, WeatherDataModel weatherData) {
+        Bitmap bitmapImg = null;
+
+        // load a photo from internet when there is new weather data available since the app was opened
+        if (preferencesManager.getLatestSol() < weatherData.getSol()) {
+            try {
+                HttpRequestModel request = new HttpRequestModel((int) weatherData.getSol(), preferencesManager.getCamera());
+                JSONObject jsonPhoto = getData(request);
+                bitmapImg = getPhoto(jsonPhoto);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+        // when there is no new data available load the photo from memory
+        else {
+            try {
+                File imageFile = new File(preferencesManager.getImageFilePath());
+                bitmapImg = BitmapFactory.decodeStream(new FileInputStream(imageFile));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return bitmapImg;
     }
 
     /** This method gets api data on a separate thread */

@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * This class is a singleton that updates the SharedPreferences whenever they change.
- * It provides information to the app and to the widget about the users preferences.
+ * It provides information to the app and to the widget about the user's preferences.
  * */
 public class SharedPreferencesManager{
 
@@ -25,7 +25,7 @@ public class SharedPreferencesManager{
     private String imageFilePath;                                       // the file path where the last downloaded photo is stored
     private List<BaseFragmentSuper> baseFragments = new ArrayList<>();  // a list of all fragments in the swipe views
 
-    private static SharedPreferencesManager preferencesManager = null;
+    private static SharedPreferencesManager instance = null;
 
     private SharedPreferencesManager(Context context){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -37,10 +37,10 @@ public class SharedPreferencesManager{
     }
 
     public static SharedPreferencesManager getInstance(Context context){
-        if(preferencesManager == null){
-            preferencesManager = new SharedPreferencesManager(context);
+        if(instance == null){
+            instance = new SharedPreferencesManager(context);
         }
-        return preferencesManager;
+        return instance;
     }
 
     public String getCamera() {

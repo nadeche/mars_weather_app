@@ -14,6 +14,7 @@
     <string name="yaxis_title">"Temperature "</string>
     <string name="menu_title_use_celsius">Use Celsius scale</string>
     <string name="menu_title_use_fahrenheit">Use Fahrenheit scale</string>
+    <string name="no_photos_found_message">No photos found for this camera and day</string>
     <string-array name="curiosity_cameras_list">
         <item>Front Hazard Avoidance Camera</item>
         <item>Rear Hazard Avoidance Camera</item>

@@ -16,11 +16,11 @@ public class ReturnDataRequestModel {
 
     private JSONObject jsonObject;          // contains the returned json data
     private HttpRequestModel requestModel;  // contains information about the kind of request
-    private boolean internetConnection;     // is true if there is an internet connection available
+    private boolean internetConnectionAvailable;     // is true if there is an internet connection available
 
-    public ReturnDataRequestModel (HttpRequestModel requestModel, boolean internetConnection){
+    public ReturnDataRequestModel (HttpRequestModel requestModel, boolean internetConnectionAvailable){
         this.requestModel = requestModel;
-        this.internetConnection = internetConnection;
+        this.internetConnectionAvailable = internetConnectionAvailable;
     }
 
     public HttpRequestModel getRequestModel() {
@@ -36,6 +36,6 @@ public class ReturnDataRequestModel {
     }
 
     public boolean internetConnectionAvailable() {
-        return internetConnection;
+        return internetConnectionAvailable;
     }
 }

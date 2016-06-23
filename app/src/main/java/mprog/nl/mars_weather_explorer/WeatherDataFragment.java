@@ -1,5 +1,11 @@
 package mprog.nl.mars_weather_explorer;
 
+/**
+ * WeatherDataFragment.java
+ *
+ * Created by Nadeche Studer
+ * */
+
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,50 +35,40 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 /**
- * Created by Nadeche
+ * This class contains a fragment displaying weather data from Mars and a photo made on Mars by Curiosity.
+ * The weather data is provided by the marsweather.ingenology api (http://marsweather.ingenology.com/).
+ * The photos are provided by the Mars Photos api (https://api.nasa.gov/api.html#MarsPhotos).
+ * The user can load weather data and photos from any Martian solar day since Curiosity's landing.
  */
 public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLifecycle {
-    /**
-     * The fragment argument representing the section number for this
-     * fragment.
-     */
-    //private static final String ARG_SECTION_NUMBER = "section_number";
-    private TextView earthDateTextView;     // contains the earth date of the data
-    private TextView solTextView;           // contains the martian solar day of the data
-    private TextView minTempTextView;       // contains the minimum temperature
-    private TextView maxTempTextView;       // contains the maximum temperature
-    private TextView windSpeedTextView;     // contains the wind speed (unknown scale)
-    private TextView statusDataTextView;    // contains the status of the weather
-    private TextView seasonDataTextView;    // contains the martian season
-    private TextView sunriseTextView;       // contains the earth date and time on the martian sunrise
-    private TextView sunsetTextView;        // contains the earth date and time on the martian sunset
-    private TextView pressureTextView;      // contains the atmospheric pressure on mars
-    private TextView photoTitleTextView;
-    private ImageView roverImageView;       // view reference to rover photo in background of weather data
-    private Dialog changeDateDialog;        // contains dialog to change the date to view data from
-    private Dialog loadPhotoDialog;         // dialog to load a particular photo from curiosity
-    private String TAG = "WeatherDataFragment";
-    private WeatherDataModel weatherData;
-    private SharedPreferencesManager preferencesManager;
 
+    private TextView earthDateTextView;                 // the earth date of the data
+    private TextView solTextView;                       // the martian solar day of the data
+    private TextView minTempTextView;                   // the minimum temperature
+    private TextView maxTempTextView;                   // the maximum temperature
+    private TextView windSpeedTextView;                 // the wind speed (unknown scale)
+    private TextView statusDataTextView;                // the status of the weather
+    private TextView seasonDataTextView;                // the martian season
+    private TextView sunriseTextView;                   // the earth date and time on the martian sunrise
+    private TextView sunsetTextView;                    // the earth date and time on the martian sunset
+    private TextView pressureTextView;                  // the atmospheric pressure on mars
+    private TextView photoTitleTextView;                // the camera name of the displayed photo
+    private ImageView roverImageView;                   // the rover photo
+    private Dialog changeDateDialog;                    // dialog to change the date to view data from
+    private Dialog loadPhotoDialog;                     // dialog to load a particular photo from curiosity
+    private String TAG = "WeatherDataFragment";
+    private WeatherDataModel weatherData;               // the collection of weather data
+    private SharedPreferencesManager preferencesManager;// used to exchange information with the saves preferences
+
+    // the only instance of this fragment to prevent loss of reference to the activity
     private static WeatherDataFragment instance = new WeatherDataFragment();
 
-    /**
-     * Returns a new instance of this fragment for the given section
-     * number.
-     */
-    public static WeatherDataFragment getInstance(int sectionNumber) {
 
+    public static WeatherDataFragment getInstance() {
+        // on construction this fragment is registered in the sharedPreferencesManager
         SharedPreferencesManager.getInstance(instance.getActivity()).registerBaseFragmentSuper(instance);
-        //Bundle args = new Bundle();
-        //args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        //fragment.setArguments(args);
         return instance;
     }
 
@@ -98,25 +94,25 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         pressureTextView = (TextView)rootView.findViewById(R.id.pressureTextView);
         roverImageView = (ImageView)rootView.findViewById(R.id.roverImageView);
         photoTitleTextView = (TextView)rootView.findViewById(R.id.photoTitleTextView);
-        //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
         preferencesManager = SharedPreferencesManager.getInstance(getActivity());
 
-        // when weather data is not yet initialised get the latest weather data and photo
+        // when weatherData is not yet initialised get the latest weather data and photo
         if (weatherData == null){
             // get the latest weather data
             getLatestWeatherData();
+
             // get the latest rover photo according to the latest sol and the last preferred rover camera
             photoTitleTextView.setText(preferencesManager.getCamera());
-            try {
+            requestPhoto(preferencesManager.getLatestSol(), preferencesManager.getCamera());
+            /*try {
                 HttpRequestModel request = new HttpRequestModel(preferencesManager.getLatestSol(), preferencesManager.getCamera());
                 new FetchDataAsync(WeatherDataFragment.this).execute(request);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
-        // when weather data is initialised reset the data to screen and get last loaded photo from internal storage
+        // when weather data is initialised recreate the data on screen and get the last loaded photo from internal storage
         else {
             setDataToView();
             photoTitleTextView.setText(preferencesManager.getCamera());
@@ -159,9 +155,8 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
                 return super.onOptionsItemSelected(item);
         }
     }
-    /**
-     * This method gets the latest weather data from the API
-     * */
+
+    /** This method gets the latest weather data from the API */
     private void getLatestWeatherData() {
         HttpRequestModel request= null;
         try {
@@ -170,6 +165,16 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
             e.printStackTrace();
         }
         new FetchDataAsync(this).execute(request);
+    }
+
+    /** This method gets a photo url from the given sol and camera name */
+    private void requestPhoto(int sol, String camera){
+        try {
+            HttpRequestModel request = new HttpRequestModel(sol, camera);
+            new FetchDataAsync(WeatherDataFragment.this).execute(request);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -185,13 +190,14 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         ArrayAdapter<CharSequence> cameraListAdapter = ArrayAdapter.createFromResource(getActivity(),R.array.curiosity_cameras_list, android.R.layout.simple_spinner_item);
         cameraListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         camerasSpinner.setAdapter(cameraListAdapter);
+
         // set selection on previous selected camera
         if (!preferencesManager.getCamera().isEmpty()){
             int spinnerPosition = cameraListAdapter.getPosition(preferencesManager.getCamera());
             camerasSpinner.setSelection(spinnerPosition);
         }
 
-        // initialize number picker with the latest solar day as a maximum
+        // initialize the number picker with the latest solar day as a maximum
         final NumberPicker numberPicker = (NumberPicker)loadPhotoDialog.findViewById(R.id.solNumberPicker);
         numberPickerInit(numberPicker);
 
@@ -212,16 +218,17 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         Button cancelButton = (Button)loadPhotoDialog.findViewById(R.id.cancelButton);
         Button getButton = (Button)loadPhotoDialog.findViewById(R.id.loadPhotoButton);
 
-        // When load photo button is clicked make a FetchDataAsync request with the selected camera and number from the number picker
+        // when the load photo button is clicked make a request with the selected camera and number from the number picker
         getButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
+                requestPhoto(numberPicker.getValue(), camera[0]);
+                /*try {
                     HttpRequestModel request = new HttpRequestModel(numberPicker.getValue(), camera[0]);
                     new FetchDataAsync(WeatherDataFragment.this).execute(request);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
-                }
+                }*/
                 loadPhotoDialog.dismiss();
             }
         });
@@ -255,8 +262,8 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         getButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // get the data from the entered solar day
                 try {
+                    // make a request to fetch data from the selected solar day
                     HttpRequestModel request = new HttpRequestModel(numberPicker.getValue());
                     new FetchDataAsync(WeatherDataFragment.this).execute(request);
                 } catch (MalformedURLException e) {
@@ -276,8 +283,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
     }
     /**
      * Initializes a numberPicker with a maximum of the latest requested sol and
-     * a minimum of the first sol when weather data is provided
-     * lets the wheel wrap around.
+     * a minimum of the first sol when weather data is provided.
      * */
     private void numberPickerInit(NumberPicker numberPicker){
         numberPicker.setMaxValue(preferencesManager.getLatestSol());
@@ -286,10 +292,8 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
     }
 
     /**
-     * This method is an implementation of the abstract method setJsonToView() in BaseFragmentSuper.
-     * It is called by onPostExecute() in FetchDataAsync.
-     * This implementation checks whether a photo request or a weather data request was made,
-     * and calls the corresponding method to convert the JsonObject to data viewable on screen.
+     * This method checks whether a photo request or a weather data request was made,
+     * and calls the corresponding method to convert the JsonObject to data.
      * */
     @Override
     public void setJsonToView(ReturnDataRequestModel returnDataRequest) {
@@ -301,6 +305,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         }
     }
 
+    /** When the preferred temperature unit changes this method changes the data displayed on screen */
     @Override
     public void onTemperatureUnitChanged() {
         setTemperatureToTextViews();
@@ -316,10 +321,13 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         if(jsonObject != null){
             try {
                 JSONArray photosJsonArray = jsonObject.getJSONArray("photos");
+
+                // take the first photo that is returned
                 JSONObject firstPhotoJsonObject = photosJsonArray.getJSONObject(0);
                 String photoLink = firstPhotoJsonObject.getString("img_src");
                 new DownloadPhotoAsync(getActivity(), roverImageView).execute(photoLink);
-                // save the camera name chosen as preference to load when the app opens
+
+                // save the camera name chosen as preference to load when the app opens and in the widget
                 preferencesManager.setCamera(cameraName);
                 photoTitleTextView.setText(cameraName);
             } catch (JSONException e) {
@@ -327,74 +335,31 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
             }
         }
         else {
-            Toast.makeText(getActivity(), "No photos found for this camera and day", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.no_photos_found_message, Toast.LENGTH_LONG).show();
         }
     }
 
     /**
-     * This method converts a received JsonObject to a weatherDataModel. If the received object is empty
-     * it means there is no data available and the user gets notified by toast.
-     * When all goes well setWeatherDataToView() gets called to display the weather data.
+     * This method fills a weatherDataModel with json data. If the json object has no data
+     * the user gets notified with a toast
      * */
     private void setJsonToWeatherData(JSONObject jsonObject, HttpRequestModel requestModel){
-        // TODO handle data from a particular earth date
+        weatherData = new WeatherDataModel();
 
         if (jsonObject != null) {
-            try {
-            /* when the returned Json object of a requested solar day is empty quit this action
-             * and let the user know.*/
-                if(!requestModel.latestWeatherData && jsonObject.getInt("count") == 0) {
-                    Toast.makeText(getActivity(), getText(R.string.toast_no_data), Toast.LENGTH_SHORT).show();
-                    return;
-                }
 
-                JSONObject weatherDataJsonObj;
-                // when the latest data was requested the weather data can be found in the report object
-                if(requestModel.latestWeatherData) {
-                    weatherDataJsonObj = jsonObject.getJSONObject("report");
-                }
-            /* when a particular solar day was requested there is an extra Json array to get
-             * which resides in the results object*/
-                else {
-                    JSONArray resultArrayJsonObject = jsonObject.getJSONArray("results");
-                    weatherDataJsonObj = resultArrayJsonObject.getJSONObject(0);
-                }
-
-                weatherData = new WeatherDataModel();
-
-                // convert the returned terrestrial date to a EU date format and save it in weatherData
-                SimpleDateFormat originalDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                Date date = originalDateFormat.parse(weatherDataJsonObj.getString("terrestrial_date"));
-                weatherData.setTerrestrial_date(dateFormat.format(date));
-
-
-                weatherData.setSol(weatherDataJsonObj.getLong("sol"));
-                // when the latest weather data where requested save the sol for other initialisations
-                if (requestModel.latestWeatherData) {
-                    preferencesManager.setLatestSol((int)weatherData.getSol());
-                }
-                // save the other returned data in a weatherDataModel
-                weatherData.setMax_temp_C(weatherDataJsonObj.getDouble("max_temp"));
-                weatherData.setMin_temp_C(weatherDataJsonObj.getDouble("min_temp"));
-                weatherData.setMax_temp_F(weatherDataJsonObj.optDouble("max_temp_fahrenheit"));
-                weatherData.setMin_temp_F(weatherDataJsonObj.optDouble("min_temp_fahrenheit"));
-                weatherData.setPressure(weatherDataJsonObj.getDouble("pressure"));
-                weatherData.setAtmo_opacity(weatherDataJsonObj.getString("atmo_opacity"));
-                weatherData.setWind_speed(weatherDataJsonObj.optLong("wind_speed"));
-                weatherData.setSeason(weatherDataJsonObj.getString("season"));
-                // TODO Handle date and time format here
-                weatherData.setSunrise(weatherDataJsonObj.getString("sunrise"));
-                weatherData.setSunset(weatherDataJsonObj.getString("sunset"));
-
+            // convert the json to weather data and check if there are results
+            boolean hasResults = WeatherDataManager.fillWeatherDataFromJson(jsonObject, requestModel, weatherData, preferencesManager);
+            if (hasResults){
                 setDataToView();
-            } catch (JSONException | ParseException e) {
-                e.printStackTrace();
+            }
+            else {
+                Toast.makeText(getActivity(), getText(R.string.toast_no_data), Toast.LENGTH_SHORT).show();
             }
         }
-
     }
 
+    /** This method sets the corresponding temperature data to the textView according to the users preference */
     public void setTemperatureToTextViews(){
         if (SharedPreferencesManager.getInstance(getActivity()).isCelsiusUnit()) {
             // set a degrees celsius character behind the temperatures values
@@ -407,10 +372,7 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         }
     }
 
-    /**
-     * This method displays the received weather data to the screen.
-     * It checks whether the weather status has a value.
-     * */
+    /** This method displays the received weather data to the screen */
     public void setDataToView() {
 
         solTextView.setText(String.valueOf(weatherData.getSol()));
@@ -429,35 +391,8 @@ public class WeatherDataFragment extends BaseFragmentSuper implements FragmentLi
         windSpeedTextView.setText(String.valueOf(weatherData.getWind_speed()));
         seasonDataTextView.setText(weatherData.getSeason());
         pressureTextView.setText(String.valueOf(weatherData.getPressure()));
-
-        // convert time and dates to device time and date
-        String sunRiseDateTime = convertUTCtoLocalTime(weatherData.getSunrise());
-        String sunSetDateTime = convertUTCtoLocalTime(weatherData.getSunset());
-        sunriseTextView.setText(sunRiseDateTime);
-        sunsetTextView.setText(sunSetDateTime);
-    }
-
-    /**
-     * Method to convert the sunrise and set time to local time.
-     * It takes a dateTime string in format: year-month-dayThour:minute:secondZ.
-     * It converts the date to: num-day text-month hour:minute
-     * when the parse was un success full it returns a string containing "None".
-     * */
-    // TODO remove, as it already exists elsewhere
-    private String convertUTCtoLocalTime(String originalDate) {
-        SimpleDateFormat dateFormatIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        dateFormatIn.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat dateFormatOut = new SimpleDateFormat("dd MMM HH:mm");
-        dateFormatOut.setTimeZone(TimeZone.getDefault());
-        try {
-            // convert string to date in UTC
-            Date dateUTC = dateFormatIn.parse(originalDate);
-            // convert UTC date to local time in right format
-            return dateFormatOut.format(dateUTC);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return "None";
+        sunriseTextView.setText(weatherData.getSunrise());
+        sunsetTextView.setText(weatherData.getSunset());
     }
 
     @Override

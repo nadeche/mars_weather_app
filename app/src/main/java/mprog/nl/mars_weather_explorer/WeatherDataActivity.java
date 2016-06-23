@@ -16,7 +16,6 @@ import android.view.MenuItem;
 
 import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
 
-// TODO Handle fragment lifecycle loading data only when needed.
 /**
  * This class contains the activity that starts when the app starts.
  * It handles the display of the actionbar and the dots at the bottom

@@ -4,7 +4,7 @@ package mprog.nl.mars_weather_explorer;
  * VerticalTextView.java
  *
  * Created Pointer Null edited on 24 oct. 2011, found on stackoverflow.com
- * @ link: http://stackoverflow.com/questions/1258275/vertical-rotated-label-in-android/7855852#7855852
+ * link: http://stackoverflow.com/questions/1258275/vertical-rotated-label-in-android/7855852#7855852
  * */
 import android.content.Context;
 import android.graphics.Canvas;

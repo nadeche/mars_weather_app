@@ -1,7 +1,6 @@
+![Launch icon](doc/launch_icon_black.png)
 # Mars Weather Explorer
 ###### Programming Project - Minor programming University of Amsterdam.
-
-##### Nadeche Studer
 
 screenshots and icon here
 

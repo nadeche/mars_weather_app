@@ -250,6 +250,18 @@ public class GraphDataFragment extends BaseFragmentSuper {
             ArrayList<Double> minTemperature = new ArrayList<>();
             ArrayList<String> solarDay = new ArrayList<>();
 
+            String maxTemperatureKey;
+            String minTemperatureKey;
+
+            // check what temperature unit is preferred and use the corresponding key in the JSON
+            if (SharedPreferencesManager.getInstance(getActivity()).isCelsiusUnit()) {
+                maxTemperatureKey = "max_temp";
+                minTemperatureKey = "min_temp";
+            } else {
+                maxTemperatureKey = "max_temp_fahrenheit";
+                minTemperatureKey = "min_temp_fahrenheit";
+            }
+
             // the first and last sol in the returned data
             int maxSol = 0;
             int minSol = 0;
@@ -275,14 +287,13 @@ public class GraphDataFragment extends BaseFragmentSuper {
 
                         int sol = dailyDataJsonObject.getInt("sol");
 
-                        // check what temperature unit is preferred and save the corresponding data
-                        if (SharedPreferencesManager.getInstance(getActivity()).isCelsiusUnit()){
-                            tempMax.put(sol, dailyDataJsonObject.getDouble("max_temp"));
-                            tempMin.put(sol, dailyDataJsonObject.getDouble("min_temp"));
+                        // save the min and max temperature data of that day, if it is known
+                        if (!dailyDataJsonObject.isNull(maxTemperatureKey)) {
+                            tempMax.put(sol, dailyDataJsonObject.getDouble(maxTemperatureKey));
                         }
-                        else {
-                            tempMax.put(sol, dailyDataJsonObject.getDouble("max_temp_fahrenheit"));
-                            tempMin.put(sol, dailyDataJsonObject.getDouble("min_temp_fahrenheit"));
+
+                        if (!dailyDataJsonObject.isNull(minTemperatureKey)) {
+                            tempMin.put(sol, dailyDataJsonObject.getDouble(minTemperatureKey));
                         }
 
                         // check if the last or first day is reached and save that solar value

@@ -124,6 +124,7 @@ public class WeatherDataActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+
         // call the update of the widget provider when the app is no longer visible
         Intent updateWidgetIntent = new Intent(this, MarsWeatherWidgetProvider.class);
         updateWidgetIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);

@@ -52,24 +52,13 @@
                 android:layout_marginBottom="2dp"
                 android:layout_marginTop="2dp"
                 android:id="@+id/dotNavigation"
-                app:numberOfDots="3"
+                app:numberOfDots="2"
                 app:selectedDotIndex="0"
                 app:unselectedDotColor="#8b8b8b"
                 app:selectedDotColor="#b4b4b4"
                 app:unselectedDotDiameter="5dp"
                 app:selectedDotDiameter="8dp"/>
         </RelativeLayout>
-
-
-
-        <!--<android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="@dimen/fab_margin"
-            android:src="@android:drawable/ic_dialog_email" />
-           -->
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

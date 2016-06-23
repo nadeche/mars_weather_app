@@ -37,9 +37,6 @@ public class SwipeViewsAdapter extends FragmentPagerAdapter {
             case 1:
                 Log.d("pagerAdapter 1 position", String.valueOf(position));
                 return GraphDataFragment.getInstance();
-            case 2:
-                Log.d("pagerAdapter 2 position", String.valueOf(position));
-                return NewsFeedFragment.getInstance();
         }
         return null;
 
@@ -47,7 +44,7 @@ public class SwipeViewsAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // there are 3 swipe views
-        return 3;
+        // there are 2 swipe views
+        return 2;
     }
 }

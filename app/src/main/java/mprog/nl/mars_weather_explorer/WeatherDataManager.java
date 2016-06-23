@@ -17,7 +17,7 @@ import java.util.TimeZone;
 /**
  * This class manages the weather data from how it is received to a form that can be handled in the application.
  * It can convert data for the app and for the widget.
- */
+ * */
 public class WeatherDataManager {
 
     /**
@@ -111,17 +111,19 @@ public class WeatherDataManager {
      * when the parse was un success full it returns a string containing "None".
      * */
     private static String convertUTCtoLocalTime(String originalDate) {
-        SimpleDateFormat dateFormatIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        dateFormatIn.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat dateFormatOut = new SimpleDateFormat("dd MMM HH:mm");
-        dateFormatOut.setTimeZone(TimeZone.getDefault());
-        try {
-            // convert string to date in UTC
-            Date dateUTC = dateFormatIn.parse(originalDate);
-            // convert UTC date to local time in right format
-            return dateFormatOut.format(dateUTC);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (!originalDate.equals("null")){
+            SimpleDateFormat dateFormatIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            dateFormatIn.setTimeZone(TimeZone.getTimeZone("UTC"));
+            SimpleDateFormat dateFormatOut = new SimpleDateFormat("dd MMM HH:mm");
+            dateFormatOut.setTimeZone(TimeZone.getDefault());
+            try {
+                // convert string to date in UTC
+                Date dateUTC = dateFormatIn.parse(originalDate);
+                // convert UTC date to local time in right format
+                return dateFormatOut.format(dateUTC);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         return "None";
     }

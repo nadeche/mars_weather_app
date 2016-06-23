@@ -5,7 +5,7 @@
 ### Mars Weather Explorer
 
 ##### UML diagram application overview
-![UML diagram](doc/Mars_Weather_Explorer_UML.png)
+![UML diagram](doc/Mars_Weather_Explorer_UML_version1.png)
 
 ##### UI Sketches
 Swipe navigation between homescreen, graphs and news items list.

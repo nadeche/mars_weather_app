@@ -11,7 +11,6 @@ package mprog.nl.mars_weather_explorer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
 /**
  * This class acts as an adapter between the fragment container in the activity layout
@@ -32,10 +31,8 @@ public class SwipeViewsAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                Log.d("pagerAdapter 0 position", String.valueOf(position));
                 return WeatherDataFragment.getInstance();
             case 1:
-                Log.d("pagerAdapter 1 position", String.valueOf(position));
                 return GraphDataFragment.getInstance();
         }
         return null;

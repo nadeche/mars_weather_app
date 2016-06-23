@@ -66,10 +66,10 @@ public class UpdateWidgetService extends Service {
                     widgetLayout.setImageViewBitmap(R.id.backgroundImgView, bitmapImg);
                 }
 
-                // intent to lunch mars weather explorer app on click on the widget
+                // intent to launch mars weather explorer app on click on the widget
                 Intent intentWidgetClick = new Intent(this.getApplicationContext(), WeatherDataActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0 , intentWidgetClick, 0);
-                widgetLayout.setOnClickPendingIntent(R.id.backgroundImgView, pendingIntent);
+                widgetLayout.setOnClickPendingIntent(R.id.widgetContainer, pendingIntent);
 
                 // update the widget individual widget
                 appWidgetManager.updateAppWidget(widgetId, widgetLayout);

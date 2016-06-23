@@ -25,8 +25,8 @@
     <string name="x_axis_title">Martian solar days</string>
     <string name="martian_sol">Martian sol</string>
     <string name="earth_date">Earth date</string>
-    <string name="sun_rise">Sun rise</string>
-    <string name="sun_set">Sun set</string>
+    <string name="sun_rise">Sunrise</string>
+    <string name="sun_set">Sunset</string>
     <string name="season">Season</string>
     <string name="max_temp">Max temp.</string>
     <string name="min_temp">Min temp.</string>
